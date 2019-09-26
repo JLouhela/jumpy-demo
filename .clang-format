@@ -7,7 +7,7 @@ AllowShortIfStatementsOnASingleLine: 'false'
 AllowShortLoopsOnASingleLine: 'false'
 BinPackParameters: 'false'
 BreakBeforeBinaryOperators: 'false'
-BreakBeforeBraces: Allman
+BreakBeforeBraces: Stroustrup
 Cpp11BracedListStyle: 'true'
 IndentCaseLabels: 'false'
 IndentWidth: '4'
