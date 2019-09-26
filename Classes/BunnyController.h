@@ -18,42 +18,22 @@
 /// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 /// IN THE SOFTWARE.
 
-#ifndef _APP_DELEGATE_H_
-#define _APP_DELEGATE_H_
+#ifndef __BUNNY_CONTROLLER_H__
+#define __BUNNY_CONTROLLER_H__
 
+#include <Bunny.h>
+#include <array>
 #include "cocos2d.h"
 
-/**
-@brief    The cocos2d Application.
-
-Private inheritance here hides part of interface from Director.
-*/
-class AppDelegate : private cocos2d::Application
-{
+class BunnyController {
 public:
-    AppDelegate();
-    virtual ~AppDelegate();
+    bool init(cocos2d::Scene& scene);
+    bool spawnBunny(const cocos2d::Vec2& pos);
 
-    virtual void initGLContextAttrs();
-
-    /**
-    @brief    Implement Director and Scene init code here.
-    @return true    Initialize success, app continue.
-    @return false   Initialize failed, app terminate.
-    */
-    virtual bool applicationDidFinishLaunching();
-
-    /**
-    @brief  Called when the application moves to the background
-    @param  the pointer of the application
-    */
-    virtual void applicationDidEnterBackground();
-
-    /**
-    @brief  Called when the application reenters the foreground
-    @param  the pointer of the application
-    */
-    virtual void applicationWillEnterForeground();
+private:
+    // Bunny_id equals to container index
+    std::array<Bunny, 5> m_bunnyContainer{Bunny{0}, Bunny{1}, Bunny{2}, Bunny{3}, Bunny{4}};
+    std::vector<std::uint8_t> m_freeBunnies{0, 1, 2, 3, 4};
 };
 
-#endif  // _APP_DELEGATE_H_
+#endif  // __BUNNY_CONTROLLER_H__

@@ -18,42 +18,32 @@
 /// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 /// IN THE SOFTWARE.
 
-#ifndef _APP_DELEGATE_H_
-#define _APP_DELEGATE_H_
+#include "BunnyController.h"
+#include "ZOrders.h"
 
-#include "cocos2d.h"
-
-/**
-@brief    The cocos2d Application.
-
-Private inheritance here hides part of interface from Director.
-*/
-class AppDelegate : private cocos2d::Application
+bool BunnyController::spawnBunny(const cocos2d::Vec2& pos)
 {
-public:
-    AppDelegate();
-    virtual ~AppDelegate();
+    if (m_freeBunnies.empty()) {
+        cocos2d::log("No free bunnies to spawn");
+        return false;
+    }
 
-    virtual void initGLContextAttrs();
+    const auto nextIdx{m_freeBunnies.back()};
+    m_freeBunnies.pop_back();
+    m_bunnyContainer[nextIdx].setPosition(pos);
+    return true;
+}
 
-    /**
-    @brief    Implement Director and Scene init code here.
-    @return true    Initialize success, app continue.
-    @return false   Initialize failed, app terminate.
-    */
-    virtual bool applicationDidFinishLaunching();
-
-    /**
-    @brief  Called when the application moves to the background
-    @param  the pointer of the application
-    */
-    virtual void applicationDidEnterBackground();
-
-    /**
-    @brief  Called when the application reenters the foreground
-    @param  the pointer of the application
-    */
-    virtual void applicationWillEnterForeground();
-};
-
-#endif  // _APP_DELEGATE_H_
+bool BunnyController::init(cocos2d::Scene& scene)
+{
+    // Before modifications to scene, check if any bunny was not initialized properly
+    for (const auto& bunny : m_bunnyContainer) {
+        if (bunny.getId() == invalidBunnyId) {
+            return false;
+        }
+    }
+    for (const auto& bunny : m_bunnyContainer) {
+        scene.addChild(bunny.getSprite(), ZOrder::bunny);
+    }
+    return true;
+}

@@ -18,42 +18,43 @@
 /// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 /// IN THE SOFTWARE.
 
-#ifndef _APP_DELEGATE_H_
-#define _APP_DELEGATE_H_
+#include "Bunny.h"
 
-#include "cocos2d.h"
+namespace {
 
-/**
-@brief    The cocos2d Application.
-
-Private inheritance here hides part of interface from Director.
-*/
-class AppDelegate : private cocos2d::Application
+cocos2d::Sprite* loadSprite()
 {
-public:
-    AppDelegate();
-    virtual ~AppDelegate();
+    const auto bunnySpriteFrame{
+        cocos2d::SpriteFrameCache::getInstance()->getSpriteFrameByName("./bunny_sit_32_32")};
+    auto bunnySprite{cocos2d::Sprite::createWithSpriteFrame(bunnySpriteFrame)};
+    if (bunnySprite == nullptr) {
+        cocos2d::log("Could not load bunny_sit_32_32");
+    }
+    return bunnySprite;
+}
 
-    virtual void initGLContextAttrs();
+}  // namespace
 
-    /**
-    @brief    Implement Director and Scene init code here.
-    @return true    Initialize success, app continue.
-    @return false   Initialize failed, app terminate.
-    */
-    virtual bool applicationDidFinishLaunching();
+Bunny::Bunny(const Bunny_id id) : m_id{id}, m_sprite{loadSprite()}
+{
+    // If ctor fails, put bunny to fail state
+    if (!m_sprite) {
+        m_id = invalidBunnyId;
+    }
+    else {
+        setPosition(cocos2d::Vec2{-100, -100});
+    }
+}
 
-    /**
-    @brief  Called when the application moves to the background
-    @param  the pointer of the application
-    */
-    virtual void applicationDidEnterBackground();
+const cocos2d::Vec2& Bunny::getPosition()
+{
+    // Redundancy vs. mental model: feels weird to have position only on sprite
+    // but feels weird to store position for no reason. Decide after other use cases for pos.
+    return m_sprite->getPosition();
+}
 
-    /**
-    @brief  Called when the application reenters the foreground
-    @param  the pointer of the application
-    */
-    virtual void applicationWillEnterForeground();
-};
-
-#endif  // _APP_DELEGATE_H_
+void Bunny::setPosition(const cocos2d::Vec2& pos)
+{
+    // No nullcheck, BunnyController shall ensure that only initialized bunnies are accessed
+    m_sprite->setPosition(pos);
+}

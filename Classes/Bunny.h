@@ -18,42 +18,37 @@
 /// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 /// IN THE SOFTWARE.
 
-#ifndef _APP_DELEGATE_H_
-#define _APP_DELEGATE_H_
+#ifndef __BUNNY_H__
+#define __BUNNY_H__
 
+#include <cstdint>
 #include "cocos2d.h"
 
-/**
-@brief    The cocos2d Application.
+using Bunny_id = std::int8_t;
+static constexpr Bunny_id invalidBunnyId{-1};
 
-Private inheritance here hides part of interface from Director.
-*/
-class AppDelegate : private cocos2d::Application
-{
+class Bunny {
 public:
-    AppDelegate();
-    virtual ~AppDelegate();
+    explicit Bunny(Bunny_id id);
 
-    virtual void initGLContextAttrs();
+    Bunny_id getId() const
+    {
+        return m_id;
+    }
 
-    /**
-    @brief    Implement Director and Scene init code here.
-    @return true    Initialize success, app continue.
-    @return false   Initialize failed, app terminate.
-    */
-    virtual bool applicationDidFinishLaunching();
+    void setPosition(const cocos2d::Vec2& pos);
 
-    /**
-    @brief  Called when the application moves to the background
-    @param  the pointer of the application
-    */
-    virtual void applicationDidEnterBackground();
+    const cocos2d::Vec2& getPosition();
 
-    /**
-    @brief  Called when the application reenters the foreground
-    @param  the pointer of the application
-    */
-    virtual void applicationWillEnterForeground();
+    cocos2d::Sprite* getSprite() const
+    {
+        return m_sprite;
+    }
+
+private:
+    cocos2d::Sprite* m_sprite{nullptr};
+    Bunny_id m_id{invalidBunnyId};
+    cocos2d::Vec2 m_pos{-100, -100};
 };
 
-#endif  // _APP_DELEGATE_H_
+#endif  // __BUNNY_H__

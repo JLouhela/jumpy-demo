@@ -10,6 +10,15 @@
     <Filter Include="src">
       <UniqueIdentifier>{bb6c862e-70e9-49d9-81b7-3829a6f50471}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\scenes">
+      <UniqueIdentifier>{55dfb1f9-289a-48da-8682-0d25e11fa8ec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\bunny">
+      <UniqueIdentifier>{f649975a-0a2d-4163-bafe-e1d840dbeb34}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\constants">
+      <UniqueIdentifier>{40b8630e-2c4f-48e4-b620-5176aa6473b1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -18,8 +27,14 @@
     <ClCompile Include="..\Classes\AppDelegate.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\HelloWorldScene.cpp">
-      <Filter>src</Filter>
+    <ClCompile Include="..\Classes\JumpyScene.cpp">
+      <Filter>src\scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Bunny.cpp">
+      <Filter>src\bunny</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BunnyController.cpp">
+      <Filter>src\bunny</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -29,8 +44,17 @@
     <ClInclude Include="..\Classes\AppDelegate.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\HelloWorldScene.h">
-      <Filter>src</Filter>
+    <ClInclude Include="..\Classes\JumpyScene.h">
+      <Filter>src\scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Bunny.h">
+      <Filter>src\bunny</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\ZOrders.h">
+      <Filter>src\constants</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BunnyController.h">
+      <Filter>src\bunny</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
