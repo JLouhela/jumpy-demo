@@ -42,7 +42,7 @@ bool InputHandler::init(BunnyController& bunnyController, cocos2d::EventDispatch
     };
 
     // Separate by build target..? If no issues, don't bother for the demo.
-    // Only input listeners, fixed priority ok.
+    // These are only input listeners in the scene, fixed priority ok.
     eventDispatcher->addEventListenerWithFixedPriority(mouseListener, 1);
     eventDispatcher->addEventListenerWithFixedPriority(touchListener, 1);
     return true;
