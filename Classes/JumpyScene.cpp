@@ -35,7 +35,6 @@ cocos2d::Sprite* initSprite(const std::string& name, const cocos2d::Vec2& pos)
     }
     return sprite;
 }
-
 }  // namespace
 
 cocos2d::Scene* JumpyScene::createScene()
@@ -46,7 +45,7 @@ cocos2d::Scene* JumpyScene::createScene()
 // on "init" you need to initialize your instance
 bool JumpyScene::init()
 {
-    // 1. super init first
+    // super init always first
     if (!cocos2d::Scene::initWithPhysics()) {
         return false;
     }
@@ -76,14 +75,16 @@ bool JumpyScene::initGfx()
     // add the sprite as a child to this layer
     this->addChild(bgSprite, ZOrder::background);
 
-    // add ground sprite to the bottom of the screen (64 == height / 2)
-    // TODO: needs collision box if physics engine to be used, maybe initialized elsewhere then
-    // If not, rework initSprite and use content size.h / 2 to pin sprite to bottom.
-    auto groundSprite{initSprite("./ground_1280_128",
-                                 cocos2d::Vec2(visibleSize.width / 2 + origin.x, 64 + origin.y))};
+    // add ground sprite to the bottom of the screen
+    static constexpr std::int16_t groundHeight = 128;
+    auto groundSprite{
+        initSprite("./ground_1280_128",
+                   cocos2d::Vec2(visibleSize.width / 2 + origin.x, (groundHeight / 2) + origin.y))};
     if (!groundSprite) {
         return false;
     }
+
+    // Ground is solid
     auto groundPhysicsBody = cocos2d::PhysicsBody::createBox(
         cocos2d::Size(visibleSize.width, 128), cocos2d::PhysicsMaterial(1.0f, 1.0f, 0.0f));
     groundPhysicsBody->setDynamic(false);
@@ -100,6 +101,12 @@ bool JumpyScene::initEntities()
         cocos2d::log("Bunny manager not initialized properly");
         return false;
     }
+
+    if (!m_beeSpawner.init(*this)) {
+        cocos2d::log("Bee spawner not initialized properly");
+        return false;
+    }
+
     const auto visibleSize{cocos2d::Director::getInstance()->getVisibleSize()};
     const cocos2d::Vec2 origin{cocos2d::Director::getInstance()->getVisibleOrigin()};
 
@@ -109,5 +116,9 @@ bool JumpyScene::initEntities()
         cocos2d::log("Could not spawn first bunny");
         return false;
     }
+
+    // test
+    m_beeSpawner.spawnBees({{0.0f, 200.0f, direction::left}, {1.0f, 300.0f, direction::right}});
+
     return true;
 }

@@ -18,34 +18,34 @@
 /// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 /// IN THE SOFTWARE.
 
-#ifndef __JUMPY_SCENE_H__
-#define __JUMPY_SCENE_H__
+#ifndef __BEE_SPAWNER_H__
+#define __BEE_SPAWNER_H__
 
-#include "BeeSpawner.h"
-#include "BunnyController.h"
-#include "InputHandler.h"
+#include <Bee.h>
+#include <array>
+#include <chrono>
+#include <cstdint>
 #include "cocos2d.h"
 
-class JumpyScene : public cocos2d::Scene {
-public:
-    static cocos2d::Scene* createScene();
-
-    virtual bool init() final;
-
-private:
-    bool initGfx();
-    bool initEntities();
-
-    // In reality memory should be allocated outside of the scene scope,
-    // but for such simple game it won't matter.
-    BunnyController m_bunnyController;
-
-    BeeSpawner m_beeSpawner;
-
-    InputHandler m_inputHandler;
-
-    // implement the "static create()" method manually
-    CREATE_FUNC(JumpyScene);
+struct BeeSpawn {
+    float delay;  // seconds
+    float y;
+    direction dir;
 };
 
-#endif  // __JUMPYS_SCENE_H__
+class BeeSpawner {
+public:
+    bool init(cocos2d::Scene& scene);
+    bool spawnBees(const std::vector<BeeSpawn>& spawn);
+
+private:
+    bool spawnBee();
+    // Bunny_id equals to container index
+    std::array<Bee, 10> m_beeContainer{Bee{0}, Bee{1}, Bee{2}, Bee{3}, Bee{4},
+                                       Bee{5}, Bee{6}, Bee{7}, Bee{8}, Bee{9}};
+    std::vector<std::uint8_t> m_freeBees{0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
+
+    cocos2d::Node* m_actionNode{nullptr};
+};
+
+#endif  // __BEE_SPAWNER_H__

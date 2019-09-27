@@ -18,34 +18,11 @@
 /// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 /// IN THE SOFTWARE.
 
-#ifndef __JUMPY_SCENE_H__
-#define __JUMPY_SCENE_H__
+#include "GameLogic.h"
 
-#include "BeeSpawner.h"
-#include "BunnyController.h"
-#include "InputHandler.h"
-#include "cocos2d.h"
-
-class JumpyScene : public cocos2d::Scene {
-public:
-    static cocos2d::Scene* createScene();
-
-    virtual bool init() final;
-
-private:
-    bool initGfx();
-    bool initEntities();
-
-    // In reality memory should be allocated outside of the scene scope,
-    // but for such simple game it won't matter.
-    BunnyController m_bunnyController;
-
-    BeeSpawner m_beeSpawner;
-
-    InputHandler m_inputHandler;
-
-    // implement the "static create()" method manually
-    CREATE_FUNC(JumpyScene);
-};
-
-#endif  // __JUMPYS_SCENE_H__
+bool GameLogic::init(BunnyController& bunnyController, BeeSpawner& beeSpawner)
+{
+    m_beeSpawner = &beeSpawner;
+    m_bunnyController = &bunnyController;
+    return true;
+}

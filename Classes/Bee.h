@@ -18,34 +18,40 @@
 /// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 /// IN THE SOFTWARE.
 
-#ifndef __JUMPY_SCENE_H__
-#define __JUMPY_SCENE_H__
+#ifndef __BEE_H__
+#define __BEE_H__
 
-#include "BeeSpawner.h"
-#include "BunnyController.h"
-#include "InputHandler.h"
+#include <cstdint>
 #include "cocos2d.h"
 
-class JumpyScene : public cocos2d::Scene {
-public:
-    static cocos2d::Scene* createScene();
+using Bee_id = std::int8_t;
+static constexpr Bee_id invalidBeeId{-1};
 
-    virtual bool init() final;
+enum class direction : std::uint8_t { left, right };
+
+class Bee {
+public:
+    explicit Bee(Bee_id id);
+
+    Bee_id getId() const
+    {
+        return m_id;
+    }
+
+    cocos2d::Sprite* getSprite() const
+    {
+        return m_sprite;
+    }
+
+    void dispose();
+
+    void spawn(const cocos2d::Vec2& pos, direction dir);
 
 private:
-    bool initGfx();
-    bool initEntities();
-
-    // In reality memory should be allocated outside of the scene scope,
-    // but for such simple game it won't matter.
-    BunnyController m_bunnyController;
-
-    BeeSpawner m_beeSpawner;
-
-    InputHandler m_inputHandler;
-
-    // implement the "static create()" method manually
-    CREATE_FUNC(JumpyScene);
+    cocos2d::Sprite* m_sprite{nullptr};
+    cocos2d::PhysicsBody* m_physicsBody{nullptr};
+    Bee_id m_id{invalidBeeId};
+    cocos2d::Vec2 m_pos{-100, -100};
 };
 
-#endif  // __JUMPYS_SCENE_H__
+#endif  // __BEE_H__

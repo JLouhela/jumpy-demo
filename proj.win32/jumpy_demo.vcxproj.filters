@@ -22,6 +22,12 @@
     <Filter Include="src\input">
       <UniqueIdentifier>{6a0fc677-7fda-4c8b-b7fd-3bcf4069b9b6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\bees">
+      <UniqueIdentifier>{748f2222-2172-48a2-bdd8-2c76ca0b7b80}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\gamelogic">
+      <UniqueIdentifier>{a0f61ef0-0abc-40c2-926a-761d7a9d6f44}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -41,6 +47,15 @@
     </ClCompile>
     <ClCompile Include="..\Classes\InputHandler.cpp">
       <Filter>src\input</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Bee.cpp">
+      <Filter>src\bees</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BeeSpawner.cpp">
+      <Filter>src\bees</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\GameLogic.cpp">
+      <Filter>src\gamelogic</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -64,6 +79,15 @@
     </ClInclude>
     <ClInclude Include="..\Classes\InputHandler.h">
       <Filter>src\input</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Bee.h">
+      <Filter>src\bees</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BeeSpawner.h">
+      <Filter>src\bees</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\GameLogic.h">
+      <Filter>src\gamelogic</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
