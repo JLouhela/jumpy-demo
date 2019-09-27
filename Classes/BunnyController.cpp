@@ -19,6 +19,7 @@
 /// IN THE SOFTWARE.
 
 #include "BunnyController.h"
+#include <cstdint>
 #include "ZOrders.h"
 
 bool BunnyController::spawnBunny(const cocos2d::Vec2& pos)
@@ -46,4 +47,27 @@ bool BunnyController::init(cocos2d::Scene& scene)
         scene.addChild(bunny.getSprite(), ZOrder::bunny);
     }
     return true;
+}
+
+bool BunnyController::jumpBunny(const cocos2d::Vec2& pos)
+{
+    for (auto& bunny : m_bunnyContainer) {
+        // Make input more forgiving by adding extra threshold
+        // to the bounding box of a bunny, especially vertically.
+        auto rect = bunny.getBoundingBox();
+        static constexpr float extraWidth = 20.0f;
+        static constexpr float extraHeight = 60.0f;
+        rect.size.width += extraWidth;
+        rect.size.height += extraHeight;
+        rect.origin.x -= extraWidth / 2;
+        rect.origin.y -= extraHeight / 2;
+
+        // In this game bunnies cannot overlap horizontally.
+        // First match can consume the jump trigger.
+        if (rect.containsPoint(pos)) {
+            bunny.jump();
+            return true;
+        }
+    }
+    return false;
 }

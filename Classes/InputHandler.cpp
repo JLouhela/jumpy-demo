@@ -19,6 +19,7 @@
 /// IN THE SOFTWARE.
 
 #include "InputHandler.h"
+#include "BunnyController.h"
 
 bool InputHandler::init(BunnyController& bunnyController, cocos2d::EventDispatcher* eventDispatcher)
 {
@@ -30,15 +31,14 @@ bool InputHandler::init(BunnyController& bunnyController, cocos2d::EventDispatch
 
     cocos2d::EventListenerMouse* mouseListener{cocos2d::EventListenerMouse::create()};
     mouseListener->onMouseDown = [this](cocos2d::Event* event) {
-        resolveInput(static_cast<cocos2d::EventMouse*>(event)->getLocationInView());
-        return true;  // consume
+        return resolveInput(static_cast<cocos2d::EventMouse*>(event)
+                                ->getLocationInView());  // consume if an action was taken
     };
     cocos2d::EventListenerTouchOneByOne* touchListener{
         cocos2d::EventListenerTouchOneByOne::create()};
 
     touchListener->onTouchBegan = [this](cocos2d::Touch* touch, cocos2d::Event* event) {
-        resolveInput(touch->getLocationInView());
-        return true;  // consume
+        return resolveInput(touch->getLocationInView());  // consume if an action was taken
     };
 
     // Separate by build target..? If no issues, don't bother for the demo.
@@ -48,7 +48,7 @@ bool InputHandler::init(BunnyController& bunnyController, cocos2d::EventDispatch
     return true;
 }
 
-void InputHandler::resolveInput(const cocos2d::Vec2& screenPos)
+bool InputHandler::resolveInput(const cocos2d::Vec2& screenPos)
 {
-    cocos2d::log("Input!");
+    return m_bunnyController->jumpBunny(screenPos);
 }

@@ -43,17 +43,17 @@ Bunny::Bunny(const Bunny_id id) : m_id{id}, m_sprite{loadSprite()}
         return;
     }
     // Add physics body
-    auto bunnyPhysicsBody = cocos2d::PhysicsBody::createBox(
-        cocos2d::Size(32, 32), cocos2d::PhysicsMaterial(1.0f, 0.2f, 0.0f));
-    bunnyPhysicsBody->setDynamic(true);
-    bunnyPhysicsBody->setGravityEnable(false);
-    bunnyPhysicsBody->setName("phys");
-    m_sprite->addComponent(bunnyPhysicsBody);
+    m_physicsBody = cocos2d::PhysicsBody::createBox(cocos2d::Size(32, 32),
+                                                    cocos2d::PhysicsMaterial(1.0f, 0.1f, 0.0f));
+    m_physicsBody->setDynamic(true);
+    m_physicsBody->setGravityEnable(false);
+    m_physicsBody->setVelocityLimit(300.0f);
+    m_sprite->addComponent(m_physicsBody);
 
     setPosition(cocos2d::Vec2{-100, -100});
 }
 
-const cocos2d::Vec2& Bunny::getPosition()
+const cocos2d::Vec2& Bunny::getPosition() const
 {
     // Redundancy vs. mental model: feels weird to have position only on sprite
     // but feels weird to store position for no reason. Decide after other use cases for pos.
@@ -64,5 +64,22 @@ void Bunny::setPosition(const cocos2d::Vec2& pos)
 {
     // No nullcheck, BunnyController shall ensure that only initialized bunnies are accessed
     m_sprite->setPosition(pos);
-    static_cast<cocos2d::PhysicsBody*>(m_sprite->getComponent("phys"))->setGravityEnable(true);
+    m_physicsBody->setGravityEnable(true);
+}
+
+const cocos2d::Rect Bunny::getBoundingBox() const
+{
+    return m_sprite->getBoundingBox();
+}
+
+void Bunny::jump()
+{
+    if (m_physicsBody->getVelocity().y >= 0.0f) {
+        // Jump
+        m_physicsBody->applyImpulse({0.0f, m_physicsBody->getMass() * 150.0f});
+    }
+    else {
+        // Downwards dash
+        m_physicsBody->applyImpulse({0.0f, m_physicsBody->getMass() * -150.0f});
+    }
 }

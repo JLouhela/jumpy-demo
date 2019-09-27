@@ -29,6 +29,7 @@ class BunnyController {
 public:
     bool init(cocos2d::Scene& scene);
     bool spawnBunny(const cocos2d::Vec2& pos);
+    bool jumpBunny(const cocos2d::Vec2& pos);
 
 private:
     // Bunny_id equals to container index

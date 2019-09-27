@@ -38,7 +38,11 @@ public:
 
     void setPosition(const cocos2d::Vec2& pos);
 
-    const cocos2d::Vec2& getPosition();
+    void jump();
+
+    const cocos2d::Vec2& getPosition() const;
+
+    const cocos2d::Rect getBoundingBox() const;
 
     cocos2d::Sprite* getSprite() const
     {
@@ -47,6 +51,7 @@ public:
 
 private:
     cocos2d::Sprite* m_sprite{nullptr};
+    cocos2d::PhysicsBody* m_physicsBody{nullptr};
     Bunny_id m_id{invalidBunnyId};
     cocos2d::Vec2 m_pos{-100, -100};
 };

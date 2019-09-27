@@ -30,7 +30,7 @@ public:
     bool init(BunnyController& bunnyController, cocos2d::EventDispatcher* eventDispatcher);
 
 private:
-    void resolveInput(const cocos2d::Vec2& screenPos);
+    bool resolveInput(const cocos2d::Vec2& screenPos);
 
     BunnyController* m_bunnyController;
 };
