@@ -18,31 +18,21 @@
 /// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 /// IN THE SOFTWARE.
 
-#ifndef __JUMPY_SCENE_H__
-#define __JUMPY_SCENE_H__
+#ifndef __INPUT_HANDLER_H__
+#define __INPUT_HANDLER_H__
 
-#include "BunnyController.h"
-#include "InputHandler.h"
 #include "cocos2d.h"
 
-class JumpyScene : public cocos2d::Scene {
-public:
-    static cocos2d::Scene* createScene();
+class BunnyController;
 
-    virtual bool init() final;
+class InputHandler {
+public:
+    bool init(BunnyController& bunnyController, cocos2d::EventDispatcher* eventDispatcher);
 
 private:
-    bool initGfx();
-    bool initEntities();
+    void resolveInput(const cocos2d::Vec2& screenPos);
 
-    // In reality memory should be allocated outside of the scene scope,
-    // but for such simple game it won't matter.
-    BunnyController m_bunnyController;
-
-    InputHandler m_inputHandler;
-
-    // implement the "static create()" method manually
-    CREATE_FUNC(JumpyScene);
+    BunnyController* m_bunnyController;
 };
 
-#endif  // __JUMPYS_SCENE_H__
+#endif  // __INPUT_HANDLER_H__

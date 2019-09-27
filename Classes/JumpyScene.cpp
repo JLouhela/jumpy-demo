@@ -57,6 +57,7 @@ bool JumpyScene::init()
     if (!initEntities()) {
         return false;
     }
+    m_inputHandler.init(m_bunnyController, getEventDispatcher());
     return true;
 }
 

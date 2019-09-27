@@ -19,6 +19,9 @@
     <Filter Include="src\constants">
       <UniqueIdentifier>{40b8630e-2c4f-48e4-b620-5176aa6473b1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\input">
+      <UniqueIdentifier>{6a0fc677-7fda-4c8b-b7fd-3bcf4069b9b6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -35,6 +38,9 @@
     </ClCompile>
     <ClCompile Include="..\Classes\BunnyController.cpp">
       <Filter>src\bunny</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\InputHandler.cpp">
+      <Filter>src\input</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -55,6 +61,9 @@
     </ClInclude>
     <ClInclude Include="..\Classes\BunnyController.h">
       <Filter>src\bunny</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\InputHandler.h">
+      <Filter>src\input</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
