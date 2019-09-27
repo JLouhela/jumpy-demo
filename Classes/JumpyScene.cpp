@@ -47,7 +47,7 @@ cocos2d::Scene* JumpyScene::createScene()
 bool JumpyScene::init()
 {
     // 1. super init first
-    if (!cocos2d::Scene::init()) {
+    if (!cocos2d::Scene::initWithPhysics()) {
         return false;
     }
 
@@ -83,6 +83,11 @@ bool JumpyScene::initGfx()
     if (!groundSprite) {
         return false;
     }
+    auto groundPhysicsBody = cocos2d::PhysicsBody::createBox(
+        cocos2d::Size(visibleSize.width, 128), cocos2d::PhysicsMaterial(1.0f, 1.0f, 0.0f));
+    groundPhysicsBody->setDynamic(false);
+
+    groundSprite->addComponent(groundPhysicsBody);
     this->addChild(groundSprite, ZOrder::ground);
 
     return true;

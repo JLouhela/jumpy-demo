@@ -40,10 +40,17 @@ Bunny::Bunny(const Bunny_id id) : m_id{id}, m_sprite{loadSprite()}
     // If ctor fails, put bunny to fail state
     if (!m_sprite) {
         m_id = invalidBunnyId;
+        return;
     }
-    else {
-        setPosition(cocos2d::Vec2{-100, -100});
-    }
+    // Add physics body
+    auto bunnyPhysicsBody = cocos2d::PhysicsBody::createBox(
+        cocos2d::Size(32, 32), cocos2d::PhysicsMaterial(1.0f, 0.2f, 0.0f));
+    bunnyPhysicsBody->setDynamic(true);
+    bunnyPhysicsBody->setGravityEnable(false);
+    bunnyPhysicsBody->setName("phys");
+    m_sprite->addComponent(bunnyPhysicsBody);
+
+    setPosition(cocos2d::Vec2{-100, -100});
 }
 
 const cocos2d::Vec2& Bunny::getPosition()
@@ -57,4 +64,5 @@ void Bunny::setPosition(const cocos2d::Vec2& pos)
 {
     // No nullcheck, BunnyController shall ensure that only initialized bunnies are accessed
     m_sprite->setPosition(pos);
+    static_cast<cocos2d::PhysicsBody*>(m_sprite->getComponent("phys"))->setGravityEnable(true);
 }
