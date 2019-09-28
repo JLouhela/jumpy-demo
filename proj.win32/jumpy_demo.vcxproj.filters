@@ -110,6 +110,9 @@
     <ClInclude Include="..\Classes\CustomEvents.h">
       <Filter>src\constants</Filter>
     </ClInclude>
+    <ClInclude Include="..\Classes\CollisionGroup.h">
+      <Filter>src\constants</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="game.rc">

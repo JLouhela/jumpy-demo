@@ -18,42 +18,16 @@
 /// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 /// IN THE SOFTWARE.
 
-#ifndef __BUNNY_H__
-#define __BUNNY_H__
+#ifndef __COLLISION_GROUP_H__
+#define __COLLISION_GROUP_H__
 
 #include <cstdint>
-#include "cocos2d.h"
 
-using Bunny_id = std::int8_t;
-static constexpr Bunny_id invalidBunnyId{-1};
+namespace CollisionGroup {
+static constexpr std::uint8_t bunny{0x01};
+static constexpr std::uint8_t ground{0x02};
+static constexpr std::uint8_t bee{0x04};
+static constexpr std::uint8_t border{0x08};
+}  // namespace CollisionGroup
 
-class Bunny {
-public:
-    bool init(Bunny_id id, cocos2d::Scene& scene);
-
-    Bunny_id getId() const
-    {
-        return m_id;
-    }
-
-    void setPosition(const cocos2d::Vec2& pos);
-
-    void jump();
-
-    const cocos2d::Vec2& getPosition() const;
-
-    const cocos2d::Rect getBoundingBox() const;
-
-    cocos2d::Sprite* getSprite() const
-    {
-        return m_sprite;
-    }
-
-private:
-    cocos2d::Sprite* m_sprite{nullptr};
-    cocos2d::PhysicsBody* m_physicsBody{nullptr};
-    Bunny_id m_id{invalidBunnyId};
-    cocos2d::Vec2 m_pos{-100, -100};
-};
-
-#endif  // __BUNNY_H__
+#endif  // __COLLISION_GROUP_H__

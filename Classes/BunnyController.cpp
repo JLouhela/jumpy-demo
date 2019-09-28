@@ -46,11 +46,13 @@ BunnyController::AvailableBunny& BunnyController::getNextAvailableBunny()
 
 bool BunnyController::init(cocos2d::Scene& scene)
 {
+    Bunny_id id{0};
     // Before modifications to scene, check if any bunny was not initialized properly
-    for (const auto& bunny : m_bunnyContainer) {
-        if (bunny.second.getId() == invalidBunnyId) {
+    for (auto& bunny : m_bunnyContainer) {
+        if (!bunny.second.init(id, scene)) {
             return false;
         }
+        ++id;
     }
     for (const auto& bunny : m_bunnyContainer) {
         scene.addChild(bunny.second.getSprite(), ZOrder::bunny);

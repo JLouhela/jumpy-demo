@@ -19,6 +19,7 @@
 /// IN THE SOFTWARE.
 
 #include "Bunny.h"
+#include "CollisionGroup.h"
 
 namespace {
 
@@ -34,14 +35,14 @@ cocos2d::Sprite* loadSprite()
 }
 
 }  // namespace
-
-Bunny::Bunny(const Bunny_id id) : m_id{id}, m_sprite{loadSprite()}
+bool Bunny::init(Bunny_id id, cocos2d::Scene& scene)
 {
-    // If ctor fails, put bunny to fail state
+    m_sprite = loadSprite();
+
     if (!m_sprite) {
-        m_id = invalidBunnyId;
-        return;
+        return false;
     }
+    m_id = id;
     // Add physics body
     m_physicsBody = cocos2d::PhysicsBody::createBox(cocos2d::Size(32, 32),
                                                     cocos2d::PhysicsMaterial(5.0f, 0.1f, 0.0f));
@@ -49,9 +50,13 @@ Bunny::Bunny(const Bunny_id id) : m_id{id}, m_sprite{loadSprite()}
     m_physicsBody->setGravityEnable(false);
     m_physicsBody->setVelocityLimit(300.0f);
     m_physicsBody->setRotationEnable(false);
+    m_physicsBody->setCategoryBitmask(CollisionGroup::bunny);
+    m_physicsBody->setCollisionBitmask(CollisionGroup::ground);
+    m_physicsBody->setContactTestBitmask(CollisionGroup::bee);
     m_sprite->addComponent(m_physicsBody);
+    m_sprite->setPosition(cocos2d::Vec2{-100, -100});
 
-    setPosition(cocos2d::Vec2{-100, -100});
+    return true;
 }
 
 const cocos2d::Vec2& Bunny::getPosition() const

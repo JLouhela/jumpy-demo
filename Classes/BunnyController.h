@@ -41,9 +41,7 @@ private:
     AvailableBunny& getNextAvailableBunny();
     // Bunny_id equals to container index.
     // Hardcoded init sufficient for demonstration purposes.
-    std::array<AvailableBunny, maxBunnyCount> m_bunnyContainer{
-        std::make_pair(true, Bunny{0}), std::make_pair(true, Bunny{1}),
-        std::make_pair(true, Bunny{2}), std::make_pair(true, Bunny{3})};
+    std::array<AvailableBunny, maxBunnyCount> m_bunnyContainer;
 };
 
 #endif  // __BUNNY_CONTROLLER_H__
