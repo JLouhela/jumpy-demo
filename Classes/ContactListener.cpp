@@ -1,0 +1,77 @@
+/// Copyright (c) 2019 Joni Louhela
+///
+/// Permission is hereby granted, free of charge, to any person obtaining a copy
+/// of this software and associated documentation files (the "Software"), to
+/// deal in the Software without restriction, including without limitation the
+/// rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+/// sell copies of the Software, and to permit persons to whom the Software is
+/// furnished to do so, subject to the following conditions:
+///
+/// The above copyright notice and this permission notice shall be included in
+/// all copies or substantial portions of the Software.
+///
+/// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+/// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+/// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+/// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+/// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+/// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+/// IN THE SOFTWARE.
+
+#include "ContactListener.h"
+#include <cstdint>
+#include "CollisionGroup.h"
+#include "CustomEvents.h"
+
+bool bunnyToBeeCollision(const std::int32_t a, const std::int32_t b)
+{
+    return (a == CollisionGroup::bee || a == CollisionGroup::bunny) &&
+           (b == CollisionGroup::bee || b == CollisionGroup::bunny) && (a != b);
+}
+
+bool beeToBorderCollision(const std::int32_t a, const std::int32_t b)
+{
+    return (a == CollisionGroup::bee || a == CollisionGroup::border) &&
+           (b == CollisionGroup::bee || b == CollisionGroup::border) && (a != b);
+}
+
+void fireBunnyHitEvent(cocos2d::EventDispatcher& eventDispatcher)
+{
+    cocos2d::EventCustom event(CustomEvent::bunnyHitEvent);
+    eventDispatcher.dispatchEvent(&event);
+}
+void fireBeeThroughEvent(cocos2d::EventDispatcher& eventDispatcher)
+{
+    cocos2d::EventCustom event(CustomEvent::beeThroughEvent);
+    eventDispatcher.dispatchEvent(&event);
+}
+
+bool ContactListener::init(cocos2d::Scene& scene)
+{
+    m_eventDispatcher = scene.getEventDispatcher();
+    if (!m_eventDispatcher) {
+        cocos2d::log("Could not get event dispatcher");
+        return false;
+    }
+    m_contactListener = cocos2d::EventListenerPhysicsContact::create();
+    if (!m_contactListener) {
+        cocos2d::log("Could not create contact listener");
+        return false;
+    }
+    m_contactListener->setEnabled(true);
+    m_contactListener->onContactBegin = [this](cocos2d::PhysicsContact& contact) -> bool {
+        const auto maskA = contact.getShapeA()->getBody()->getCategoryBitmask();
+        const auto maskB = contact.getShapeB()->getBody()->getCategoryBitmask();
+        if (bunnyToBeeCollision(maskA, maskB)) {
+            fireBunnyHitEvent(*m_eventDispatcher);
+            return true;
+        }
+        if (beeToBorderCollision(maskA, maskB)) {
+            fireBeeThroughEvent(*m_eventDispatcher);
+            return true;
+        }
+        return false;
+    };
+    scene.getEventDispatcher()->addEventListenerWithSceneGraphPriority(m_contactListener, &scene);
+    return true;
+}

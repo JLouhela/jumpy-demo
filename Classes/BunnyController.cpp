@@ -52,6 +52,7 @@ bool BunnyController::init(cocos2d::Scene& scene)
         if (!bunny.second.init(id, scene)) {
             return false;
         }
+        bunny.first = true;
         ++id;
     }
     for (const auto& bunny : m_bunnyContainer) {

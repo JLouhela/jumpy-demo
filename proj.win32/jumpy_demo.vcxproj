@@ -154,6 +154,7 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)\Resources\" /D /E /I /F /Y
     <ClCompile Include="..\Classes\BeeSpawner.cpp" />
     <ClCompile Include="..\Classes\Bunny.cpp" />
     <ClCompile Include="..\Classes\BunnyController.cpp" />
+    <ClCompile Include="..\Classes\ContactListener.cpp" />
     <ClCompile Include="..\Classes\GameLogic.cpp" />
     <ClCompile Include="..\Classes\InputHandler.cpp" />
     <ClCompile Include="..\Classes\JumpyScene.cpp" />
@@ -169,6 +170,7 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)\Resources\" /D /E /I /F /Y
     <ClInclude Include="..\Classes\Bunny.h" />
     <ClInclude Include="..\Classes\BunnyController.h" />
     <ClInclude Include="..\Classes\CollisionGroup.h" />
+    <ClInclude Include="..\Classes\ContactListener.h" />
     <ClInclude Include="..\Classes\CustomEvents.h" />
     <ClInclude Include="..\Classes\Direction.h" />
     <ClInclude Include="..\Classes\GameLogic.h" />

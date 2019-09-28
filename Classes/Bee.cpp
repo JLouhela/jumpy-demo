@@ -19,6 +19,7 @@
 /// IN THE SOFTWARE.
 
 #include "Bee.h"
+#include "CollisionGroup.h"
 
 namespace {
 
@@ -47,6 +48,8 @@ Bee::Bee(const Bee_id id) : m_id{id}, m_sprite{loadSprite()}
                                                     cocos2d::PhysicsMaterial(0.1f, 0.1f, 0.0f));
     m_physicsBody->setDynamic(true);
     m_physicsBody->setGravityEnable(false);
+    m_physicsBody->setCategoryBitmask(CollisionGroup::bee);
+    m_physicsBody->setContactTestBitmask(CollisionGroup::bunny + CollisionGroup::border);
     m_sprite->addComponent(m_physicsBody);
 
     // TODO add collider to each side of screen, dispose on_collision and notify game logic somehow

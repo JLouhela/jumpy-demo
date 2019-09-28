@@ -63,6 +63,9 @@
     <ClCompile Include="..\Classes\StageManager.cpp">
       <Filter>src\gamelogic</Filter>
     </ClCompile>
+    <ClCompile Include="..\Classes\ContactListener.cpp">
+      <Filter>src\gamelogic</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
@@ -112,6 +115,9 @@
     </ClInclude>
     <ClInclude Include="..\Classes\CollisionGroup.h">
       <Filter>src\constants</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\ContactListener.h">
+      <Filter>src\gamelogic</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

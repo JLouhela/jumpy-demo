@@ -27,6 +27,7 @@ bool GameLogic::init(cocos2d::Scene* scene)
     ok = ok && m_beeSpawner.init(*scene);
     ok = ok && m_bunnyController.init(*scene);
     ok = ok && m_inputHandler.init(m_bunnyController, scene->getEventDispatcher());
+    ok = ok && m_contactListener.init(*scene);
     if (!ok) {
         cocos2d::log("Game logic initialization failed");
         return false;
@@ -65,8 +66,8 @@ void GameLogic::initStage(StageInfo& stageInfo)
         const auto visibleSize{cocos2d::Director::getInstance()->getVisibleSize()};
         const float xOffset = visibleSize.width / BunnyController::maxBunnyCount;
         // Should spread from center towards borders, if there's extra time for implementation.
-        // There's only single stage, thus fixed yOffset
-        static constexpr float yOffset{128.0f};
+        // There's only single stage, thus fixed yOffset. Ground height + bunny height / 2
+        static constexpr float yOffset{144.0f};
         const cocos2d::Vec2 bunnyPos{xOffset * m_bunnyCount, yOffset};
         m_bunnyController.spawnBunny(bunnyPos);
     }

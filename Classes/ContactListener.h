@@ -18,41 +18,19 @@
 /// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 /// IN THE SOFTWARE.
 
-#ifndef __GAME_LOGIC_H__
-#define __GAME_LOGIC_H__
+#ifndef __CONTACT_LISTENER_H__
+#define __CONTACT_LISTENER_H__
 
-#include <cstdint>
-#include "BeeEventListener.h"
-#include "BeeSpawner.h"
-#include "BunnyController.h"
-#include "ContactListener.h"
-#include "InputHandler.h"
-#include "StageManager.h"
+#include <functional>
 #include "cocos2d.h"
 
-class BunnyController;
-class BeeSpawner;
-class InputHandler;
-
-enum GameState : std::uint8_t { start, active, wait, end };
-
-class GameLogic {
+class ContactListener {
 public:
-    bool init(cocos2d::Scene* scene);
+    bool init(cocos2d::Scene& scene);
 
 private:
-    void initStage(StageInfo& stageInfo);
-
-    BunnyController m_bunnyController;
-    BeeSpawner m_beeSpawner;
-    InputHandler m_inputHandler;
-    StageManager m_stageManager;
-    BeeEventListener m_beeEventListener;
-    ContactListener m_contactListener;
-    cocos2d::EventListenerCustom* m_bunnyEventListener{nullptr};
-    GameState m_state{GameState::start};
-    std::int32_t m_curLvl{0};
-    std::uint8_t m_bunnyCount{0};
+    cocos2d::EventListenerPhysicsContact* m_contactListener{nullptr};
+    cocos2d::EventDispatcher* m_eventDispatcher{nullptr};
 };
 
-#endif  // __GAME_LOGIC_H__
+#endif  // __CONTACT_LISTENER_H__

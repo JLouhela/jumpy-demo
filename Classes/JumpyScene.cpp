@@ -19,6 +19,7 @@
 /// IN THE SOFTWARE.
 
 #include "JumpyScene.h"
+#include "CollisionGroup.h"
 #include "SimpleAudioEngine.h"
 #include "ZOrders.h"
 
@@ -92,6 +93,8 @@ bool JumpyScene::initGfx()
     auto groundPhysicsBody = cocos2d::PhysicsBody::createBox(
         cocos2d::Size(visibleSize.width, 128), cocos2d::PhysicsMaterial(1.0f, 1.0f, 0.0f));
     groundPhysicsBody->setDynamic(false);
+    groundPhysicsBody->setCategoryBitmask(CollisionGroup::ground);
+    groundPhysicsBody->setCollisionBitmask(CollisionGroup::bunny);
 
     groundSprite->addComponent(groundPhysicsBody);
     this->addChild(groundSprite, ZOrder::ground);
