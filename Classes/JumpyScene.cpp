@@ -52,7 +52,7 @@ bool JumpyScene::init()
         return false;
     }
 
-    if (!initGfx()) {
+    if (!initEnvironment()) {
         cocos2d::log("Could not initialize gfx for scene");
         return false;
     }
@@ -65,17 +65,19 @@ bool JumpyScene::init()
     return true;
 }
 
-bool JumpyScene::initGfx()
+bool JumpyScene::initEnvironment()
 {
     const auto visibleSize{cocos2d::Director::getInstance()->getVisibleSize()};
     const cocos2d::Vec2 origin{cocos2d::Director::getInstance()->getVisibleOrigin()};
 
-    // add bg sprite to the center of the screen
+    // Add bg sprite to the center of the screen
+    // Could (should?) be node instead of sprite, but spriteframe doesn't seem to support it.
     auto bgSprite{initSprite("./bg_1280_720", cocos2d::Vec2(visibleSize.width / 2 + origin.x,
                                                             visibleSize.height / 2 + origin.y))};
     if (!bgSprite) {
         return false;
     }
+    getPhysicsWorld()->setDebugDrawMask(0xFFFFFFFF);
 
     // add the sprite as a child to this layer
     this->addChild(bgSprite, ZOrder::background);
@@ -98,6 +100,37 @@ bool JumpyScene::initGfx()
 
     groundSprite->addComponent(groundPhysicsBody);
     this->addChild(groundSprite, ZOrder::ground);
+
+    // Add (invisible) border colliders for bees
+    // Left
+    auto leftBorderNode{cocos2d::Node::create()};
+    leftBorderNode->setPosition({0.0f, 0.0f});
+    leftBorderNode->setContentSize({1, visibleSize.height});
+
+    auto leftBorderPhysicsBody = cocos2d::PhysicsBody::createBox(
+        cocos2d::Size(1, visibleSize.height), cocos2d::PhysicsMaterial(1.0f, 1.0f, 0.0f));
+    leftBorderPhysicsBody->setCategoryBitmask(CollisionGroup::border);
+    leftBorderPhysicsBody->setContactTestBitmask(CollisionGroup::bee);
+    leftBorderPhysicsBody->setCollisionBitmask(0x00);
+    leftBorderPhysicsBody->setEnabled(true);
+    leftBorderPhysicsBody->setDynamic(false);
+    leftBorderNode->addComponent(leftBorderPhysicsBody);
+    this->addChild(leftBorderNode);
+
+    // Right
+    auto rightBorderNode{cocos2d::Node::create()};
+    rightBorderNode->setPosition({visibleSize.width - 1.0f, 0.0f});
+
+    rightBorderNode->setContentSize({1, visibleSize.height});
+    auto rightBorderPhysicsBody = cocos2d::PhysicsBody::createBox(
+        {1, visibleSize.height}, cocos2d::PhysicsMaterial(1.0f, 1.0f, 0.0f));
+    rightBorderPhysicsBody->setCategoryBitmask(CollisionGroup::border);
+    rightBorderPhysicsBody->setContactTestBitmask(CollisionGroup::bee);
+    rightBorderPhysicsBody->setCollisionBitmask(0x00);
+    rightBorderPhysicsBody->setDynamic(false);
+
+    rightBorderNode->addComponent(rightBorderPhysicsBody);
+    this->addChild(rightBorderNode, 10);
 
     return true;
 }

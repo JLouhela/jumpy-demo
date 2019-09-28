@@ -66,12 +66,21 @@ bool ContactListener::init(cocos2d::Scene& scene)
             fireBunnyHitEvent(*m_eventDispatcher);
             return true;
         }
+        return false;
+    };
+
+    m_contactListener->onContactSeparate = [this](cocos2d::PhysicsContact& contact) -> bool {
+        const auto maskA = contact.getShapeA()->getBody()->getCategoryBitmask();
+        const auto maskB = contact.getShapeB()->getBody()->getCategoryBitmask();
+
         if (beeToBorderCollision(maskA, maskB)) {
+            // TODO dispose bee!
             fireBeeThroughEvent(*m_eventDispatcher);
             return true;
         }
         return false;
     };
+
     scene.getEventDispatcher()->addEventListenerWithSceneGraphPriority(m_contactListener, &scene);
     return true;
 }

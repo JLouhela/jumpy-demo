@@ -31,7 +31,7 @@ public:
     virtual bool init() final;
 
 private:
-    bool initGfx();
+    bool initEnvironment();
 
     GameLogic m_gameLogic;
 
