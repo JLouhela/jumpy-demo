@@ -18,39 +18,12 @@
 /// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 /// IN THE SOFTWARE.
 
-#ifndef __GAME_LOGIC_H__
-#define __GAME_LOGIC_H__
-
-#include <cstdint>
-#include "BeeEventListener.h"
-#include "BeeSpawner.h"
-#include "BunnyController.h"
-#include "InputHandler.h"
 #include "StageManager.h"
-#include "cocos2d.h"
 
-class BunnyController;
-class BeeSpawner;
-class InputHandler;
-
-enum GameState : std::uint8_t { start, active, wait, end };
-
-class GameLogic {
-public:
-    bool init(cocos2d::Scene* scene);
-
-private:
-    void initStage(StageInfo& stageInfo);
-
-    BunnyController m_bunnyController;
-    BeeSpawner m_beeSpawner;
-    InputHandler m_inputHandler;
-    StageManager m_stageManager;
-    BeeEventListener m_beeEventListener;
-    cocos2d::EventListenerCustom* m_bunnyEventListener{nullptr};
-    GameState m_state{GameState::start};
-    std::int32_t m_curLvl{0};
-    std::uint8_t m_bunnyCount{0};
-};
-
-#endif  // __GAME_LOGIC_H__
+StageInfo* StageManager::getNext() const
+{
+    if (m_curStage == m_stages.end()) {
+        return nullptr;
+    }
+    return &(*m_curStage++);
+}

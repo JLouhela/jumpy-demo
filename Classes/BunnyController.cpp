@@ -24,27 +24,36 @@
 
 bool BunnyController::spawnBunny(const cocos2d::Vec2& pos)
 {
-    if (m_freeBunnies.empty()) {
-        cocos2d::log("No free bunnies to spawn");
+    auto& nextBunny = getNextAvailableBunny();
+    if (!nextBunny.first) {
         return false;
     }
-
-    const auto nextIdx{m_freeBunnies.back()};
-    m_freeBunnies.pop_back();
-    m_bunnyContainer[nextIdx].setPosition(pos);
+    nextBunny.second.setPosition(pos);
+    nextBunny.first = false;
     return true;
+}
+
+BunnyController::AvailableBunny& BunnyController::getNextAvailableBunny()
+{
+    for (auto& bunny : m_bunnyContainer) {
+        if (bunny.first == true) {
+            return bunny;
+        }
+    }
+    cocos2d::log("No more free bunnies");
+    return m_bunnyContainer.front();
 }
 
 bool BunnyController::init(cocos2d::Scene& scene)
 {
     // Before modifications to scene, check if any bunny was not initialized properly
     for (const auto& bunny : m_bunnyContainer) {
-        if (bunny.getId() == invalidBunnyId) {
+        if (bunny.second.getId() == invalidBunnyId) {
             return false;
         }
     }
     for (const auto& bunny : m_bunnyContainer) {
-        scene.addChild(bunny.getSprite(), ZOrder::bunny);
+        scene.addChild(bunny.second.getSprite(), ZOrder::bunny);
     }
     return true;
 }
@@ -54,7 +63,7 @@ bool BunnyController::jumpBunny(const cocos2d::Vec2& pos)
     for (auto& bunny : m_bunnyContainer) {
         // Make input more forgiving by adding extra threshold
         // to the bounding box of a bunny, especially vertically.
-        auto rect = bunny.getBoundingBox();
+        auto rect = bunny.second.getBoundingBox();
         static constexpr float extraWidth = 20.0f;
         static constexpr float extraHeight = 60.0f;
         rect.size.width += extraWidth;
@@ -65,7 +74,7 @@ bool BunnyController::jumpBunny(const cocos2d::Vec2& pos)
         // In this game bunnies cannot overlap horizontally.
         // First match can consume the jump trigger.
         if (rect.containsPoint(pos)) {
-            bunny.jump();
+            bunny.second.jump();
             return true;
         }
     }

@@ -18,39 +18,26 @@
 /// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 /// IN THE SOFTWARE.
 
-#ifndef __GAME_LOGIC_H__
-#define __GAME_LOGIC_H__
+#ifndef __BEE_EVENT_LISTENER_H__
+#define __BEE_EVENT_LISTENER_H__
 
 #include <cstdint>
-#include "BeeEventListener.h"
-#include "BeeSpawner.h"
-#include "BunnyController.h"
-#include "InputHandler.h"
-#include "StageManager.h"
+#include <functional>
 #include "cocos2d.h"
 
-class BunnyController;
-class BeeSpawner;
-class InputHandler;
-
-enum GameState : std::uint8_t { start, active, wait, end };
-
-class GameLogic {
+class BeeEventListener {
 public:
-    bool init(cocos2d::Scene* scene);
+    void init(cocos2d::Scene& scene, std::function<void()> callback);
+
+    void wait(std::uint8_t count)
+    {
+        m_waitingCount = count;
+    }
 
 private:
-    void initStage(StageInfo& stageInfo);
-
-    BunnyController m_bunnyController;
-    BeeSpawner m_beeSpawner;
-    InputHandler m_inputHandler;
-    StageManager m_stageManager;
-    BeeEventListener m_beeEventListener;
-    cocos2d::EventListenerCustom* m_bunnyEventListener{nullptr};
-    GameState m_state{GameState::start};
-    std::int32_t m_curLvl{0};
-    std::uint8_t m_bunnyCount{0};
+    cocos2d::EventListenerCustom* m_beeListener{nullptr};
+    std::uint8_t m_waitingCount{0};
+    std::function<void()> m_callback;
 };
 
-#endif  // __GAME_LOGIC_H__
+#endif  // __BEE_EVENT_LISTENER_H__

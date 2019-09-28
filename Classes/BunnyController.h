@@ -23,18 +23,27 @@
 
 #include <Bunny.h>
 #include <array>
+#include <cstdint>
+#include <utility>
 #include "cocos2d.h"
 
 class BunnyController {
 public:
+    static constexpr std::uint8_t maxBunnyCount{4};
+
     bool init(cocos2d::Scene& scene);
     bool spawnBunny(const cocos2d::Vec2& pos);
     bool jumpBunny(const cocos2d::Vec2& pos);
 
 private:
-    // Bunny_id equals to container index
-    std::array<Bunny, 5> m_bunnyContainer{Bunny{0}, Bunny{1}, Bunny{2}, Bunny{3}, Bunny{4}};
-    std::vector<std::uint8_t> m_freeBunnies{0, 1, 2, 3, 4};
+    // First = availability flag (false == in use)
+    using AvailableBunny = std::pair<bool, Bunny>;
+    AvailableBunny& getNextAvailableBunny();
+    // Bunny_id equals to container index.
+    // Hardcoded init sufficient for demonstration purposes.
+    std::array<AvailableBunny, maxBunnyCount> m_bunnyContainer{
+        std::make_pair(true, Bunny{0}), std::make_pair(true, Bunny{1}),
+        std::make_pair(true, Bunny{2}), std::make_pair(true, Bunny{3})};
 };
 
 #endif  // __BUNNY_CONTROLLER_H__

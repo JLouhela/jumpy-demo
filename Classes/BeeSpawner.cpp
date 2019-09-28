@@ -22,7 +22,7 @@
 #include <cstdint>
 #include "ZOrders.h"
 
-bool BeeSpawner::spawnBees(const std::vector<BeeSpawn>& spawn)
+bool BeeSpawner::spawnBees(const BeeSpawns& spawn)
 {
     for (const auto& spawnBee : spawn) {
         if (m_freeBees.empty()) {

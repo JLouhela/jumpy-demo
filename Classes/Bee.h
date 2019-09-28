@@ -22,12 +22,11 @@
 #define __BEE_H__
 
 #include <cstdint>
+#include "Direction.h"
 #include "cocos2d.h"
 
 using Bee_id = std::int8_t;
 static constexpr Bee_id invalidBeeId{-1};
-
-enum class direction : std::uint8_t { left, right };
 
 class Bee {
 public:

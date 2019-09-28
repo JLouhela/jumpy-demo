@@ -47,16 +47,20 @@ bool JumpyScene::init()
 {
     // super init always first
     if (!cocos2d::Scene::initWithPhysics()) {
+        cocos2d::log("Could not initialize parent scene");
         return false;
     }
 
     if (!initGfx()) {
+        cocos2d::log("Could not initialize gfx for scene");
         return false;
     }
-    if (!initEntities()) {
+
+    if (!m_gameLogic.init(this)) {
+        cocos2d::log("Could not initialize game logic");
         return false;
     }
-    m_inputHandler.init(m_bunnyController, getEventDispatcher());
+
     return true;
 }
 
@@ -91,34 +95,6 @@ bool JumpyScene::initGfx()
 
     groundSprite->addComponent(groundPhysicsBody);
     this->addChild(groundSprite, ZOrder::ground);
-
-    return true;
-}
-
-bool JumpyScene::initEntities()
-{
-    if (!m_bunnyController.init(*this)) {
-        cocos2d::log("Bunny manager not initialized properly");
-        return false;
-    }
-
-    if (!m_beeSpawner.init(*this)) {
-        cocos2d::log("Bee spawner not initialized properly");
-        return false;
-    }
-
-    const auto visibleSize{cocos2d::Director::getInstance()->getVisibleSize()};
-    const cocos2d::Vec2 origin{cocos2d::Director::getInstance()->getVisibleOrigin()};
-
-    // Start with a single bunny
-    if (!m_bunnyController.spawnBunny(
-            cocos2d::Vec2(visibleSize.width / 4 + origin.x, visibleSize.height / 4 + origin.y))) {
-        cocos2d::log("Could not spawn first bunny");
-        return false;
-    }
-
-    // test
-    m_beeSpawner.spawnBees({{0.0f, 200.0f, direction::left}, {1.0f, 300.0f, direction::right}});
 
     return true;
 }

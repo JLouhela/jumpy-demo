@@ -21,26 +21,20 @@
 #ifndef __BEE_SPAWNER_H__
 #define __BEE_SPAWNER_H__
 
-#include <Bee.h>
 #include <array>
 #include <chrono>
 #include <cstdint>
+#include "Bee.h"
+#include "BeeSpawn.h"
 #include "cocos2d.h"
-
-struct BeeSpawn {
-    float delay;  // seconds
-    float y;
-    direction dir;
-};
 
 class BeeSpawner {
 public:
     bool init(cocos2d::Scene& scene);
-    bool spawnBees(const std::vector<BeeSpawn>& spawn);
+    bool spawnBees(const BeeSpawns& spawn);
 
 private:
-    bool spawnBee();
-    // Bunny_id equals to container index
+    // Bee_id equals to container index
     std::array<Bee, 10> m_beeContainer{Bee{0}, Bee{1}, Bee{2}, Bee{3}, Bee{4},
                                        Bee{5}, Bee{6}, Bee{7}, Bee{8}, Bee{9}};
     std::vector<std::uint8_t> m_freeBees{0, 1, 2, 3, 4, 5, 6, 7, 8, 9};

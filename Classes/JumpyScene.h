@@ -21,9 +21,7 @@
 #ifndef __JUMPY_SCENE_H__
 #define __JUMPY_SCENE_H__
 
-#include "BeeSpawner.h"
-#include "BunnyController.h"
-#include "InputHandler.h"
+#include "GameLogic.h"
 #include "cocos2d.h"
 
 class JumpyScene : public cocos2d::Scene {
@@ -34,15 +32,8 @@ public:
 
 private:
     bool initGfx();
-    bool initEntities();
 
-    // In reality memory should be allocated outside of the scene scope,
-    // but for such simple game it won't matter.
-    BunnyController m_bunnyController;
-
-    BeeSpawner m_beeSpawner;
-
-    InputHandler m_inputHandler;
+    GameLogic m_gameLogic;
 
     // implement the "static create()" method manually
     CREATE_FUNC(JumpyScene);

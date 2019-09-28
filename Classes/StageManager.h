@@ -18,39 +18,27 @@
 /// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 /// IN THE SOFTWARE.
 
-#ifndef __GAME_LOGIC_H__
-#define __GAME_LOGIC_H__
+#ifndef __STAGE_MANAGER_H__
+#define __STAGE_MANAGER_H__
 
-#include <cstdint>
-#include "BeeEventListener.h"
-#include "BeeSpawner.h"
-#include "BunnyController.h"
-#include "InputHandler.h"
-#include "StageManager.h"
-#include "cocos2d.h"
+#include <vector>
+#include "BeeSpawn.h"
 
-class BunnyController;
-class BeeSpawner;
-class InputHandler;
-
-enum GameState : std::uint8_t { start, active, wait, end };
-
-class GameLogic {
-public:
-    bool init(cocos2d::Scene* scene);
-
-private:
-    void initStage(StageInfo& stageInfo);
-
-    BunnyController m_bunnyController;
-    BeeSpawner m_beeSpawner;
-    InputHandler m_inputHandler;
-    StageManager m_stageManager;
-    BeeEventListener m_beeEventListener;
-    cocos2d::EventListenerCustom* m_bunnyEventListener{nullptr};
-    GameState m_state{GameState::start};
-    std::int32_t m_curLvl{0};
-    std::uint8_t m_bunnyCount{0};
+struct StageInfo {
+    BeeSpawns beeSpawns;
+    std::uint8_t bunnyCount;
 };
 
-#endif  // __GAME_LOGIC_H__
+class StageManager {
+public:
+    StageInfo* getNext() const;
+
+private:
+    // Hard coded stages for demonstration purposes.
+    // For efficient testing this should be file read -> no recompile on change.
+    std::vector<StageInfo> m_stages{
+        {{{0.0f, 200.0f, direction::left}, {1.0f, 300.0f, direction::right}}, 1}};
+    mutable std::vector<StageInfo>::iterator m_curStage{m_stages.begin()};
+};
+
+#endif  // __STAGE_MANAGER_H__

@@ -19,10 +19,57 @@
 /// IN THE SOFTWARE.
 
 #include "GameLogic.h"
+#include "CustomEvents.h"
 
-bool GameLogic::init(BunnyController& bunnyController, BeeSpawner& beeSpawner)
+bool GameLogic::init(cocos2d::Scene* scene)
 {
-    m_beeSpawner = &beeSpawner;
-    m_bunnyController = &bunnyController;
+    bool ok = (scene != nullptr);
+    ok = ok && m_beeSpawner.init(*scene);
+    ok = ok && m_bunnyController.init(*scene);
+    ok = ok && m_inputHandler.init(m_bunnyController, scene->getEventDispatcher());
+    if (!ok) {
+        cocos2d::log("Game logic initialization failed");
+        return false;
+    }
+
+    const auto stage = m_stageManager.getNext();
+    if (!stage) {
+        cocos2d::log("Cannot get next stage");
+
+        return false;
+    }
+
+    m_beeEventListener.init(*scene, [this]() {
+        if (m_state == GameState::active) {
+            m_state = GameState::wait;
+        }
+    });
+
+    m_bunnyEventListener = cocos2d::EventListenerCustom::create(
+        CustomEvent::bunnyHitEvent, [this](cocos2d::EventCustom* event) {
+            if (m_state == GameState::active) {
+                m_state = GameState::end;
+            }
+        });
+    scene->getEventDispatcher()->addEventListenerWithSceneGraphPriority(m_bunnyEventListener,
+                                                                        scene);
+
+    initStage(*stage);
     return true;
+}
+
+void GameLogic::initStage(StageInfo& stageInfo)
+{
+    // Stages never contain less bunnies than previous stage by design.
+    while (m_bunnyCount < stageInfo.bunnyCount) {
+        ++m_bunnyCount;
+        const auto visibleSize{cocos2d::Director::getInstance()->getVisibleSize()};
+        const float xOffset = visibleSize.width / BunnyController::maxBunnyCount;
+        // Should spread from center towards borders, if there's extra time for implementation.
+        // There's only single stage, thus fixed yOffset
+        static constexpr float yOffset{128.0f};
+        const cocos2d::Vec2 bunnyPos{xOffset * m_bunnyCount, yOffset};
+        m_bunnyController.spawnBunny(bunnyPos);
+    }
+    m_beeSpawner.spawnBees(stageInfo.beeSpawns);
 }
