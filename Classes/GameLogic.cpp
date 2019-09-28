@@ -35,7 +35,6 @@ bool GameLogic::init(cocos2d::Scene* scene)
     const auto stage = m_stageManager.getNext();
     if (!stage) {
         cocos2d::log("Cannot get next stage");
-
         return false;
     }
 

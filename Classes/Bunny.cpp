@@ -44,10 +44,11 @@ Bunny::Bunny(const Bunny_id id) : m_id{id}, m_sprite{loadSprite()}
     }
     // Add physics body
     m_physicsBody = cocos2d::PhysicsBody::createBox(cocos2d::Size(32, 32),
-                                                    cocos2d::PhysicsMaterial(1.0f, 0.1f, 0.0f));
+                                                    cocos2d::PhysicsMaterial(5.0f, 0.1f, 0.0f));
     m_physicsBody->setDynamic(true);
     m_physicsBody->setGravityEnable(false);
     m_physicsBody->setVelocityLimit(300.0f);
+    m_physicsBody->setRotationEnable(false);
     m_sprite->addComponent(m_physicsBody);
 
     setPosition(cocos2d::Vec2{-100, -100});
