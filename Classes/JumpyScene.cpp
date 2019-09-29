@@ -29,7 +29,7 @@ cocos2d::Sprite* initSprite(const std::string& name, const cocos2d::Vec2& pos)
     const auto spriteFrame{cocos2d::SpriteFrameCache::getInstance()->getSpriteFrameByName(name)};
     auto sprite{cocos2d::Sprite::createWithSpriteFrame(spriteFrame)};
     if (sprite == nullptr) {
-        cocos2d::log("Error while loading: %s\n", name);
+        cocos2d::log("Error while loading: %s\n", name.c_str());
     }
     else {
         sprite->setPosition(pos);

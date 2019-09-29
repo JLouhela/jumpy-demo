@@ -49,11 +49,34 @@ endif()
 # add cross-platforms source files and header files 
 list(APPEND GAME_SOURCE
      Classes/AppDelegate.cpp
-     Classes/HelloWorldScene.cpp
+     Classes/Bee.cpp
+     Classes/BeeEventListener.cpp
+     Classes/BeeSpawner.cpp
+     Classes/Bunny.cpp
+     Classes/BunnyController.cpp
+     Classes/ContactListener.cpp
+     Classes/GameLogic.cpp
+     Classes/InputHandler.cpp
+     Classes/JumpyScene.cpp
+     Classes/StageManager.cpp
      )
 list(APPEND GAME_HEADER
      Classes/AppDelegate.h
-     Classes/HelloWorldScene.h
+     Classes/Bee.h
+     Classes/BeeEventListener.h
+     Classes/BeeSpawn.h
+     Classes/BeeSpawner.h
+     Classes/Bunny.h
+     Classes/BunnyController.h
+     Classes/CollisionGroup.h
+     Classes/ContactListener.h
+     Classes/CustomEvents.h
+     Classes/Direction.h
+     Classes/GameLogic.h
+     Classes/InputHandler.h
+     Classes/JumpyScene.h
+     Classes/StageManager.h
+     Classes/ZOrders.h
      )
 
 if(ANDROID)
