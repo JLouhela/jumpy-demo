@@ -83,10 +83,10 @@ bool JumpyScene::initEnvironment()
     this->addChild(bgSprite, ZOrder::background);
 
     // add ground sprite to the bottom of the screen
-    static constexpr std::int16_t groundHeight = 128;
+    static const float groundHeight = 128.0f;
     auto groundSprite{
         initSprite("./ground_1280_128",
-                   cocos2d::Vec2(visibleSize.width / 2 + origin.x, (groundHeight / 2) + origin.y))};
+                   cocos2d::Vec2{visibleSize.width / 2 + origin.x, groundHeight / 2 + origin.y})};
     if (!groundSprite) {
         return false;
     }
