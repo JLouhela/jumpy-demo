@@ -26,10 +26,10 @@ namespace {
 cocos2d::Sprite* loadSprite()
 {
     const auto bunnySpriteFrame{
-        cocos2d::SpriteFrameCache::getInstance()->getSpriteFrameByName("./bunny_sit_32_32")};
+        cocos2d::SpriteFrameCache::getInstance()->getSpriteFrameByName("./bunny_stand_64_32")};
     auto bunnySprite{cocos2d::Sprite::createWithSpriteFrame(bunnySpriteFrame)};
     if (bunnySprite == nullptr) {
-        cocos2d::log("Could not load bunny_sit_32_32");
+        cocos2d::log("Could not load bunny_stand_64_32");
     }
     return bunnySprite;
 }
@@ -44,7 +44,7 @@ bool Bunny::init(Bunny_id id, cocos2d::Scene& scene)
     }
     m_id = id;
     // Add physics body
-    m_physicsBody = cocos2d::PhysicsBody::createBox(cocos2d::Size(32, 32),
+    m_physicsBody = cocos2d::PhysicsBody::createBox(cocos2d::Size(32, 64),
                                                     cocos2d::PhysicsMaterial(5.0f, 0.1f, 0.0f));
     m_physicsBody->setDynamic(true);
     m_physicsBody->setGravityEnable(true);
@@ -83,16 +83,32 @@ void Bunny::jump()
     if (m_physicsBody->getVelocity().y >= 0.0f) {
         // Jump
         m_physicsBody->applyImpulse({0.0f, m_physicsBody->getMass() * 150.0f});
+        cocos2d::SpriteFrameCache* spriteFrameCache = cocos2d::SpriteFrameCache::getInstance();
+        cocos2d::SpriteFrame* spriteFrame =
+            spriteFrameCache->getSpriteFrameByName("./bunny_jump_64_32");
+        m_sprite->setSpriteFrame(spriteFrame);
+        m_sprite->setFlippedY(false);
     }
     else {
         // Downwards dash
         m_physicsBody->applyImpulse({0.0f, m_physicsBody->getMass() * -150.0f});
+        m_sprite->setFlippedY(true);
     }
+}
+
+void Bunny::resetSprite()
+{
+    cocos2d::SpriteFrameCache* spriteFrameCache = cocos2d::SpriteFrameCache::getInstance();
+    cocos2d::SpriteFrame* spriteFrame =
+        spriteFrameCache->getSpriteFrameByName("./bunny_jump_64_32");
+    m_sprite->setSpriteFrame(spriteFrame);
+    m_sprite->setFlippedY(false);
 }
 
 void Bunny::dispose()
 {
     m_physicsBody->setEnabled(false);
     m_physicsBody->resetForces();
+    m_physicsBody->setVelocity(cocos2d::Vec2{0, 0});
     m_sprite->setPosition(cocos2d::Vec2{-100, -100});
 }

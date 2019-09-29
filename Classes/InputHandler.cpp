@@ -38,13 +38,15 @@ bool InputHandler::init(BunnyController& bunnyController, cocos2d::EventDispatch
         cocos2d::EventListenerTouchOneByOne::create()};
 
     touchListener->onTouchBegan = [this](cocos2d::Touch* touch, cocos2d::Event* event) {
-        return resolveInput(touch->getLocationInView());  // consume if an action was taken
+        auto location = touch->getLocationInView();
+        location.y = cocos2d::Director::getInstance()->getVisibleSize().height - location.y;
+        return resolveInput(location);  // consume if an action was taken
     };
 
     // Separate by build target..? If no issues, don't bother for the demo.
     // These are only input listeners in the scene, fixed priority ok.
     eventDispatcher->addEventListenerWithFixedPriority(mouseListener, 1);
-    eventDispatcher->addEventListenerWithFixedPriority(touchListener, 1);
+    eventDispatcher->addEventListenerWithFixedPriority(touchListener, 2);
     return true;
 }
 

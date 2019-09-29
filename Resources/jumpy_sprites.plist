@@ -9,13 +9,13 @@
     <key>aliases</key>
     <array/>
     <key>spriteOffset</key>
-    <string>{0,0}</string>
+    <string>{0,1}</string>
     <key>spriteSize</key>
-    <string>{16,16}</string>
+    <string>{16,13}</string>
     <key>spriteSourceSize</key>
     <string>{16,16}</string>
     <key>textureRect</key>
-    <string>{{68,852},{16,16}}</string>
+    <string>{{66,852},{16,13}}</string>
     <key>textureRotated</key>
     <false/>
    </dict>
@@ -34,22 +34,22 @@
     <key>textureRotated</key>
     <false/>
    </dict>
-   <key>./ground_1280_128</key>
+   <key>./bunny_jump_64_32</key>
    <dict>
     <key>aliases</key>
     <array/>
     <key>spriteOffset</key>
-    <string>{0,0}</string>
+    <string>{1,0}</string>
     <key>spriteSize</key>
-    <string>{1280,128}</string>
+    <string>{30,63}</string>
     <key>spriteSourceSize</key>
-    <string>{1280,128}</string>
+    <string>{32,64}</string>
     <key>textureRect</key>
-    <string>{{0,722},{1280,128}}</string>
+    <string>{{34,852},{30,63}}</string>
     <key>textureRotated</key>
     <false/>
    </dict>
-   <key>./bunny_64_32</key>
+   <key>./bunny_stand_64_32</key>
    <dict>
     <key>aliases</key>
     <array/>
@@ -64,18 +64,18 @@
     <key>textureRotated</key>
     <false/>
    </dict>
-   <key>./bunny_sit_32_32</key>
+   <key>./ground_1280_128</key>
    <dict>
     <key>aliases</key>
     <array/>
     <key>spriteOffset</key>
     <string>{0,0}</string>
     <key>spriteSize</key>
-    <string>{32,32}</string>
+    <string>{1280,128}</string>
     <key>spriteSourceSize</key>
-    <string>{32,32}</string>
+    <string>{1280,128}</string>
     <key>textureRect</key>
-    <string>{{34,852},{32,32}}</string>
+    <string>{{0,722},{1280,128}}</string>
     <key>textureRotated</key>
     <false/>
    </dict>

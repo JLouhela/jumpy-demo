@@ -97,16 +97,8 @@ bool AppDelegate::applicationDidFinishLaunching()
     // Set the design resolution
     glview->setDesignResolutionSize(designResolutionSize.width, designResolutionSize.height,
                                     ResolutionPolicy::NO_BORDER);
-    auto frameSize = glview->getFrameSize();
-    if ((frameSize.width / frameSize.height) >
-        (designResolutionSize.width / designResolutionSize.height)) {
-        auto scale = frameSize.width / designResolutionSize.width;
-        director->setContentScaleFactor(1 / scale);
-    }
-    else {
-        auto scale = frameSize.height / designResolutionSize.height;
-        director->setContentScaleFactor(1 / scale);
-    }
+
+    // Content scale factor disabled, as S7 edge handles scaling properly => ok for demo.
 
     register_all_packages();
 

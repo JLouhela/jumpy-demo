@@ -41,6 +41,8 @@ public:
 
     void dispose();
 
+    void resetSprite();
+
     void activate(const cocos2d::Vec2& pos);
 
     void jump();

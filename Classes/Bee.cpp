@@ -60,6 +60,7 @@ Bee::Bee(const Bee_id id) : m_id{id}, m_sprite{loadSprite()}
 void Bee::dispose()
 {
     m_physicsBody->setEnabled(false);
+    m_sprite->setVisible(false);
     m_sprite->setPosition(cocos2d::Vec2{-500, -500});
     m_state = BeeState::inactive;
 }
@@ -67,10 +68,11 @@ void Bee::dispose()
 void Bee::spawn(const cocos2d::Vec2& pos, direction dir)
 {
     m_sprite->setPosition(pos);
+    m_sprite->setVisible(true);
     m_physicsBody->setEnabled(true);
-    static constexpr float beeForce = 2000.0f;
-    float xForce = (dir == direction::right) ? beeForce : (beeForce * -1);
-    m_physicsBody->setVelocity(cocos2d::Vec2{xForce, 0});
+    const float velocityX = (dir == direction::right) ? m_physicsBody->getVelocityLimit()
+                                                      : (m_physicsBody->getVelocityLimit() * -1);
+    m_physicsBody->setVelocity(cocos2d::Vec2{velocityX, 0});
 }
 
 void Bee::activate()

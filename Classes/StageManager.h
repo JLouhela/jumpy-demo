@@ -37,7 +37,7 @@ private:
     // Hard coded stages for demonstration purposes.
     // For efficient testing this should be file read -> no recompile on change.
     std::vector<StageInfo> m_stages{
-        {{{0.0f, 140.0f, direction::left}}, 1},
+        {{{0.0f, 360.0f, direction::left}}, 1},
         {{{0.0f, 140.0f, direction::left}, {0.5f, 240.0f, direction::right}}, 1},
         {{{0.0f, 140.0f, direction::left},
           {1.5f, 140.0f, direction::left},
