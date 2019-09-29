@@ -60,17 +60,8 @@ bool GameLogic::init(cocos2d::Scene* scene)
 
 void GameLogic::initStage(StageInfo& stageInfo)
 {
-    // Stages never contain less bunnies than previous stage by design.
-    while (m_bunnyCount < stageInfo.bunnyCount) {
-        ++m_bunnyCount;
-        const auto visibleSize{cocos2d::Director::getInstance()->getVisibleSize()};
-        const float xOffset = visibleSize.width / BunnyController::maxBunnyCount;
-        // Should spread from center towards borders, if there's extra time for implementation.
-        // There's only single stage, thus fixed yOffset. Ground height + bunny height / 2
-        static constexpr float yOffset{143.0f};
-        const cocos2d::Vec2 bunnyPos{xOffset * m_bunnyCount, yOffset};
-        m_bunnyController.spawnBunny(bunnyPos);
-    }
+    m_bunnyController.spawnBunnies(stageInfo.bunnyCount);
     m_beeSpawner.spawnBees(stageInfo.beeSpawns);
     m_beeEventListener.wait(stageInfo.beeSpawns.size());
+    m_state = GameState::active;
 }

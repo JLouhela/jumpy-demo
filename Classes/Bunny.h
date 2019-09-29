@@ -24,6 +24,9 @@
 #include <cstdint>
 #include "cocos2d.h"
 
+// Potential refactoring: bee and bunny follow the same pattern
+// Base class extraction: "PooledEntity"
+
 using Bunny_id = std::int8_t;
 static constexpr Bunny_id invalidBunnyId{-1};
 
@@ -36,7 +39,9 @@ public:
         return m_id;
     }
 
-    void setPosition(const cocos2d::Vec2& pos);
+    void dispose();
+
+    void activate(const cocos2d::Vec2& pos);
 
     void jump();
 

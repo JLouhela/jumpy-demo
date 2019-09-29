@@ -32,16 +32,16 @@ public:
     static constexpr std::uint8_t maxBunnyCount{4};
 
     bool init(cocos2d::Scene& scene);
-    bool spawnBunny(const cocos2d::Vec2& pos);
+    void spawnBunnies(std::uint8_t count);
+    void disposeBunnies();
     bool jumpBunny(const cocos2d::Vec2& pos);
 
 private:
-    // First = availability flag (false == in use)
-    using AvailableBunny = std::pair<bool, Bunny>;
-    AvailableBunny& getNextAvailableBunny();
+    std::vector<cocos2d::Vec2> getSpawnPoints(std::uint8_t count);
+
     // Bunny_id equals to container index.
     // Hardcoded init sufficient for demonstration purposes.
-    std::array<AvailableBunny, maxBunnyCount> m_bunnyContainer;
+    std::array<Bunny, maxBunnyCount> m_bunnyContainer;
 };
 
 #endif  // __BUNNY_CONTROLLER_H__

@@ -22,26 +22,22 @@
 #include <cstdint>
 #include "ZOrders.h"
 
-bool BunnyController::spawnBunny(const cocos2d::Vec2& pos)
+void BunnyController::spawnBunnies(std::uint8_t count)
 {
-    auto& nextBunny = getNextAvailableBunny();
-    if (!nextBunny.first) {
-        return false;
+    if (count > maxBunnyCount) {
+        cocos2d::log("Too many bunnies requested (%d), maximum is (%d)", count, maxBunnyCount);
+        count = maxBunnyCount;
     }
-    nextBunny.second.setPosition(pos);
-    nextBunny.first = false;
-    return true;
+    const auto spawnPoints = getSpawnPoints(count);
+
+    for (std::uint8_t i{0}; i < count; ++i) {
+        m_bunnyContainer[i].activate(spawnPoints[i]);
+    }
 }
 
-BunnyController::AvailableBunny& BunnyController::getNextAvailableBunny()
+void BunnyController::disposeBunnies()
 {
-    for (auto& bunny : m_bunnyContainer) {
-        if (bunny.first == true) {
-            return bunny;
-        }
-    }
-    cocos2d::log("No more free bunnies");
-    return m_bunnyContainer.front();
+    // TODO: add dispose to bunny
 }
 
 bool BunnyController::init(cocos2d::Scene& scene)
@@ -49,16 +45,29 @@ bool BunnyController::init(cocos2d::Scene& scene)
     Bunny_id id{0};
     // Before modifications to scene, check if any bunny was not initialized properly
     for (auto& bunny : m_bunnyContainer) {
-        if (!bunny.second.init(id, scene)) {
+        if (!bunny.init(id, scene)) {
             return false;
         }
-        bunny.first = true;
         ++id;
     }
     for (const auto& bunny : m_bunnyContainer) {
-        scene.addChild(bunny.second.getSprite(), ZOrder::bunny);
+        scene.addChild(bunny.getSprite(), ZOrder::bunny);
     }
     return true;
+}
+
+std::vector<cocos2d::Vec2> BunnyController::getSpawnPoints(const std::uint8_t bunnyCount)
+{
+    std::vector<cocos2d::Vec2> res;
+    for (std::uint8_t i{0}; i < bunnyCount; ++i) {
+        const auto visibleSize{cocos2d::Director::getInstance()->getVisibleSize()};
+        // FIXME 16.0f should come from bunny origin delta
+        const float xOffset = visibleSize.width / (bunnyCount + 1) - 16.0f;
+        // There's only single stage, thus fixed yOffset. Ground height + bunny height / 2
+        static constexpr float yOffset{143.0f};
+        res.emplace_back(xOffset * bunnyCount, yOffset);
+    }
+    return res;
 }
 
 bool BunnyController::jumpBunny(const cocos2d::Vec2& pos)
@@ -66,7 +75,7 @@ bool BunnyController::jumpBunny(const cocos2d::Vec2& pos)
     for (auto& bunny : m_bunnyContainer) {
         // Make input more forgiving by adding extra threshold
         // to the bounding box of a bunny, especially vertically.
-        auto rect = bunny.second.getBoundingBox();
+        auto rect = bunny.getBoundingBox();
         static constexpr float extraWidth = 20.0f;
         static constexpr float extraHeight = 60.0f;
         rect.size.width += extraWidth;
@@ -77,7 +86,7 @@ bool BunnyController::jumpBunny(const cocos2d::Vec2& pos)
         // In this game bunnies cannot overlap horizontally.
         // First match can consume the jump trigger.
         if (rect.containsPoint(pos)) {
-            bunny.second.jump();
+            bunny.jump();
             return true;
         }
     }
