@@ -22,25 +22,39 @@
 #include <cstdint>
 #include "ZOrders.h"
 
+namespace {
+
+Bee* getAvailableBee(std::array<Bee, 10>& bees)
+{
+    for (auto& bee : bees) {
+        if (bee.getState() == BeeState::inactive) {
+            // Shortcut: should be tied to spawn, but this menas
+            // bee should offer functionality to spawn after certain time.
+            bee.activate();
+            return &bee;
+        }
+    }
+    return nullptr;
+}
+
+}  // namespace
+
 bool BeeSpawner::spawnBees(const BeeSpawns& spawn)
 {
     for (const auto& spawnBee : spawn) {
-        if (m_freeBees.empty()) {
+        auto bee = getAvailableBee(m_beeContainer);
+        if (!bee) {
             cocos2d::log("No free bees to spawn");
             return false;
         }
-
-        const auto nextIdx{m_freeBees.back()};
-        m_freeBees.pop_back();
 
         const auto visibleSize{cocos2d::Director::getInstance()->getVisibleSize()};
         static constexpr float xOffset = 20.0f;
         const float x = (spawnBee.dir == direction::left) ? (visibleSize.width - xOffset) : xOffset;
 
         auto delayAction = cocos2d::DelayTime::create(spawnBee.delay);
-        auto& bee = m_beeContainer[nextIdx];
-        auto callback = cocos2d::CallFunc::create([&bee, spawnBee, x]() {
-            bee.spawn(cocos2d::Vec2{x, spawnBee.y}, spawnBee.dir);
+        auto callback = cocos2d::CallFunc::create([bee, spawnBee, x]() {
+            bee->spawn(cocos2d::Vec2{x, spawnBee.y}, spawnBee.dir);
         });
         m_actionNode->runAction(cocos2d::Sequence::create(delayAction, callback, nullptr));
     }

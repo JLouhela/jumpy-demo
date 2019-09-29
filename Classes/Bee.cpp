@@ -50,22 +50,30 @@ Bee::Bee(const Bee_id id) : m_id{id}, m_sprite{loadSprite()}
     m_physicsBody->setGravityEnable(false);
     m_physicsBody->setCategoryBitmask(CollisionGroup::bee);
     m_physicsBody->setContactTestBitmask(CollisionGroup::bunny + CollisionGroup::border);
+    m_sprite->setUserData(this);
     m_sprite->addComponent(m_physicsBody);
 
-    // TODO add collider to each side of screen, dispose on_collision and notify game logic somehow
     dispose();
 }
 
 void Bee::dispose()
 {
     m_physicsBody->resetForces();
+    m_physicsBody->setEnabled(false);
     m_sprite->setPosition(cocos2d::Vec2{-500, -500});
+    m_state = BeeState::inactive;
 }
 
 void Bee::spawn(const cocos2d::Vec2& pos, direction dir)
 {
     m_sprite->setPosition(pos);
+    m_physicsBody->setEnabled(true);
     static constexpr float beeForce = 200000.0f;
     float xForce = (dir == direction::right) ? beeForce : (beeForce * -1);
     m_physicsBody->applyForce(cocos2d::Vec2{xForce, 0});
+}
+
+void Bee::activate()
+{
+    m_state = BeeState::active;
 }

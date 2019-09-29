@@ -37,7 +37,6 @@ private:
     // Bee_id equals to container index
     std::array<Bee, 10> m_beeContainer{Bee{0}, Bee{1}, Bee{2}, Bee{3}, Bee{4},
                                        Bee{5}, Bee{6}, Bee{7}, Bee{8}, Bee{9}};
-    std::vector<std::uint8_t> m_freeBees{0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
 
     cocos2d::Node* m_actionNode{nullptr};
 };

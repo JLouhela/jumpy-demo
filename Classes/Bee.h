@@ -28,6 +28,8 @@
 using Bee_id = std::int8_t;
 static constexpr Bee_id invalidBeeId{-1};
 
+enum class BeeState : std::uint8_t { active, inactive };
+
 class Bee {
 public:
     explicit Bee(Bee_id id);
@@ -36,6 +38,13 @@ public:
     {
         return m_id;
     }
+
+    BeeState getState() const
+    {
+        return m_state;
+    }
+
+    void activate();
 
     cocos2d::Sprite* getSprite() const
     {
@@ -50,7 +59,8 @@ private:
     cocos2d::Sprite* m_sprite{nullptr};
     cocos2d::PhysicsBody* m_physicsBody{nullptr};
     Bee_id m_id{invalidBeeId};
-    cocos2d::Vec2 m_pos{-100, -100};
+    cocos2d::Vec2 m_pos{-500, -500};
+    BeeState m_state{BeeState::inactive};
 };
 
 #endif  // __BEE_H__

@@ -20,6 +20,7 @@
 
 #include "ContactListener.h"
 #include <cstdint>
+#include "Bee.h"
 #include "CollisionGroup.h"
 #include "CustomEvents.h"
 
@@ -74,7 +75,14 @@ bool ContactListener::init(cocos2d::Scene& scene)
         const auto maskB = contact.getShapeB()->getBody()->getCategoryBitmask();
 
         if (beeToBorderCollision(maskA, maskB)) {
-            // TODO dispose bee!
+            if (maskA == CollisionGroup::bee) {
+                static_cast<Bee*>(contact.getShapeA()->getBody()->getNode()->getUserData())
+                    ->dispose();
+            }
+            if (maskB == CollisionGroup::bee) {
+                static_cast<Bee*>(contact.getShapeB()->getBody()->getNode()->getUserData())
+                    ->dispose();
+            }
             fireBeeThroughEvent(*m_eventDispatcher);
             return true;
         }
