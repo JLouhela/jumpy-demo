@@ -42,11 +42,14 @@ public:
 
 private:
     void initStage(StageInfo& stageInfo);
+    void endStage();
+    void endGame();
 
     BunnyController m_bunnyController;
     BeeSpawner m_beeSpawner;
     InputHandler m_inputHandler;
     StageManager m_stageManager;
+    cocos2d::Node* m_actionNode{nullptr};
     BeeEventListener m_beeEventListener;
     ContactListener m_contactListener;
     cocos2d::EventListenerCustom* m_bunnyEventListener{nullptr};

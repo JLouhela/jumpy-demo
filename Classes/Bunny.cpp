@@ -79,6 +79,7 @@ const cocos2d::Rect Bunny::getBoundingBox() const
 
 void Bunny::jump()
 {
+    // FIXME this is not good
     if (m_physicsBody->getVelocity().y >= 0.0f) {
         // Jump
         m_physicsBody->applyImpulse({0.0f, m_physicsBody->getMass() * 150.0f});
@@ -92,5 +93,6 @@ void Bunny::jump()
 void Bunny::dispose()
 {
     m_physicsBody->setEnabled(false);
+    m_physicsBody->resetForces();
     m_sprite->setPosition(cocos2d::Vec2{-100, -100});
 }
