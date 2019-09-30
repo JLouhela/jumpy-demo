@@ -26,10 +26,10 @@ namespace {
 cocos2d::Sprite* loadSprite()
 {
     const auto bunnySpriteFrame{
-        cocos2d::SpriteFrameCache::getInstance()->getSpriteFrameByName("./bunny_stand_64_32")};
+        cocos2d::SpriteFrameCache::getInstance()->getSpriteFrameByName("./bunny_stand_96_48")};
     auto bunnySprite{cocos2d::Sprite::createWithSpriteFrame(bunnySpriteFrame)};
     if (bunnySprite == nullptr) {
-        cocos2d::log("Could not load bunny_stand_64_32");
+        cocos2d::log("Could not load bunny_stand_96_48");
     }
     return bunnySprite;
 }
@@ -44,7 +44,7 @@ bool Bunny::init(Bunny_id id, cocos2d::Scene& scene)
     }
     m_id = id;
     // Add physics body
-    m_physicsBody = cocos2d::PhysicsBody::createBox(cocos2d::Size(32, 64),
+    m_physicsBody = cocos2d::PhysicsBody::createBox(cocos2d::Size(40, 90),
                                                     cocos2d::PhysicsMaterial(1.0f, 0.01f, 0.0f));
     m_physicsBody->setDynamic(true);
     m_physicsBody->setGravityEnable(true);
@@ -81,7 +81,7 @@ const cocos2d::Rect Bunny::getBoundingBox() const
 void Bunny::jump()
 {
     if ((m_state == BunnyState::jump || m_state == BunnyState::doublejump) &&
-        m_physicsBody->getVelocity().y < 0) {
+        m_physicsBody->getVelocity().y < -25.0f) {
         // Downwards dash
         m_state = BunnyState::dash;
         m_physicsBody->applyImpulse(cocos2d::Vec2{0.0f, -4000000.0f});
@@ -93,7 +93,7 @@ void Bunny::jump()
         m_state = (m_state == BunnyState::grounded) ? BunnyState::jump : BunnyState::doublejump;
         m_physicsBody->applyImpulse(cocos2d::Vec2{0.0f, 4000000.0f});
         const auto spriteFrame{
-            cocos2d::SpriteFrameCache::getInstance()->getSpriteFrameByName("./bunny_jump_64_32")};
+            cocos2d::SpriteFrameCache::getInstance()->getSpriteFrameByName("./bunny_jump_96_48")};
         m_sprite->setSpriteFrame(spriteFrame);
         m_sprite->setFlippedY(false);
         return;
@@ -103,7 +103,7 @@ void Bunny::jump()
 void Bunny::resetState()
 {
     const auto spriteFrame{
-        cocos2d::SpriteFrameCache::getInstance()->getSpriteFrameByName("./bunny_stand_64_32")};
+        cocos2d::SpriteFrameCache::getInstance()->getSpriteFrameByName("./bunny_stand_96_48")};
     m_sprite->setSpriteFrame(spriteFrame);
     m_sprite->setFlippedY(false);
 

@@ -26,10 +26,10 @@ namespace {
 cocos2d::Sprite* loadSprite()
 {
     const auto beeSpriteFrame{
-        cocos2d::SpriteFrameCache::getInstance()->getSpriteFrameByName("./bee_16_16")};
+        cocos2d::SpriteFrameCache::getInstance()->getSpriteFrameByName("./bee_32_28")};
     auto beeSprite{cocos2d::Sprite::createWithSpriteFrame(beeSpriteFrame)};
     if (beeSprite == nullptr) {
-        cocos2d::log("Could not load bee_16_16");
+        cocos2d::log("Could not load bee_32_28");
     }
     return beeSprite;
 }

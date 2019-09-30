@@ -4,18 +4,18 @@
  <dict>
   <key>frames</key>
   <dict>
-   <key>./bee_16_16</key>
+   <key>./bee_32_28</key>
    <dict>
     <key>aliases</key>
     <array/>
     <key>spriteOffset</key>
-    <string>{0,1}</string>
+    <string>{0,0}</string>
     <key>spriteSize</key>
-    <string>{16,13}</string>
+    <string>{32,27}</string>
     <key>spriteSourceSize</key>
-    <string>{16,16}</string>
+    <string>{32,28}</string>
     <key>textureRect</key>
-    <string>{{66,852},{16,13}}</string>
+    <string>{{100,852},{32,27}}</string>
     <key>textureRotated</key>
     <false/>
    </dict>
@@ -34,33 +34,33 @@
     <key>textureRotated</key>
     <false/>
    </dict>
-   <key>./bunny_jump_64_32</key>
-   <dict>
-    <key>aliases</key>
-    <array/>
-    <key>spriteOffset</key>
-    <string>{1,0}</string>
-    <key>spriteSize</key>
-    <string>{30,63}</string>
-    <key>spriteSourceSize</key>
-    <string>{32,64}</string>
-    <key>textureRect</key>
-    <string>{{34,852},{30,63}}</string>
-    <key>textureRotated</key>
-    <false/>
-   </dict>
-   <key>./bunny_stand_64_32</key>
+   <key>./bunny_jump_96_48</key>
    <dict>
     <key>aliases</key>
     <array/>
     <key>spriteOffset</key>
     <string>{0,0}</string>
     <key>spriteSize</key>
-    <string>{32,64}</string>
+    <string>{48,96}</string>
     <key>spriteSourceSize</key>
-    <string>{32,64}</string>
+    <string>{48,96}</string>
     <key>textureRect</key>
-    <string>{{0,852},{32,64}}</string>
+    <string>{{0,852},{48,96}}</string>
+    <key>textureRotated</key>
+    <false/>
+   </dict>
+   <key>./bunny_stand_96_48</key>
+   <dict>
+    <key>aliases</key>
+    <array/>
+    <key>spriteOffset</key>
+    <string>{0,-1}</string>
+    <key>spriteSize</key>
+    <string>{48,94}</string>
+    <key>spriteSourceSize</key>
+    <string>{48,96}</string>
+    <key>textureRect</key>
+    <string>{{50,852},{48,94}}</string>
     <key>textureRotated</key>
     <false/>
    </dict>
@@ -85,7 +85,7 @@
    <key>format</key>
    <integer>3</integer>
    <key>size</key>
-   <string>{1282,918}</string>
+   <string>{1282,950}</string>
    <key>textureFileName</key>
    <string>jumpy_sprites.png</string>
   </dict>
