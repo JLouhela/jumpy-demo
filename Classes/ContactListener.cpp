@@ -21,6 +21,7 @@
 #include "ContactListener.h"
 #include <cstdint>
 #include "Bee.h"
+#include "Bunny.h"
 #include "CollisionGroup.h"
 #include "CustomEvents.h"
 
@@ -28,6 +29,12 @@ bool bunnyToBeeCollision(const std::int32_t a, const std::int32_t b)
 {
     return (a == CollisionGroup::bee || a == CollisionGroup::bunny) &&
            (b == CollisionGroup::bee || b == CollisionGroup::bunny) && (a != b);
+}
+
+bool bunnyToGroundCollision(const std::int32_t a, const std::int32_t b)
+{
+    return (a == CollisionGroup::ground || a == CollisionGroup::bunny) &&
+           (b == CollisionGroup::ground || b == CollisionGroup::bunny) && (a != b);
 }
 
 bool beeToBorderCollision(const std::int32_t a, const std::int32_t b)
@@ -67,6 +74,25 @@ bool ContactListener::init(cocos2d::Scene& scene)
             fireBunnyHitEvent(*m_eventDispatcher);
             return true;
         }
+        // Not sure how I feel about directly invoking Bunny methods here.
+        // api getting bloated, although usage is in logical place.
+        // Ideally Bunny would be responsible for it's own collisions, but cocos2d seems to
+        // prefer single collision detector which for sure is more efficient on this design.
+        if (bunnyToGroundCollision(maskA, maskB)) {
+            if (maskA == CollisionGroup::bunny) {
+                static_cast<Bunny*>(contact.getShapeA()->getBody()->getNode()->getUserData())
+                    ->resetState();
+            }
+            if (maskB == CollisionGroup::bunny) {
+                static_cast<Bunny*>(contact.getShapeB()->getBody()->getNode()->getUserData())
+                    ->resetState();
+            }
+        }
+        // TODO add bunny -> ground collision
+        // if yes, change sprite to jumping one, toggle state "standing"
+        // jump -> toggle state jumping
+        // jump jump -> toggle state doublejump
+        // going down -> toggle state dash
         return false;
     };
 

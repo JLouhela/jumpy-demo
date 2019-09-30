@@ -39,9 +39,9 @@ public:
         return m_id;
     }
 
-    void dispose();
+    void resetState();
 
-    void resetSprite();
+    void dispose();
 
     void activate(const cocos2d::Vec2& pos);
 
@@ -57,10 +57,15 @@ public:
     }
 
 private:
+    enum class BunnyState : std::uint8_t { grounded, jump, doublejump, dash };
+
+    void resetSprite();
+
     cocos2d::Sprite* m_sprite{nullptr};
     cocos2d::PhysicsBody* m_physicsBody{nullptr};
     Bunny_id m_id{invalidBunnyId};
     cocos2d::Vec2 m_pos{-100, -100};
+    BunnyState m_state{BunnyState::grounded};
 };
 
 #endif  // __BUNNY_H__

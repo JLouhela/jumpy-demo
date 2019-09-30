@@ -45,15 +45,16 @@ bool Bunny::init(Bunny_id id, cocos2d::Scene& scene)
     m_id = id;
     // Add physics body
     m_physicsBody = cocos2d::PhysicsBody::createBox(cocos2d::Size(32, 64),
-                                                    cocos2d::PhysicsMaterial(5.0f, 0.1f, 0.0f));
+                                                    cocos2d::PhysicsMaterial(1.0f, 0.01f, 0.0f));
     m_physicsBody->setDynamic(true);
     m_physicsBody->setGravityEnable(true);
     m_physicsBody->setVelocityLimit(300.0f);
     m_physicsBody->setRotationEnable(false);
     m_physicsBody->setCategoryBitmask(CollisionGroup::bunny);
     m_physicsBody->setCollisionBitmask(CollisionGroup::ground);
-    m_physicsBody->setContactTestBitmask(CollisionGroup::bee);
+    m_physicsBody->setContactTestBitmask(CollisionGroup::bee + CollisionGroup::ground);
     m_sprite->addComponent(m_physicsBody);
+    m_sprite->setUserData(this);
     dispose();
     return true;
 }
@@ -79,30 +80,31 @@ const cocos2d::Rect Bunny::getBoundingBox() const
 
 void Bunny::jump()
 {
-    // FIXME this is not good
-    if (m_physicsBody->getVelocity().y >= 0.0f) {
-        // Jump
-        m_physicsBody->applyImpulse({0.0f, m_physicsBody->getMass() * 150.0f});
-        cocos2d::SpriteFrameCache* spriteFrameCache = cocos2d::SpriteFrameCache::getInstance();
-        cocos2d::SpriteFrame* spriteFrame =
-            spriteFrameCache->getSpriteFrameByName("./bunny_jump_64_32");
+    if (m_state == BunnyState::grounded || m_state == BunnyState::jump) {
+        m_state = (m_state == BunnyState::grounded) ? BunnyState::jump : BunnyState::doublejump;
+        m_physicsBody->applyImpulse(cocos2d::Vec2{0.0f, 2000000.0f});
+        const auto spriteFrame{
+            cocos2d::SpriteFrameCache::getInstance()->getSpriteFrameByName("./bunny_jump_64_32")};
         m_sprite->setSpriteFrame(spriteFrame);
         m_sprite->setFlippedY(false);
     }
-    else {
+    else if ((m_state == BunnyState::jump || m_state == BunnyState::doublejump) &&
+             m_physicsBody->getVelocity().y < 0) {
         // Downwards dash
-        m_physicsBody->applyImpulse({0.0f, m_physicsBody->getMass() * -150.0f});
+        m_state = BunnyState::dash;
+        m_physicsBody->applyImpulse(cocos2d::Vec2{0.0f, -1500.0f});
         m_sprite->setFlippedY(true);
     }
 }
 
-void Bunny::resetSprite()
+void Bunny::resetState()
 {
-    cocos2d::SpriteFrameCache* spriteFrameCache = cocos2d::SpriteFrameCache::getInstance();
-    cocos2d::SpriteFrame* spriteFrame =
-        spriteFrameCache->getSpriteFrameByName("./bunny_jump_64_32");
+    const auto spriteFrame{
+        cocos2d::SpriteFrameCache::getInstance()->getSpriteFrameByName("./bunny_stand_64_32")};
     m_sprite->setSpriteFrame(spriteFrame);
     m_sprite->setFlippedY(false);
+
+    m_state = BunnyState::grounded;
 }
 
 void Bunny::dispose()
