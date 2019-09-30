@@ -63,17 +63,18 @@ bool GameLogic::init(cocos2d::Scene* scene)
 
 void GameLogic::initStage(StageInfo& stageInfo)
 {
-    // TODO set as actions -> display arrows for spawns
     m_bunnyController.disposeBunnies();
     m_bunnyController.spawnBunnies(stageInfo.bunnyCount);
     m_beeSpawner.spawnBees(stageInfo.beeSpawns);
     m_beeEventListener.wait(stageInfo.beeSpawns.size());
+    m_inputHandler.enable();
     m_state = GameState::active;
 }
 
 void GameLogic::endStage()
 {
     m_state = GameState::wait;
+    m_inputHandler.disable();
     auto delayAction = cocos2d::DelayTime::create(2.0f);
     auto callback = cocos2d::CallFunc::create([this]() {
         const auto stage = m_stageManager.getNext();

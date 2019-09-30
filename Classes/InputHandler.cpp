@@ -33,6 +33,9 @@ bool InputHandler::init(BunnyController& bunnyController, cocos2d::EventDispatch
         cocos2d::EventListenerTouchOneByOne::create()};
 
     touchListener->onTouchBegan = [this](cocos2d::Touch* touch, cocos2d::Event* event) {
+        if (!m_enabled) {
+            return true;
+        }
         auto location = touch->getLocationInView();
         location.y = cocos2d::Director::getInstance()->getVisibleSize().height - location.y;
         return resolveInput(location);  // consume if an action was taken

@@ -39,6 +39,7 @@ private:
     std::vector<StageInfo> m_stages{
         {{{0.0f, 145.0f, direction::left}}, 1},
         {{{0.0f, 145.0f, direction::left}, {0.5f, 240.0f, direction::right}}, 1},
+        {{{0.0f, 145.0f, direction::left}, {1.5f, 145.0f, direction::left}}, 2},
         {{{0.0f, 145.0f, direction::left},
           {1.5f, 145.0f, direction::left},
           {1.0f, 240.0f, direction::right}},

@@ -48,7 +48,7 @@ bool Bunny::init(Bunny_id id, cocos2d::Scene& scene)
                                                     cocos2d::PhysicsMaterial(1.0f, 0.01f, 0.0f));
     m_physicsBody->setDynamic(true);
     m_physicsBody->setGravityEnable(true);
-    m_physicsBody->setVelocityLimit(300.0f);
+    m_physicsBody->setVelocityLimit(350.0f);
     m_physicsBody->setRotationEnable(false);
     m_physicsBody->setCategoryBitmask(CollisionGroup::bunny);
     m_physicsBody->setCollisionBitmask(CollisionGroup::ground);

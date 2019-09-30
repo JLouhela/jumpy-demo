@@ -29,10 +29,21 @@ class InputHandler {
 public:
     bool init(BunnyController& bunnyController, cocos2d::EventDispatcher* eventDispatcher);
 
+    void disable()
+    {
+        m_enabled = false;
+    }
+
+    void enable()
+    {
+        m_enabled = true;
+    }
+
 private:
     bool resolveInput(const cocos2d::Vec2& screenPos);
 
     BunnyController* m_bunnyController;
+    bool m_enabled;
 };
 
 #endif  // __INPUT_HANDLER_H__
