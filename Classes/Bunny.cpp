@@ -80,20 +80,23 @@ const cocos2d::Rect Bunny::getBoundingBox() const
 
 void Bunny::jump()
 {
+    if ((m_state == BunnyState::jump || m_state == BunnyState::doublejump) &&
+        m_physicsBody->getVelocity().y < 0) {
+        // Downwards dash
+        m_state = BunnyState::dash;
+        m_physicsBody->applyImpulse(cocos2d::Vec2{0.0f, -4000000.0f});
+        m_sprite->setFlippedY(true);
+        return;
+    }
+
     if (m_state == BunnyState::grounded || m_state == BunnyState::jump) {
         m_state = (m_state == BunnyState::grounded) ? BunnyState::jump : BunnyState::doublejump;
-        m_physicsBody->applyImpulse(cocos2d::Vec2{0.0f, 2000000.0f});
+        m_physicsBody->applyImpulse(cocos2d::Vec2{0.0f, 4000000.0f});
         const auto spriteFrame{
             cocos2d::SpriteFrameCache::getInstance()->getSpriteFrameByName("./bunny_jump_64_32")};
         m_sprite->setSpriteFrame(spriteFrame);
         m_sprite->setFlippedY(false);
-    }
-    else if ((m_state == BunnyState::jump || m_state == BunnyState::doublejump) &&
-             m_physicsBody->getVelocity().y < 0) {
-        // Downwards dash
-        m_state = BunnyState::dash;
-        m_physicsBody->applyImpulse(cocos2d::Vec2{0.0f, -1500.0f});
-        m_sprite->setFlippedY(true);
+        return;
     }
 }
 

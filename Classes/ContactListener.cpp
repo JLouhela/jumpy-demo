@@ -87,6 +87,7 @@ bool ContactListener::init(cocos2d::Scene& scene)
                 static_cast<Bunny*>(contact.getShapeB()->getBody()->getNode()->getUserData())
                     ->resetState();
             }
+            return true;
         }
         // TODO add bunny -> ground collision
         // if yes, change sprite to jumping one, toggle state "standing"

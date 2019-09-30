@@ -51,7 +51,7 @@ bool JumpyScene::init()
         cocos2d::log("Could not initialize parent scene");
         return false;
     }
-    getPhysicsWorld()->setGravity(cocos2d::Vect(0, -980));
+    getPhysicsWorld()->setGravity(cocos2d::Vect(0, -500));
 
     if (!initEnvironment()) {
         cocos2d::log("Could not initialize gfx for scene");
@@ -98,6 +98,7 @@ bool JumpyScene::initEnvironment()
     groundPhysicsBody->setDynamic(false);
     groundPhysicsBody->setCategoryBitmask(CollisionGroup::ground);
     groundPhysicsBody->setCollisionBitmask(CollisionGroup::bunny);
+    groundPhysicsBody->setContactTestBitmask(CollisionGroup::bunny);
 
     groundSprite->addComponent(groundPhysicsBody);
     this->addChild(groundSprite, ZOrder::ground);
