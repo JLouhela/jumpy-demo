@@ -31,7 +31,7 @@ struct StageInfo {
 
 class StageManager {
 public:
-    StageInfo* getNext() const;
+    const StageInfo* getStage(std::int32_t index) const;
 
 private:
     // Hard coded stages for demonstration purposes.
@@ -41,10 +41,9 @@ private:
         {{{0.0f, 145.0f, direction::left}, {0.5f, 240.0f, direction::right}}, 1},
         {{{0.0f, 145.0f, direction::left}, {1.5f, 145.0f, direction::left}}, 2},
         {{{0.0f, 145.0f, direction::left},
-          {1.5f, 145.0f, direction::left},
-          {1.0f, 240.0f, direction::right}},
+          {1.5f, 240.0f, direction::left},
+          {1.0f, 145.0f, direction::right}},
          2}};
-    mutable std::vector<StageInfo>::iterator m_curStage{m_stages.begin()};
 };
 
 #endif  // __STAGE_MANAGER_H__

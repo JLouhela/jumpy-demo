@@ -32,6 +32,7 @@ class BeeSpawner {
 public:
     bool init(cocos2d::Scene& scene);
     bool spawnBees(const BeeSpawns& spawn);
+    void disposeBees();
 
 private:
     // Bee_id equals to container index

@@ -37,7 +37,9 @@ void BunnyController::spawnBunnies(std::uint8_t count)
 
 void BunnyController::disposeBunnies()
 {
-    // TODO: add dispose to bunny
+    for (auto& bunny : m_bunnyContainer) {
+        bunny.dispose();
+    }
 }
 
 bool BunnyController::init(cocos2d::Scene& scene)
@@ -64,7 +66,7 @@ std::vector<cocos2d::Vec2> BunnyController::getSpawnPoints(const std::uint8_t bu
         // FIXME 16.0f should come from bunny origin delta
         const float xOffset = visibleSize.width / (bunnyCount + 1) - 24.0f;
         // There's only single stage, thus fixed yOffset. Ground height + bunny height / 2
-        static constexpr float yOffset{176.0f};
+        static constexpr float yOffset{177.0f};
         res.emplace_back(xOffset * (i + 1), yOffset);
     }
     return res;

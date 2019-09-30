@@ -76,3 +76,10 @@ bool BeeSpawner::init(cocos2d::Scene& scene)
     }
     return true;
 }
+
+void BeeSpawner::disposeBees()
+{
+    for (auto& bee : m_beeContainer) {
+        bee.dispose();
+    }
+}

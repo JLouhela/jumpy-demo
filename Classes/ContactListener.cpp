@@ -89,11 +89,6 @@ bool ContactListener::init(cocos2d::Scene& scene)
             }
             return true;
         }
-        // TODO add bunny -> ground collision
-        // if yes, change sprite to jumping one, toggle state "standing"
-        // jump -> toggle state jumping
-        // jump jump -> toggle state doublejump
-        // going down -> toggle state dash
         return false;
     };
 
@@ -102,14 +97,7 @@ bool ContactListener::init(cocos2d::Scene& scene)
         const auto maskB = contact.getShapeB()->getBody()->getCategoryBitmask();
 
         if (beeToBorderCollision(maskA, maskB)) {
-            if (maskA == CollisionGroup::bee) {
-                static_cast<Bee*>(contact.getShapeA()->getBody()->getNode()->getUserData())
-                    ->dispose();
-            }
-            if (maskB == CollisionGroup::bee) {
-                static_cast<Bee*>(contact.getShapeB()->getBody()->getNode()->getUserData())
-                    ->dispose();
-            }
+            // Could also dispose the bee, probably no point.
             fireBeeThroughEvent(*m_eventDispatcher);
             return true;
         }

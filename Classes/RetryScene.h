@@ -18,46 +18,19 @@
 /// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 /// IN THE SOFTWARE.
 
-#ifndef __GAME_LOGIC_H__
-#define __GAME_LOGIC_H__
+#ifndef __RETRY_SCENE__
+#define __RETRY_SCENE__
 
-#include <cstdint>
-#include "BeeEventListener.h"
-#include "BeeSpawner.h"
-#include "BunnyController.h"
-#include "ContactListener.h"
-#include "InputHandler.h"
-#include "StageManager.h"
 #include "cocos2d.h"
 
-class BunnyController;
-class BeeSpawner;
-class InputHandler;
-
-enum GameState : std::uint8_t { start, active, wait, end };
-
-class GameLogic {
+class RetryScene : public cocos2d::Scene {
 public:
-    bool init(cocos2d::Scene& scene);
+    static cocos2d::Scene* createScene();
 
-private:
-    void initStage(const StageInfo& stageInfo);
+    virtual bool init();
 
-    void endStage();
-    void endGame();
-
-    cocos2d::Scene* m_scene;
-    BunnyController m_bunnyController;
-    BeeSpawner m_beeSpawner;
-    InputHandler m_inputHandler;
-    StageManager m_stageManager;
-    cocos2d::Node* m_actionNode{nullptr};
-    BeeEventListener m_beeEventListener;
-    ContactListener m_contactListener;
-    cocos2d::EventListenerCustom* m_bunnyEventListener{nullptr};
-    GameState m_state{GameState::start};
-    std::int32_t m_curLvl{0};
-    std::uint8_t m_bunnyCount{0};
+    // implement the "static create()" method manually
+    CREATE_FUNC(RetryScene);
 };
 
-#endif  // __GAME_LOGIC_H__
+#endif  // __RETRY_SCENE__

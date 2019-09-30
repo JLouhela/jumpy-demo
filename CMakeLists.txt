@@ -59,6 +59,7 @@ list(APPEND GAME_SOURCE
      Classes/InputHandler.cpp
      Classes/JumpyScene.cpp
      Classes/MenuScene.cpp
+     Classes/RetryScene.cpp
      Classes/StageManager.cpp
      )
 list(APPEND GAME_HEADER
@@ -77,6 +78,7 @@ list(APPEND GAME_HEADER
      Classes/InputHandler.h
      Classes/JumpyScene.h
      Classes/MenuScene.h
+     Classes/RetryScene.h
      Classes/StageManager.h
      Classes/ZOrders.h
      )

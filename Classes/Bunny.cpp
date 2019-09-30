@@ -44,7 +44,7 @@ bool Bunny::init(Bunny_id id, cocos2d::Scene& scene)
     }
     m_id = id;
     // Add physics body
-    m_physicsBody = cocos2d::PhysicsBody::createBox(cocos2d::Size(40, 90),
+    m_physicsBody = cocos2d::PhysicsBody::createBox(cocos2d::Size(38, 86),
                                                     cocos2d::PhysicsMaterial(1.0f, 0.01f, 0.0f));
     m_physicsBody->setDynamic(true);
     m_physicsBody->setGravityEnable(true);
@@ -112,8 +112,8 @@ void Bunny::resetState()
 
 void Bunny::dispose()
 {
+    m_sprite->setPosition(cocos2d::Vec2{-100, -100});
     m_physicsBody->setEnabled(false);
     m_physicsBody->resetForces();
     m_physicsBody->setVelocity(cocos2d::Vec2{0, 0});
-    m_sprite->setPosition(cocos2d::Vec2{-100, -100});
 }

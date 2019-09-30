@@ -51,14 +51,15 @@ bool JumpyScene::init()
         cocos2d::log("Could not initialize parent scene");
         return false;
     }
-    getPhysicsWorld()->setGravity(cocos2d::Vect(0, -500));
 
     if (!initEnvironment()) {
         cocos2d::log("Could not initialize gfx for scene");
         return false;
     }
 
-    if (!m_gameLogic.init(this)) {
+    getPhysicsWorld()->setGravity(cocos2d::Vect(0, -500));
+
+    if (!m_gameLogic.init(*this)) {
         cocos2d::log("Could not initialize game logic");
         return false;
     }

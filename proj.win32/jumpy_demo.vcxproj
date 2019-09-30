@@ -159,6 +159,7 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)\Resources\" /D /E /I /F /Y
     <ClCompile Include="..\Classes\InputHandler.cpp" />
     <ClCompile Include="..\Classes\JumpyScene.cpp" />
     <ClCompile Include="..\Classes\MenuScene.cpp" />
+    <ClCompile Include="..\Classes\RetryScene.cpp" />
     <ClCompile Include="..\Classes\StageManager.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
@@ -178,6 +179,7 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)\Resources\" /D /E /I /F /Y
     <ClInclude Include="..\Classes\InputHandler.h" />
     <ClInclude Include="..\Classes\JumpyScene.h" />
     <ClInclude Include="..\Classes\MenuScene.h" />
+    <ClInclude Include="..\Classes\RetryScene.h" />
     <ClInclude Include="..\Classes\StageManager.h" />
     <ClInclude Include="..\Classes\ZOrders.h" />
     <ClInclude Include="main.h" />

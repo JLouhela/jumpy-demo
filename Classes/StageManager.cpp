@@ -20,10 +20,10 @@
 
 #include "StageManager.h"
 
-StageInfo* StageManager::getNext() const
+const StageInfo* StageManager::getStage(std::int32_t index) const
 {
-    if (m_curStage == m_stages.end()) {
+    if (index >= m_stages.size()) {
         return nullptr;
     }
-    return &(*m_curStage++);
+    return &m_stages[index];
 }

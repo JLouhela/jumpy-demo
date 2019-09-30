@@ -44,13 +44,14 @@ Bee::Bee(const Bee_id id) : m_id{id}, m_sprite{loadSprite()}
         return;
     }
     // Add physics body
-    m_physicsBody = cocos2d::PhysicsBody::createBox(cocos2d::Size(16, 16),
+    m_physicsBody = cocos2d::PhysicsBody::createBox(cocos2d::Size(26, 20),
                                                     cocos2d::PhysicsMaterial(0.1f, 0.1f, 0.0f));
     m_physicsBody->setDynamic(true);
     m_physicsBody->setGravityEnable(false);
     m_physicsBody->setCategoryBitmask(CollisionGroup::bee);
     m_physicsBody->setVelocityLimit(150.0f);
     m_physicsBody->setContactTestBitmask(CollisionGroup::bunny + CollisionGroup::border);
+    m_physicsBody->setCollisionBitmask(0x00);
     m_sprite->setUserData(this);
     m_sprite->addComponent(m_physicsBody);
 
@@ -59,19 +60,22 @@ Bee::Bee(const Bee_id id) : m_id{id}, m_sprite{loadSprite()}
 
 void Bee::dispose()
 {
-    m_physicsBody->setEnabled(false);
-    m_sprite->setVisible(false);
     m_sprite->setPosition(cocos2d::Vec2{-500, -500});
+    m_physicsBody->setEnabled(false);
+    m_physicsBody->resetForces();
+    m_physicsBody->setVelocity(cocos2d::Vec2{0, 0});
+    m_sprite->setVisible(false);
     m_state = BeeState::inactive;
 }
 
 void Bee::spawn(const cocos2d::Vec2& pos, direction dir)
 {
+    m_physicsBody->setEnabled(true);
     m_sprite->setPosition(pos);
     m_sprite->setVisible(true);
-    m_physicsBody->setEnabled(true);
     const float velocityX = (dir == direction::right) ? m_physicsBody->getVelocityLimit()
                                                       : (m_physicsBody->getVelocityLimit() * -1);
+    m_sprite->setFlippedX(dir == direction::right);
     m_physicsBody->setVelocity(cocos2d::Vec2{velocityX, 0});
 }
 
