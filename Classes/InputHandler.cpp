@@ -29,11 +29,6 @@ bool InputHandler::init(BunnyController& bunnyController, cocos2d::EventDispatch
     }
     m_bunnyController = &bunnyController;
 
-    cocos2d::EventListenerMouse* mouseListener{cocos2d::EventListenerMouse::create()};
-    mouseListener->onMouseDown = [this](cocos2d::Event* event) {
-        return resolveInput(static_cast<cocos2d::EventMouse*>(event)
-                                ->getLocationInView());  // consume if an action was taken
-    };
     cocos2d::EventListenerTouchOneByOne* touchListener{
         cocos2d::EventListenerTouchOneByOne::create()};
 
@@ -45,7 +40,6 @@ bool InputHandler::init(BunnyController& bunnyController, cocos2d::EventDispatch
 
     // Separate by build target..? If no issues, don't bother for the demo.
     // These are only input listeners in the scene, fixed priority ok.
-    eventDispatcher->addEventListenerWithFixedPriority(mouseListener, 1);
     eventDispatcher->addEventListenerWithFixedPriority(touchListener, 2);
     return true;
 }
