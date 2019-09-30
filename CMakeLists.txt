@@ -58,6 +58,7 @@ list(APPEND GAME_SOURCE
      Classes/GameLogic.cpp
      Classes/InputHandler.cpp
      Classes/JumpyScene.cpp
+     Classes/MenuScene.cpp
      Classes/StageManager.cpp
      )
 list(APPEND GAME_HEADER
@@ -75,6 +76,7 @@ list(APPEND GAME_HEADER
      Classes/GameLogic.h
      Classes/InputHandler.h
      Classes/JumpyScene.h
+     Classes/MenuScene.h
      Classes/StageManager.h
      Classes/ZOrders.h
      )

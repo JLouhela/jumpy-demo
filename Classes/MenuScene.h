@@ -18,23 +18,19 @@
 /// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 /// IN THE SOFTWARE.
 
-#ifndef __JUMPY_SCENE_H__
-#define __JUMPY_SCENE_H__
+#ifndef __MENU_SCENE_H__
+#define __MENU_SCENE_H__
 
 #include "cocos2d.h"
 
-class JumpyScene : public cocos2d::Scene
-{
+class MenuScene : public cocos2d::Scene {
 public:
     static cocos2d::Scene* createScene();
 
     virtual bool init();
 
-    // a selector callback
-    void menuCloseCallback(cocos2d::Ref* pSender);
-
     // implement the "static create()" method manually
-    CREATE_FUNC(JumpyScene);
+    CREATE_FUNC(MenuScene);
 };
 
-#endif  // __JUMPYS_SCENE_H__
+#endif  // __MENU_SCENE_H__

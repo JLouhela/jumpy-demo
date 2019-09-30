@@ -66,6 +66,9 @@
     <ClCompile Include="..\Classes\ContactListener.cpp">
       <Filter>src\gamelogic</Filter>
     </ClCompile>
+    <ClCompile Include="..\Classes\MenuScene.cpp">
+      <Filter>src\scenes</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
@@ -118,6 +121,9 @@
     </ClInclude>
     <ClInclude Include="..\Classes\ContactListener.h">
       <Filter>src\gamelogic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\MenuScene.h">
+      <Filter>src\scenes</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
