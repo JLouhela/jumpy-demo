@@ -63,7 +63,7 @@ std::vector<cocos2d::Vec2> BunnyController::getSpawnPoints(const std::uint8_t bu
     std::vector<cocos2d::Vec2> res;
     for (std::uint8_t i{0}; i < bunnyCount; ++i) {
         const auto visibleSize{cocos2d::Director::getInstance()->getVisibleSize()};
-        // FIXME 16.0f should come from bunny origin delta
+        // FIXME 24.0f should come from bunny origin delta
         const float xOffset = visibleSize.width / (bunnyCount + 1) - 24.0f;
         // There's only single stage, thus fixed yOffset. Ground height + bunny height / 2
         static constexpr float yOffset{177.0f};
@@ -78,8 +78,8 @@ bool BunnyController::jumpBunny(const cocos2d::Vec2& pos)
         // Make input more forgiving by adding extra threshold
         // to the bounding box of a bunny, especially vertically.
         auto rect = bunny.getBoundingBox();
-        static constexpr float extraWidth = 20.0f;
-        static constexpr float extraHeight = 60.0f;
+        static constexpr float extraWidth = 40.0f;
+        static constexpr float extraHeight = 80.0f;
         rect.size.width += extraWidth;
         rect.size.height += extraHeight;
         rect.origin.x -= extraWidth / 2;

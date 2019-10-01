@@ -18,22 +18,11 @@
 /// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 /// IN THE SOFTWARE.
 
-#include "RetryScene.h"
-#include "JumpyScene.h"
+#include "RetryOverlay.h"
 #include "MenuScene.h"
 
-cocos2d::Scene* RetryScene::createScene()
+bool RetryOverlay::init(std::function<void()> retryCallback, cocos2d::Scene& scene)
 {
-    return RetryScene::create();
-}
-
-// on "init" you need to initialize your instance
-bool RetryScene::init()
-{
-    if (!Scene::init()) {
-        return false;
-    }
-
     const auto visibleSize{cocos2d::Director::getInstance()->getVisibleSize()};
     const auto origin{cocos2d::Director::getInstance()->getVisibleOrigin()};
 
@@ -52,41 +41,60 @@ bool RetryScene::init()
         origin.y + 3 * visibleSize.height / 4 + ouchLabel->getContentSize().height / 2});
 
     // Retry label
-    auto retryLabel = cocos2d::Label::createWithTTF("Retry", "fonts/Marker Felt.ttf", 100);
-    auto retryLabelButton = cocos2d::MenuItemLabel::create(
-        retryLabel, [](Ref* sender) { cocos2d::Director::getInstance()->popScene(); });
+    auto retryLabel = cocos2d::Label::createWithTTF("Try again", "fonts/Marker Felt.ttf", 100);
+    retryLabel->setColor(cocos2d::Color3B::BLACK);
+    auto retryButton = cocos2d::MenuItemLabel::create(
+        retryLabel, [retryCallback](cocos2d::Ref* sender) { retryCallback(); });
 
-    if (retryLabelButton == nullptr || retryLabelButton->getContentSize().width <= 0 ||
-        retryLabelButton->getContentSize().height <= 0) {
+    if (retryButton == nullptr || retryButton->getContentSize().width <= 0 ||
+        retryButton->getContentSize().height <= 0) {
         cocos2d::log("Could not load font");
         return false;
     }
 
-    retryLabelButton->setPosition(
+    retryButton->setPosition(
         cocos2d::Vec2{origin.x + visibleSize.width / 2,
                       origin.y + visibleSize.height / 2 + ouchLabel->getContentSize().height});
 
     // Main menu label
     auto menuLabel = cocos2d::Label::createWithTTF("Main Menu", "fonts/Marker Felt.ttf", 50);
-    auto menuLabelButton = cocos2d::MenuItemLabel::create(menuLabel, [](Ref* sender) {
+    menuLabel->setColor(cocos2d::Color3B::BLACK);
+    auto menuButton = cocos2d::MenuItemLabel::create(menuLabel, [](cocos2d::Ref* sender) {
         auto scene = MenuScene::createScene();
         cocos2d::Director::getInstance()->replaceScene(scene);
     });
 
-    if (menuLabelButton == nullptr || menuLabelButton->getContentSize().width <= 0 ||
-        menuLabelButton->getContentSize().height <= 0) {
+    if (menuButton == nullptr || menuButton->getContentSize().width <= 0 ||
+        menuButton->getContentSize().height <= 0) {
         cocos2d::log("Could not load font");
         return false;
     }
 
-    menuLabelButton->setPosition(cocos2d::Vec2{
-        retryLabelButton->getPosition().x,
-        retryLabelButton->getPosition().y - retryLabel->getContentSize().height * 1.5f});
+    menuButton->setPosition(
+        cocos2d::Vec2{retryButton->getPosition().x,
+                      retryButton->getPosition().y - retryLabel->getContentSize().height * 1.5f});
 
     // create menu, it's an autorelease object
-    auto menu = cocos2d::Menu::createWithArray({retryLabelButton, menuLabelButton});
+    auto menu = cocos2d::Menu::createWithArray({retryButton, menuButton});
     menu->setPosition(cocos2d::Vec2::ZERO);
-    this->addChild(ouchLabel);
-    this->addChild(menu, 1);
+    m_overlay = cocos2d::Node::create();
+    m_overlay->addChild(ouchLabel);
+    m_overlay->addChild(menu, 1);
+    scene.addChild(m_overlay);
+    hide();
     return true;
+}
+
+void RetryOverlay::show()
+{
+    if (m_overlay) {
+        m_overlay->setVisible(true);
+    }
+}
+
+void RetryOverlay::hide()
+{
+    if (m_overlay) {
+        m_overlay->setVisible(false);
+    }
 }

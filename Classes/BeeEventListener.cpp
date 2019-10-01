@@ -26,11 +26,24 @@ void BeeEventListener::init(cocos2d::Scene& scene, std::function<void()> callbac
     m_callback = callback;
     m_beeListener = cocos2d::EventListenerCustom::create(CustomEvent::beeThroughEvent,
                                                          [this](cocos2d::EventCustom* event) {
-                                                             m_waitingCount--;
-                                                             if (m_waitingCount == 0) {
+                                                             if (!m_waitingCount.first) {
+                                                                 return;
+                                                             }
+                                                             m_waitingCount.second--;
+                                                             if (m_waitingCount.second == 0) {
                                                                  m_callback();
                                                              }
                                                          });
 
     scene.getEventDispatcher()->addEventListenerWithSceneGraphPriority(m_beeListener, &scene);
+}
+
+void BeeEventListener::reset()
+{
+    m_waitingCount = std::make_pair(false, 0);
+}
+
+void BeeEventListener::wait(const std::uint8_t count)
+{
+    m_waitingCount = std::make_pair(true, count);
 }

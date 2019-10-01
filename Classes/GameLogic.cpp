@@ -21,7 +21,29 @@
 #include "GameLogic.h"
 #include "CustomEvents.h"
 #include "MenuScene.h"
-#include "RetryScene.h"
+
+namespace {
+void displayVictoryLabel(cocos2d::Scene& scene)
+{
+    auto victoryLabel = cocos2d::Label::createWithTTF("Victory!", "fonts/Marker Felt.ttf", 200);
+    victoryLabel->setRotation(355);
+    victoryLabel->setColor(cocos2d::Color3B::GREEN);
+
+    if (victoryLabel == nullptr || victoryLabel->getContentSize().width <= 0 ||
+        victoryLabel->getContentSize().height <= 0) {
+        cocos2d::log("Could not load font for victory text");
+    }
+    else {
+        const auto visibleSize{cocos2d::Director::getInstance()->getVisibleSize()};
+        const auto origin{cocos2d::Director::getInstance()->getVisibleOrigin()};
+
+        victoryLabel->setPosition(cocos2d::Vec2{
+            origin.x + visibleSize.width / 3,
+            origin.y + visibleSize.height / 2 + victoryLabel->getContentSize().height / 2});
+        scene.addChild(victoryLabel);
+    }
+}
+}  // namespace
 
 bool GameLogic::init(cocos2d::Scene& scene)
 {
@@ -30,6 +52,15 @@ bool GameLogic::init(cocos2d::Scene& scene)
     ok = ok && m_bunnyController.init(scene);
     ok = ok && m_inputHandler.init(m_bunnyController, scene.getEventDispatcher());
     ok = ok && m_contactListener.init(scene);
+
+    auto retryCallback = [this]() {
+        const auto stage = m_stageManager.getStage(m_curLvl);
+        // Guaranteed to be found when retrying
+        m_retryOverlay.hide();
+        initStage(*stage);
+    };
+
+    ok = ok && m_retryOverlay.init(retryCallback, scene);
     if (!ok) {
         cocos2d::log("Game logic initialization failed");
         return false;
@@ -50,7 +81,8 @@ bool GameLogic::init(cocos2d::Scene& scene)
     m_bunnyEventListener = cocos2d::EventListenerCustom::create(
         CustomEvent::bunnyHitEvent, [this](cocos2d::EventCustom* event) {
             if (m_state == GameState::active) {
-                endGame();
+                cleanStage();
+                m_retryOverlay.show();
             }
         });
     scene.getEventDispatcher()->addEventListenerWithSceneGraphPriority(m_bunnyEventListener,
@@ -65,9 +97,7 @@ bool GameLogic::init(cocos2d::Scene& scene)
 
 void GameLogic::initStage(const StageInfo& stageInfo)
 {
-    m_bunnyController.disposeBunnies();
     m_bunnyController.spawnBunnies(stageInfo.bunnyCount);
-    m_beeSpawner.disposeBees();
     m_beeSpawner.spawnBees(stageInfo.beeSpawns);
     m_beeEventListener.wait(stageInfo.beeSpawns.size());
     m_inputHandler.enable();
@@ -83,25 +113,7 @@ void GameLogic::endStage()
     auto stageTransitionCallback = cocos2d::CallFunc::create([this]() {
         const auto stage = m_stageManager.getStage(m_curLvl);
         if (!stage) {
-            // Victory text
-            const auto visibleSize{cocos2d::Director::getInstance()->getVisibleSize()};
-            const auto origin{cocos2d::Director::getInstance()->getVisibleOrigin()};
-
-            auto victoryLabel =
-                cocos2d::Label::createWithTTF("Victory!", "fonts/Marker Felt.ttf", 200);
-            victoryLabel->setRotation(355);
-            victoryLabel->setColor(cocos2d::Color3B::GREEN);
-
-            if (victoryLabel == nullptr || victoryLabel->getContentSize().width <= 0 ||
-                victoryLabel->getContentSize().height <= 0) {
-                cocos2d::log("Could not load font for victory text");
-            }
-            else {
-                victoryLabel->setPosition(cocos2d::Vec2{
-                    origin.x + visibleSize.width / 3,
-                    origin.y + visibleSize.height / 2 + victoryLabel->getContentSize().height / 2});
-                m_scene->addChild(victoryLabel);
-            }
+            displayVictoryLabel(*m_scene);
 
             const auto gameEndDelay = cocos2d::DelayTime::create(5.0f);
             auto menuTransitionCallback = cocos2d::CallFunc::create([this]() {
@@ -112,6 +124,7 @@ void GameLogic::endStage()
                 cocos2d::Sequence::create(gameEndDelay, menuTransitionCallback, nullptr));
             return;
         }
+        cleanStage();
         initStage(*stage);
     });
 
@@ -119,12 +132,9 @@ void GameLogic::endStage()
         cocos2d::Sequence::create(stageTransitionDelay, stageTransitionCallback, nullptr));
 }
 
-void GameLogic::endGame()
+void GameLogic::cleanStage()
 {
-    // Guaranteed to be found as we just ended this stage.
-    const auto stage = m_stageManager.getStage(m_curLvl);
-    initStage(*stage);
-    cocos2d::Director::getInstance()->pushScene(m_scene);
-    auto retryScene = RetryScene::create();
-    cocos2d::Director::getInstance()->replaceScene(retryScene);
+    m_bunnyController.disposeBunnies();
+    m_beeSpawner.disposeBees();
+    m_beeEventListener.reset();
 }

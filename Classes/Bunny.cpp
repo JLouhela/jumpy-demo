@@ -23,6 +23,9 @@
 
 namespace {
 
+constexpr float velocityLimitUp{350.0f};
+constexpr float velocityLimitDown{500.0f};
+
 cocos2d::Sprite* loadSprite()
 {
     const auto bunnySpriteFrame{
@@ -44,11 +47,11 @@ bool Bunny::init(Bunny_id id, cocos2d::Scene& scene)
     }
     m_id = id;
     // Add physics body
-    m_physicsBody = cocos2d::PhysicsBody::createBox(cocos2d::Size(38, 86),
+    m_physicsBody = cocos2d::PhysicsBody::createBox(cocos2d::Size(36, 84),
                                                     cocos2d::PhysicsMaterial(1.0f, 0.01f, 0.0f));
     m_physicsBody->setDynamic(true);
     m_physicsBody->setGravityEnable(true);
-    m_physicsBody->setVelocityLimit(350.0f);
+    m_physicsBody->setVelocityLimit(velocityLimitUp);
     m_physicsBody->setRotationEnable(false);
     m_physicsBody->setCategoryBitmask(CollisionGroup::bunny);
     m_physicsBody->setCollisionBitmask(CollisionGroup::ground);
@@ -59,16 +62,10 @@ bool Bunny::init(Bunny_id id, cocos2d::Scene& scene)
     return true;
 }
 
-const cocos2d::Vec2& Bunny::getPosition() const
-{
-    // Redundancy vs. mental model: feels weird to have position only on sprite
-    // but feels weird to store position for no reason. Decide after other use cases for pos.
-    return m_sprite->getPosition();
-}
-
 void Bunny::activate(const cocos2d::Vec2& pos)
 {
     // No nullcheck, BunnyController shall ensure that only initialized bunnies are accessed
+    m_sprite->setVisible(true);
     m_sprite->setPosition(pos);
     m_physicsBody->setEnabled(true);
 }
@@ -80,17 +77,19 @@ const cocos2d::Rect Bunny::getBoundingBox() const
 
 void Bunny::jump()
 {
-    if ((m_state == BunnyState::jump || m_state == BunnyState::doublejump) &&
+    if ((m_state == BunnyState::jumped || m_state == BunnyState::doublejump) &&
         m_physicsBody->getVelocity().y < -25.0f) {
         // Downwards dash
         m_state = BunnyState::dash;
+        // Allow more speed downwards
+        m_physicsBody->setVelocityLimit(velocityLimitDown);
         m_physicsBody->applyImpulse(cocos2d::Vec2{0.0f, -4000000.0f});
         m_sprite->setFlippedY(true);
         return;
     }
 
-    if (m_state == BunnyState::grounded || m_state == BunnyState::jump) {
-        m_state = (m_state == BunnyState::grounded) ? BunnyState::jump : BunnyState::doublejump;
+    if (m_state == BunnyState::grounded || m_state == BunnyState::jumped) {
+        m_state = (m_state == BunnyState::grounded) ? BunnyState::jumped : BunnyState::doublejump;
         m_physicsBody->applyImpulse(cocos2d::Vec2{0.0f, 4000000.0f});
         const auto spriteFrame{
             cocos2d::SpriteFrameCache::getInstance()->getSpriteFrameByName("./bunny_jump_96_48")};
@@ -106,13 +105,15 @@ void Bunny::resetState()
         cocos2d::SpriteFrameCache::getInstance()->getSpriteFrameByName("./bunny_stand_96_48")};
     m_sprite->setSpriteFrame(spriteFrame);
     m_sprite->setFlippedY(false);
+    m_physicsBody->setVelocityLimit(velocityLimitUp);
 
     m_state = BunnyState::grounded;
 }
 
 void Bunny::dispose()
 {
-    m_sprite->setPosition(cocos2d::Vec2{-100, -100});
+    m_state = BunnyState::doublejump;
+    m_sprite->setVisible(false);
     m_physicsBody->setEnabled(false);
     m_physicsBody->resetForces();
     m_physicsBody->setVelocity(cocos2d::Vec2{0, 0});

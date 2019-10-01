@@ -18,19 +18,20 @@
 /// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 /// IN THE SOFTWARE.
 
-#ifndef __RETRY_SCENE__
-#define __RETRY_SCENE__
+#ifndef __RETRY_OVERLAY__
+#define __RETRY_OVERLAY__
 
+#include <functional>
 #include "cocos2d.h"
 
-class RetryScene : public cocos2d::Scene {
+class RetryOverlay {
 public:
-    static cocos2d::Scene* createScene();
+    bool init(std::function<void()> retryCallback, cocos2d::Scene& scene);
+    void show();
+    void hide();
 
-    virtual bool init();
-
-    // implement the "static create()" method manually
-    CREATE_FUNC(RetryScene);
+private:
+    cocos2d::Node* m_overlay{nullptr};
 };
 
-#endif  // __RETRY_SCENE__
+#endif  // __RETRY_OVERLAY__

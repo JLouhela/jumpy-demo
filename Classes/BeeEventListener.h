@@ -23,20 +23,19 @@
 
 #include <cstdint>
 #include <functional>
+#include <utility>
 #include "cocos2d.h"
 
 class BeeEventListener {
 public:
     void init(cocos2d::Scene& scene, std::function<void()> callback);
 
-    void wait(std::uint8_t count)
-    {
-        m_waitingCount = count;
-    }
+    void wait(std::uint8_t count);
+    void reset();
 
 private:
     cocos2d::EventListenerCustom* m_beeListener{nullptr};
-    std::uint8_t m_waitingCount{0};
+    std::pair<bool, std::uint8_t> m_waitingCount{std::make_pair(false, 0)};
     std::function<void()> m_callback;
 };
 

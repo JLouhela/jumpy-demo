@@ -27,6 +27,7 @@
 #include "BunnyController.h"
 #include "ContactListener.h"
 #include "InputHandler.h"
+#include "RetryOverlay.h"
 #include "StageManager.h"
 #include "cocos2d.h"
 
@@ -42,15 +43,15 @@ public:
 
 private:
     void initStage(const StageInfo& stageInfo);
-
     void endStage();
-    void endGame();
+    void cleanStage();
 
     cocos2d::Scene* m_scene;
     BunnyController m_bunnyController;
     BeeSpawner m_beeSpawner;
     InputHandler m_inputHandler;
     StageManager m_stageManager;
+    RetryOverlay m_retryOverlay;
     cocos2d::Node* m_actionNode{nullptr};
     BeeEventListener m_beeEventListener;
     ContactListener m_contactListener;

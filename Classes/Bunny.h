@@ -47,8 +47,6 @@ public:
 
     void jump();
 
-    const cocos2d::Vec2& getPosition() const;
-
     const cocos2d::Rect getBoundingBox() const;
 
     cocos2d::Sprite* getSprite() const
@@ -57,15 +55,19 @@ public:
     }
 
 private:
-    enum class BunnyState : std::uint8_t { grounded, jump, doublejump, dash };
-
-    void resetSprite();
+    enum class BunnyState : std::uint8_t {
+        grounded,    // Landed on ground
+        jumped,      // Has jumped once
+        doublejump,  // Has jumped twice
+        dash         // Dashing downwards
+    };
 
     cocos2d::Sprite* m_sprite{nullptr};
     cocos2d::PhysicsBody* m_physicsBody{nullptr};
     Bunny_id m_id{invalidBunnyId};
     cocos2d::Vec2 m_pos{-100, -100};
-    BunnyState m_state{BunnyState::grounded};
+    BunnyState m_state{BunnyState::doublejump};  // use doublejump as default to prevent jumping if
+                                                 // bunny spawns in free fall
 };
 
 #endif  // __BUNNY_H__

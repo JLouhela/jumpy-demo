@@ -69,7 +69,7 @@
     <ClCompile Include="..\Classes\MenuScene.cpp">
       <Filter>src\scenes</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\RetryScene.cpp">
+    <ClCompile Include="..\Classes\RetryOverlay.cpp">
       <Filter>src\scenes</Filter>
     </ClCompile>
   </ItemGroup>
@@ -128,7 +128,7 @@
     <ClInclude Include="..\Classes\MenuScene.h">
       <Filter>src\scenes</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\RetryScene.h">
+    <ClInclude Include="..\Classes\RetryOverlay.h">
       <Filter>src\scenes</Filter>
     </ClInclude>
   </ItemGroup>
