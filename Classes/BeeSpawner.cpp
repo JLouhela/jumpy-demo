@@ -82,4 +82,5 @@ void BeeSpawner::disposeBees()
     for (auto& bee : m_beeContainer) {
         bee.dispose();
     }
+    m_actionNode->cleanup();
 }
