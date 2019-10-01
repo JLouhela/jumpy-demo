@@ -50,7 +50,7 @@ bool GameLogic::init(cocos2d::Scene& scene)
     m_scene = &scene;
     bool ok = m_beeSpawner.init(scene);
     ok = ok && m_bunnyController.init(scene);
-    ok = ok && m_inputHandler.init(m_bunnyController, scene.getEventDispatcher());
+    ok = ok && m_inputHandler.init(m_bunnyController);
     ok = ok && m_contactListener.init(scene);
 
     auto retryCallback = [this]() {
@@ -65,7 +65,6 @@ bool GameLogic::init(cocos2d::Scene& scene)
         cocos2d::log("Game logic initialization failed");
         return false;
     }
-
     const auto stage = m_stageManager.getStage(m_curLvl);
     if (!stage) {
         cocos2d::log("Cannot get first stage");
@@ -111,6 +110,7 @@ void GameLogic::endStage()
     m_inputHandler.disable();
     const auto stageTransitionDelay = cocos2d::DelayTime::create(2.0f);
     auto stageTransitionCallback = cocos2d::CallFunc::create([this]() {
+        cleanStage();
         const auto stage = m_stageManager.getStage(m_curLvl);
         if (!stage) {
             displayVictoryLabel(*m_scene);
@@ -124,7 +124,6 @@ void GameLogic::endStage()
                 cocos2d::Sequence::create(gameEndDelay, menuTransitionCallback, nullptr));
             return;
         }
-        cleanStage();
         initStage(*stage);
     });
 

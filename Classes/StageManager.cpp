@@ -22,7 +22,7 @@
 
 const StageInfo* StageManager::getStage(std::int32_t index) const
 {
-    if (index >= m_stages.size()) {
+    if (static_cast<std::size_t>(index) >= m_stages.size()) {
         return nullptr;
     }
     return &m_stages[index];

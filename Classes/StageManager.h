@@ -36,14 +36,31 @@ public:
 private:
     // Hard coded stages for demonstration purposes.
     // For efficient testing this should be file read -> no recompile on change.
+
+    // clang-format off
     std::vector<StageInfo> m_stages{
-        {{{0.0f, 145.0f, direction::left}}, 1},
-        {{{0.0f, 145.0f, direction::left}, {0.5f, 240.0f, direction::right}}, 1},
-        {{{0.0f, 145.0f, direction::left}, {1.5f, 145.0f, direction::left}}, 2},
-        {{{0.0f, 145.0f, direction::left},
-          {1.5f, 240.0f, direction::left},
-          {1.0f, 145.0f, direction::right}},
-         2}};
+        {	BeeSpawns{{0.0f, 145.0f, direction::left}}, 1},
+        {	BeeSpawns{{0.0f, 145.0f, direction::left}, {0.5f, 240.0f, direction::right}}, 1},
+        {	BeeSpawns{{0.0f, 145.0f, direction::left}, {1.5f, 145.0f, direction::left}}, 2},
+        {	BeeSpawns{{0.0f, 145.0f, direction::left},{1.5f, 240.0f, direction::left},
+				      {1.0f, 145.0f, direction::right}},2},
+        {	BeeSpawns{{0.0f, 145.0f, direction::left},{1.8f, 240.0f, direction::left},
+				      {1.2f, 145.0f, direction::left}},3},
+        {	BeeSpawns{{0.3f, 260.0f, direction::right},{0.0f, 260.0f, direction::left},
+				      {1.3f, 145.0f, direction::right}, {1.6f, 145.0f, direction::left}},3},
+        {	BeeSpawns{{0.0f, 145.0f, direction::left},{1.5f, 240.0f, direction::left},
+				      {1.0f, 145.0f, direction::right}},3},
+        {	BeeSpawns{{0.0f, 400.0f, direction::right}, {0.0f, 200.0f, direction::right},
+					  {1.5f, 400.0f, direction::right}, {1.5f, 200.0f, direction::right},
+					  {3.0f, 400.0f, direction::right}, {3.0f, 200.0f, direction::right}},3},
+        {	BeeSpawns{{0.3f, 140.0f, direction::right},{0.6f, 200.0f, direction::right},
+				      {0.9f, 260.0f, direction::right}, {2.0f, 260.0f, direction::right}},3},
+        {	BeeSpawns{{0.3f, 140.0f, direction::right},{0.6f, 200.0f, direction::right},
+				      {0.9f, 260.0f, direction::right}, {2.0f, 260.0f, direction::right}, {3.0f, 145, direction::left}},3},
+        {	BeeSpawns{{0.0f, 145.0f, direction::left},{1.5f, 240.0f, direction::left},
+				      {1.0f, 145.0f, direction::right}, {0.2f, 260.0f, direction::right}},3}
+	};
+    // clang-format on
 };
 
 #endif  // __STAGE_MANAGER_H__

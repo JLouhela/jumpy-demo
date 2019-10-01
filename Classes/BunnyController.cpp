@@ -64,7 +64,7 @@ std::vector<cocos2d::Vec2> BunnyController::getSpawnPoints(const std::uint8_t bu
     for (std::uint8_t i{0}; i < bunnyCount; ++i) {
         const auto visibleSize{cocos2d::Director::getInstance()->getVisibleSize()};
         // FIXME 24.0f should come from bunny origin delta
-        const float xOffset = visibleSize.width / (bunnyCount + 1) - 24.0f;
+        const float xOffset = visibleSize.width / (bunnyCount + 1);
         // There's only single stage, thus fixed yOffset. Ground height + bunny height / 2
         static constexpr float yOffset{177.0f};
         res.emplace_back(xOffset * (i + 1), yOffset);

@@ -49,7 +49,6 @@ private:
     cocos2d::Scene* m_scene;
     BunnyController m_bunnyController;
     BeeSpawner m_beeSpawner;
-    InputHandler m_inputHandler;
     StageManager m_stageManager;
     RetryOverlay m_retryOverlay;
     cocos2d::Node* m_actionNode{nullptr};
@@ -59,6 +58,7 @@ private:
     GameState m_state{GameState::start};
     std::int32_t m_curLvl{0};
     std::uint8_t m_bunnyCount{0};
+    InputHandler m_inputHandler;
 };
 
 #endif  // __GAME_LOGIC_H__
