@@ -75,19 +75,15 @@ std::vector<cocos2d::Vec2> BunnyController::getSpawnPoints(const std::uint8_t bu
 bool BunnyController::jumpBunny(const cocos2d::Vec2& pos)
 {
     for (auto& bunny : m_bunnyContainer) {
-        // Make input more forgiving by adding extra threshold
-        // to the bounding box of a bunny, especially vertically.
+        // Forget y completely, just check x
         auto rect = bunny.getBoundingBox();
         static constexpr float extraWidth = 40.0f;
-        static constexpr float extraHeight = 80.0f;
         rect.size.width += extraWidth;
-        rect.size.height += extraHeight;
         rect.origin.x -= extraWidth / 2;
-        rect.origin.y -= extraHeight / 2;
 
         // In this game bunnies cannot overlap horizontally.
         // First match can consume the jump trigger.
-        if (rect.containsPoint(pos)) {
+        if (pos.x > rect.origin.x && pos.x < (rect.origin.x + rect.size.width)) {
             bunny.jump();
             return true;
         }
