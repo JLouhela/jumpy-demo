@@ -79,7 +79,8 @@ bool JumpyScene::initEnvironment()
     if (!bgSprite) {
         return false;
     }
-    getPhysicsWorld()->setDebugDrawMask(0xFFFFFFFF);
+    // Uncomment to enable debug bounding boxes
+    // getPhysicsWorld()->setDebugDrawMask(0xFFFFFFFF);
 
     // add the sprite as a child to this layer
     this->addChild(bgSprite, ZOrder::background);
