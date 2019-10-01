@@ -27,7 +27,7 @@ class BunnyController;
 
 class InputHandler {
 public:
-    bool init(BunnyController& bunnyController, cocos2d::EventDispatcher* eventDispatcher);
+    bool init(BunnyController& bunnyController);
 
     void disable()
     {
@@ -39,11 +39,14 @@ public:
         m_enabled = true;
     }
 
+    ~InputHandler();
+
 private:
     bool resolveInput(const cocos2d::Vec2& screenPos);
 
-    BunnyController* m_bunnyController;
-    bool m_enabled;
+    cocos2d::EventListenerTouchOneByOne* m_touchListener{nullptr};
+    BunnyController* m_bunnyController{nullptr};
+    bool m_enabled{false};
 };
 
 #endif  // __INPUT_HANDLER_H__

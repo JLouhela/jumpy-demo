@@ -21,18 +21,13 @@
 #include "InputHandler.h"
 #include "BunnyController.h"
 
-bool InputHandler::init(BunnyController& bunnyController, cocos2d::EventDispatcher* eventDispatcher)
+bool InputHandler::init(BunnyController& bunnyController)
 {
-    if (!eventDispatcher) {
-        cocos2d::log("Null event dispatcher for input handler!");
-        return false;
-    }
     m_bunnyController = &bunnyController;
 
-    cocos2d::EventListenerTouchOneByOne* touchListener{
-        cocos2d::EventListenerTouchOneByOne::create()};
+    m_touchListener = cocos2d::EventListenerTouchOneByOne::create();
 
-    touchListener->onTouchBegan = [this](cocos2d::Touch* touch, cocos2d::Event* event) {
+    m_touchListener->onTouchBegan = [this](cocos2d::Touch* touch, cocos2d::Event* event) {
         if (!m_enabled) {
             return true;
         }
@@ -43,11 +38,17 @@ bool InputHandler::init(BunnyController& bunnyController, cocos2d::EventDispatch
 
     // Separate by build target..? If no issues, don't bother for the demo.
     // These are only input listeners in the scene, fixed priority ok.
-    eventDispatcher->addEventListenerWithFixedPriority(touchListener, 2);
+    cocos2d::Director::getInstance()->getEventDispatcher()->addEventListenerWithFixedPriority(
+        m_touchListener, 2);
     return true;
 }
 
 bool InputHandler::resolveInput(const cocos2d::Vec2& screenPos)
 {
     return m_bunnyController->jumpBunny(screenPos);
+}
+
+InputHandler::~InputHandler()
+{
+    cocos2d::Director::getInstance()->getEventDispatcher()->removeEventListener(m_touchListener);
 }
