@@ -18,19 +18,12 @@
 /// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 /// IN THE SOFTWARE.
 
-#ifndef __CONTACT_LISTENER_H__
-#define __CONTACT_LISTENER_H__
+#ifndef __PTM_H__
+#define __PTM_H__
 
-#include <functional>
-#include "cocos2d.h"
+namespace PTM {
+static constexpr float ptm = 32.0f;
 
-class ContactListener {
-public:
-    bool init(cocos2d::Scene& scene);
+}  // namespace PTM
 
-private:
-    // cocos2d::EventListenerPhysicsContact* m_contactListener{nullptr};
-    cocos2d::EventDispatcher* m_eventDispatcher{nullptr};
-};
-
-#endif  // __CONTACT_LISTENER_H__
+#endif  // __PTM_H__

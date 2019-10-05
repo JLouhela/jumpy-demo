@@ -63,7 +63,7 @@ private:
     };
 
     cocos2d::Sprite* m_sprite{nullptr};
-    cocos2d::PhysicsBody* m_physicsBody{nullptr};
+    // cocos2d::PhysicsBody* m_physicsBody{nullptr};
     Bunny_id m_id{invalidBunnyId};
     cocos2d::Vec2 m_pos{-100, -100};
     BunnyState m_state{BunnyState::doublejump};  // use doublejump as default to prevent jumping if

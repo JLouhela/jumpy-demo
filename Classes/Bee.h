@@ -57,7 +57,7 @@ public:
 
 private:
     cocos2d::Sprite* m_sprite{nullptr};
-    cocos2d::PhysicsBody* m_physicsBody{nullptr};
+    // cocos2d::PhysicsBody* m_physicsBody{nullptr};
     Bee_id m_id{invalidBeeId};
     cocos2d::Vec2 m_pos{-500, -500};
     BeeState m_state{BeeState::inactive};

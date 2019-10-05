@@ -47,17 +47,21 @@ bool Bunny::init(Bunny_id id, cocos2d::Scene& scene)
     }
     m_id = id;
     // Add physics body
-    m_physicsBody = cocos2d::PhysicsBody::createBox(cocos2d::Size(36, 84),
-                                                    cocos2d::PhysicsMaterial(1.0f, 0.01f, 0.0f));
-    m_physicsBody->setDynamic(true);
-    m_physicsBody->setGravityEnable(true);
-    m_physicsBody->setVelocityLimit(velocityLimitUp);
-    m_physicsBody->setRotationEnable(false);
-    m_physicsBody->setCategoryBitmask(CollisionGroup::bunny);
-    m_physicsBody->setCollisionBitmask(CollisionGroup::ground);
-    m_physicsBody->setContactTestBitmask(CollisionGroup::bee + CollisionGroup::ground);
-    m_sprite->addComponent(m_physicsBody);
-    m_sprite->setUserData(this);
+    /*
+    TODO: Fix to use Box2D, see all commented lines
+
+m_physicsBody = cocos2d::PhysicsBody::createBox(cocos2d::Size(36, 84),
+                                                cocos2d::PhysicsMaterial(1.0f, 0.01f, 0.0f));
+m_physicsBody->setDynamic(true);
+m_physicsBody->setGravityEnable(true);
+m_physicsBody->setVelocityLimit(velocityLimitUp);
+m_physicsBody->setRotationEnable(false);
+m_physicsBody->setCategoryBitmask(CollisionGroup::bunny);
+m_physicsBody->setCollisionBitmask(CollisionGroup::ground);
+m_physicsBody->setContactTestBitmask(CollisionGroup::bee + CollisionGroup::ground);
+m_sprite->addComponent(m_physicsBody);
+m_sprite->setUserData(this);
+    */
     dispose();
     return true;
 }
@@ -67,7 +71,7 @@ void Bunny::activate(const cocos2d::Vec2& pos)
     // No nullcheck, BunnyController shall ensure that only initialized bunnies are accessed
     m_sprite->setVisible(true);
     m_sprite->setPosition(pos);
-    m_physicsBody->setEnabled(true);
+    // m_physicsBody->setEnabled(true);
 }
 
 const cocos2d::Rect Bunny::getBoundingBox() const
@@ -77,20 +81,20 @@ const cocos2d::Rect Bunny::getBoundingBox() const
 
 void Bunny::jump()
 {
-    if ((m_state == BunnyState::jumped || m_state == BunnyState::doublejump) &&
-        m_physicsBody->getVelocity().y < -25.0f) {
+    if ((m_state == BunnyState::jumped || m_state == BunnyState::doublejump)  /* &&
+        m_physicsBody->getVelocity().y < -25.0f*/) {
         // Downwards dash
         m_state = BunnyState::dash;
         // Allow more speed downwards
-        m_physicsBody->setVelocityLimit(velocityLimitDown);
-        m_physicsBody->applyImpulse(cocos2d::Vec2{0.0f, -4000000.0f});
+        // m_physicsBody->setVelocityLimit(velocityLimitDown);
+        // m_physicsBody->applyImpulse(cocos2d::Vec2{0.0f, -4000000.0f});
         m_sprite->setFlippedY(true);
         return;
     }
 
     if (m_state == BunnyState::grounded || m_state == BunnyState::jumped) {
         m_state = (m_state == BunnyState::grounded) ? BunnyState::jumped : BunnyState::doublejump;
-        m_physicsBody->applyImpulse(cocos2d::Vec2{0.0f, 4000000.0f});
+        // m_physicsBody->applyImpulse(cocos2d::Vec2{0.0f, 4000000.0f});
         const auto spriteFrame{
             cocos2d::SpriteFrameCache::getInstance()->getSpriteFrameByName("./bunny_jump_96_48")};
         m_sprite->setSpriteFrame(spriteFrame);
@@ -105,7 +109,7 @@ void Bunny::resetState()
         cocos2d::SpriteFrameCache::getInstance()->getSpriteFrameByName("./bunny_stand_96_48")};
     m_sprite->setSpriteFrame(spriteFrame);
     m_sprite->setFlippedY(false);
-    m_physicsBody->setVelocityLimit(velocityLimitUp);
+    // m_physicsBody->setVelocityLimit(velocityLimitUp);
 
     m_state = BunnyState::grounded;
 }
@@ -114,7 +118,7 @@ void Bunny::dispose()
 {
     m_state = BunnyState::doublejump;
     m_sprite->setVisible(false);
-    m_physicsBody->setEnabled(false);
-    m_physicsBody->resetForces();
-    m_physicsBody->setVelocity(cocos2d::Vec2{0, 0});
+    // m_physicsBody->setEnabled(false);
+    // m_physicsBody->resetForces();
+    // m_physicsBody->setVelocity(cocos2d::Vec2{0, 0});
 }

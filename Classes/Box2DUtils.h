@@ -18,19 +18,18 @@
 /// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 /// IN THE SOFTWARE.
 
-#ifndef __CONTACT_LISTENER_H__
-#define __CONTACT_LISTENER_H__
+#ifndef __BOX_2D_UTILS_H__
+#define __BOX_2D_UTILS_H__
 
-#include <functional>
+#include "Box2D/Box2D.h"
 #include "cocos2d.h"
 
-class ContactListener {
-public:
-    bool init(cocos2d::Scene& scene);
+namespace utils {
+namespace box2d {
+void setPosition(b2BodyDef& body, const cocos2d::Sprite& sprite);
+b2PolygonShape getBoxShape(const cocos2d::Vec2& sizePixels);
+b2Vec2 pixelsToMeters(const cocos2d::Vec2& pixelPos);
+}  // namespace box2d
+}  // namespace utils
 
-private:
-    // cocos2d::EventListenerPhysicsContact* m_contactListener{nullptr};
-    cocos2d::EventDispatcher* m_eventDispatcher{nullptr};
-};
-
-#endif  // __CONTACT_LISTENER_H__
+#endif  // __BOX_2D_UTILS_H__

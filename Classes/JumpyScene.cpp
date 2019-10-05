@@ -19,10 +19,13 @@
 /// IN THE SOFTWARE.
 
 #include "JumpyScene.h"
+#include "Box2D/Box2D.h"
+#include "Box2DUtils.h"
 #include "CollisionGroup.h"
 #include "SimpleAudioEngine.h"
-#include "ZOrders.h"
+#include "cocos2d/extensions/cocos-ext.h"
 
+#include "ZOrders.h"
 namespace {
 cocos2d::Sprite* initSprite(const std::string& name, const cocos2d::Vec2& pos)
 {
@@ -36,6 +39,24 @@ cocos2d::Sprite* initSprite(const std::string& name, const cocos2d::Vec2& pos)
     }
     return sprite;
 }
+cocos2d::extension::PhysicsSprite* initPhysicsSprite(const std::string& name)
+{
+    const auto spriteFrame{cocos2d::SpriteFrameCache::getInstance()->getSpriteFrameByName(name)};
+
+    auto sprite{cocos2d::extension::PhysicsSprite::createWithSpriteFrame(spriteFrame)};
+    if (sprite == nullptr) {
+        cocos2d::log("Error while loading: %s\n", name.c_str());
+    }
+    return sprite;
+}
+
+double getCurrentTick()
+{
+    static struct timeval currentTime;
+    cocos2d::gettimeofday(&currentTime, nullptr);
+    return (currentTime.tv_sec) + (currentTime.tv_usec / 1000000.0);
+}
+
 }  // namespace
 
 cocos2d::Scene* JumpyScene::createScene()
@@ -43,11 +64,22 @@ cocos2d::Scene* JumpyScene::createScene()
     return JumpyScene::create();
 }
 
+JumpyScene::ScopedWorld::ScopedWorld()
+{
+    static const b2Vec2 gravity{0, -9.8f};  // earth gravity
+    m_world = new b2World(gravity);
+}
+
+JumpyScene::ScopedWorld::~ScopedWorld()
+{
+    delete m_world;
+}
+
 // on "init" you need to initialize your instance
 bool JumpyScene::init()
 {
     // super init always first
-    if (!cocos2d::Scene::initWithPhysics()) {
+    if (!cocos2d::Scene::init()) {
         cocos2d::log("Could not initialize parent scene");
         return false;
     }
@@ -56,8 +88,6 @@ bool JumpyScene::init()
         cocos2d::log("Could not initialize gfx for scene");
         return false;
     }
-
-    getPhysicsWorld()->setGravity(cocos2d::Vect(0, -500));
 
     if (!m_gameLogic.init(*this)) {
         cocos2d::log("Could not initialize game logic");
@@ -79,62 +109,115 @@ bool JumpyScene::initEnvironment()
     if (!bgSprite) {
         return false;
     }
-    // Uncomment to enable debug bounding boxes
-    // getPhysicsWorld()->setDebugDrawMask(0xFFFFFFFF);
 
     // add the sprite as a child to this layer
     this->addChild(bgSprite, ZOrder::background);
 
     // add ground sprite to the bottom of the screen
     static const float groundHeight = 128.0f;
-    auto groundSprite{
-        initSprite("./ground_1280_128",
-                   cocos2d::Vec2{visibleSize.width / 2 + origin.x, groundHeight / 2 + origin.y})};
+    auto groundSprite{initPhysicsSprite("./ground_1280_128")};
     if (!groundSprite) {
         return false;
     }
+    uint32 flags = 0;
+    flags += b2Draw::e_shapeBit;
+    flags += b2Draw::e_jointBit;
+    flags += b2Draw::e_aabbBit;
+    flags += b2Draw::e_centerOfMassBit;
+    m_debugDraw.SetFlags(flags);
+
+    m_world.getWorld().SetDebugDraw(&m_debugDraw);
 
     // Ground is solid
-    auto groundPhysicsBody = cocos2d::PhysicsBody::createBox(
-        cocos2d::Size(visibleSize.width, 128), cocos2d::PhysicsMaterial(1.0f, 1.0f, 0.0f));
-    groundPhysicsBody->setDynamic(false);
-    groundPhysicsBody->setCategoryBitmask(CollisionGroup::ground);
-    groundPhysicsBody->setCollisionBitmask(CollisionGroup::bunny);
-    groundPhysicsBody->setContactTestBitmask(CollisionGroup::bunny);
+    b2BodyDef groundBody{};
+    groundBody.type = b2_staticBody;
+    groundBody.angle = 0;
+    auto staticBody = m_world.getWorld().CreateBody(&groundBody);
 
-    groundSprite->addComponent(groundPhysicsBody);
+    b2FixtureDef groundFixtureDef;
+    auto boxShape = utils::box2d::getBoxShape(groundSprite->getContentSize());
+    groundFixtureDef.shape = &boxShape;
+    groundFixtureDef.density = 1;
+    groundFixtureDef.filter.categoryBits = CollisionGroup::ground;
+    groundFixtureDef.filter.maskBits = CollisionGroup::bunny;
+    staticBody->CreateFixture(&groundFixtureDef);
+    groundSprite->setB2Body(staticBody);
+    groundSprite->setPTMRatio(PTM::ptm);
+    groundSprite->setPosition(
+        cocos2d::Vec2{visibleSize.width / 2 + origin.x, groundHeight / 2 + origin.y});
     this->addChild(groundSprite, ZOrder::ground);
 
     // Add (invisible) border colliders for bees
     // Left
-    auto leftBorderNode{cocos2d::Node::create()};
-    leftBorderNode->setPosition({0.0f, 0.0f});
-    leftBorderNode->setContentSize({1, visibleSize.height});
+    b2BodyDef leftBeeColliderBody{};
+    leftBeeColliderBody.type = b2_staticBody;
+    leftBeeColliderBody.angle = 0;
+    leftBeeColliderBody.position = utils::box2d::pixelsToMeters({1, visibleSize.height / 2});
+    auto staticLeftBeeColliderBody = m_world.getWorld().CreateBody(&leftBeeColliderBody);
 
-    auto leftBorderPhysicsBody = cocos2d::PhysicsBody::createBox(
-        cocos2d::Size(1, visibleSize.height), cocos2d::PhysicsMaterial(1.0f, 1.0f, 0.0f));
-    leftBorderPhysicsBody->setCategoryBitmask(CollisionGroup::border);
-    leftBorderPhysicsBody->setContactTestBitmask(CollisionGroup::bee);
-    leftBorderPhysicsBody->setCollisionBitmask(0x00);
-    leftBorderPhysicsBody->setEnabled(true);
-    leftBorderPhysicsBody->setDynamic(false);
-    leftBorderNode->addComponent(leftBorderPhysicsBody);
-    this->addChild(leftBorderNode);
+    b2FixtureDef leftBeeColliderFixtureDef;
+    auto leftBeeCollidershape = utils::box2d::getBoxShape({2, visibleSize.height});
+    leftBeeColliderFixtureDef.shape = &leftBeeCollidershape;
+    leftBeeColliderFixtureDef.density = 1;
+    leftBeeColliderFixtureDef.filter.categoryBits = CollisionGroup::border;
+    leftBeeColliderFixtureDef.filter.maskBits = CollisionGroup::bee;
+    leftBeeColliderFixtureDef.isSensor = true;  // TODO verify
+    staticLeftBeeColliderBody->CreateFixture(&leftBeeColliderFixtureDef);
 
     // Right
-    auto rightBorderNode{cocos2d::Node::create()};
-    rightBorderNode->setPosition({visibleSize.width - 1.0f, 0.0f});
+    b2BodyDef rightBeeColliderBody{};
+    rightBeeColliderBody.type = b2_staticBody;
+    rightBeeColliderBody.angle = 0;
+    rightBeeColliderBody.position =
+        utils::box2d::pixelsToMeters({visibleSize.width - 1, visibleSize.height / 2});
+    auto staticRightBeeColliderBody = m_world.getWorld().CreateBody(&rightBeeColliderBody);
 
-    rightBorderNode->setContentSize({1, visibleSize.height});
-    auto rightBorderPhysicsBody = cocos2d::PhysicsBody::createBox(
-        {1, visibleSize.height}, cocos2d::PhysicsMaterial(1.0f, 1.0f, 0.0f));
-    rightBorderPhysicsBody->setCategoryBitmask(CollisionGroup::border);
-    rightBorderPhysicsBody->setContactTestBitmask(CollisionGroup::bee);
-    rightBorderPhysicsBody->setCollisionBitmask(0x00);
-    rightBorderPhysicsBody->setDynamic(false);
+    b2FixtureDef rightBeeColliderFixtureDef;
+    auto rightBeeCollidershape = utils::box2d::getBoxShape({2, visibleSize.height});
+    rightBeeColliderFixtureDef.shape = &rightBeeCollidershape;
+    rightBeeColliderFixtureDef.density = 1;
+    rightBeeColliderFixtureDef.filter.categoryBits = CollisionGroup::border;
+    rightBeeColliderFixtureDef.filter.maskBits = CollisionGroup::bee;
+    rightBeeColliderFixtureDef.isSensor = true;  // TODO verify
+    staticRightBeeColliderBody->CreateFixture(&rightBeeColliderFixtureDef);
 
-    rightBorderNode->addComponent(rightBorderPhysicsBody);
-    this->addChild(rightBorderNode, 10);
+    // World stepping
+    scheduleUpdate();
 
     return true;
+}
+
+void JumpyScene::update(const float dt)
+{  // get current time double
+    const auto currentTick = getCurrentTick();
+    if (m_lastUpdateTick < 0) {
+        m_lastUpdateTick = currentTick;
+    }
+
+    // determine the amount of time elapsed since our last update
+    const double frameTime = currentTick - m_lastUpdateTick;
+    m_tickAccumulator += frameTime;
+
+    static constexpr double secondsPerUpdate{0.1};
+    // update the world with the same seconds per update
+    while (m_tickAccumulator > secondsPerUpdate) {
+        m_tickAccumulator -= secondsPerUpdate;
+
+        // perform a single step of the physics simulation
+        m_world.getWorld().Step(secondsPerUpdate, 8, 1);
+    }
+    m_lastUpdateTick = currentTick;
+}
+
+void JumpyScene::render(cocos2d::Renderer* renderer,
+                        const cocos2d::Mat4& eyeTransform,
+                        const cocos2d::Mat4* eyeProjection)
+{
+    cocos2d::Scene::render(renderer, eyeTransform, eyeProjection);
+    auto director = cocos2d::Director::getInstance();
+    director->pushMatrix(cocos2d::MATRIX_STACK_TYPE::MATRIX_STACK_MODELVIEW);
+    director->loadMatrix(cocos2d::MATRIX_STACK_TYPE::MATRIX_STACK_MODELVIEW, eyeTransform);
+    cocos2d::GL::enableVertexAttribs(cocos2d::GL::VERTEX_ATTRIB_FLAG_POSITION);
+    m_world.getWorld().DrawDebugData();
+    director->popMatrix(cocos2d::MATRIX_STACK_TYPE::MATRIX_STACK_MODELVIEW);
 }

@@ -21,19 +21,52 @@
 #ifndef __JUMPY_SCENE_H__
 #define __JUMPY_SCENE_H__
 
+#include "GLES-Render.h"
 #include "GameLogic.h"
+#include "PTM.h"
 #include "cocos2d.h"
+
+class b2World;
 
 class JumpyScene : public cocos2d::Scene {
 public:
+    class ScopedWorld {
+    public:
+        ScopedWorld();
+        ~ScopedWorld();
+
+        b2World& getWorld()
+        {
+            return *m_world;
+        }
+
+        const b2World& getWorld() const
+        {
+            return *m_world;
+        }
+
+        ScopedWorld(const ScopedWorld&) = delete;
+
+    private:
+        b2World* m_world;
+    };
     static cocos2d::Scene* createScene();
 
     virtual bool init() final;
+    void update(float dt) final;
+    void render(cocos2d::Renderer* renderer,
+                const cocos2d::Mat4& eyeTransform,
+                const cocos2d::Mat4* eyeProjection = nullptr) final;
 
 private:
     bool initEnvironment();
 
+    // From Box2D demo
+    GLESDebugDraw m_debugDraw{PTM::ptm};
+    ScopedWorld m_world;
     GameLogic m_gameLogic;
+    double m_lastUpdateTick{-1.0};
+    double m_tickAccumulator{0.0};
 
     // implement the "static create()" method manually
     CREATE_FUNC(JumpyScene);

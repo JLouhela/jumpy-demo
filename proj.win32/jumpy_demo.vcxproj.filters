@@ -28,6 +28,12 @@
     <Filter Include="src\gamelogic">
       <UniqueIdentifier>{a0f61ef0-0abc-40c2-926a-761d7a9d6f44}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\utils">
+      <UniqueIdentifier>{375230c0-a3c3-4ed5-9e25-92d4d8bbc114}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\cocos2d">
+      <UniqueIdentifier>{33c623df-39c2-45dc-9530-c1807a4d61e4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -71,6 +77,12 @@
     </ClCompile>
     <ClCompile Include="..\Classes\RetryOverlay.cpp">
       <Filter>src\scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Box2DUtils.cpp">
+      <Filter>src\utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\GLES-Render.cpp">
+      <Filter>src\cocos2d</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -130,6 +142,15 @@
     </ClInclude>
     <ClInclude Include="..\Classes\RetryOverlay.h">
       <Filter>src\scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Box2DUtils.h">
+      <Filter>src\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\GLES-Render.h">
+      <Filter>src\cocos2d</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\PTM.h">
+      <Filter>src\constants</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

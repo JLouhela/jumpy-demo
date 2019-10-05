@@ -61,49 +61,57 @@ bool ContactListener::init(cocos2d::Scene& scene)
         cocos2d::log("Could not get event dispatcher");
         return false;
     }
-    m_contactListener = cocos2d::EventListenerPhysicsContact::create();
-    if (!m_contactListener) {
-        cocos2d::log("Could not create contact listener");
-        return false;
+    // TODO inherit from b2ContactListener
+    //   m_world->SetContactListener(&myContactListenerInstance);
+    // etc, see https://www.iforce2d.net/b2dtut/collision-callbacks
+
+    /*
+m_contactListener = cocos2d::EventListenerPhysicsContact::create();
+if (!m_contactListener) {
+    cocos2d::log("Could not create contact listener");
+    return false;
+}
+m_contactListener->setEnabled(true);
+m_contactListener->onContactBegin = [this](cocos2d::PhysicsContact& contact) -> bool {
+    const auto maskA = contact.getShapeA()->getBody()->getCategoryBitmask();
+    const auto maskB = contact.getShapeB()->getBody()->getCategoryBitmask();
+    if (bunnyToBeeCollision(maskA, maskB)) {
+        fireBunnyHitEvent(*m_eventDispatcher);
+        return true;
     }
-    m_contactListener->setEnabled(true);
-    m_contactListener->onContactBegin = [this](cocos2d::PhysicsContact& contact) -> bool {
-        const auto maskA = contact.getShapeA()->getBody()->getCategoryBitmask();
-        const auto maskB = contact.getShapeB()->getBody()->getCategoryBitmask();
-        if (bunnyToBeeCollision(maskA, maskB)) {
-            fireBunnyHitEvent(*m_eventDispatcher);
-            return true;
+    // Not sure how I feel about directly invoking Bunny methods here.
+    // api getting bloated, although usage is in logical place.
+    // Ideally Bunny would be responsible for it's own collisions, but cocos2d seems to
+    // prefer single collision detector which for sure is more efficient on this design.
+    if (bunnyToGroundCollision(maskA, maskB)) {
+        if (maskA == CollisionGroup::bunny) {
+            static_cast<Bunny*>(contact.getShapeA()->getBody()->getNode()->getUserData())
+                ->resetState();
         }
-        // Not sure how I feel about directly invoking Bunny methods here.
-        // api getting bloated, although usage is in logical place.
-        // Ideally Bunny would be responsible for it's own collisions, but cocos2d seems to
-        // prefer single collision detector which for sure is more efficient on this design.
-        if (bunnyToGroundCollision(maskA, maskB)) {
-            if (maskA == CollisionGroup::bunny) {
-                static_cast<Bunny*>(contact.getShapeA()->getBody()->getNode()->getUserData())
-                    ->resetState();
-            }
-            if (maskB == CollisionGroup::bunny) {
-                static_cast<Bunny*>(contact.getShapeB()->getBody()->getNode()->getUserData())
-                    ->resetState();
-            }
-            return true;
+        if (maskB == CollisionGroup::bunny) {
+            static_cast<Bunny*>(contact.getShapeB()->getBody()->getNode()->getUserData())
+                ->resetState();
         }
-        return false;
-    };
+        return true;
+    }
 
-    m_contactListener->onContactSeparate = [this](cocos2d::PhysicsContact& contact) -> bool {
-        const auto maskA = contact.getShapeA()->getBody()->getCategoryBitmask();
-        const auto maskB = contact.getShapeB()->getBody()->getCategoryBitmask();
+            
+    return false;
+};
 
-        if (beeToBorderCollision(maskA, maskB)) {
-            // Could also dispose the bee, probably no point.
-            fireBeeThroughEvent(*m_eventDispatcher);
-            return true;
-        }
-        return false;
-    };
+m_contactListener->onContactSeparate = [this](cocos2d::PhysicsContact& contact) -> bool {
+    const auto maskA = contact.getShapeA()->getBody()->getCategoryBitmask();
+    const auto maskB = contact.getShapeB()->getBody()->getCategoryBitmask();
 
-    scene.getEventDispatcher()->addEventListenerWithSceneGraphPriority(m_contactListener, &scene);
+    if (beeToBorderCollision(maskA, maskB)) {
+        // Could also dispose the bee, probably no point.
+        fireBeeThroughEvent(*m_eventDispatcher);
+        return true;
+    }
+    return false;
+};
+
+scene.getEventDispatcher()->addEventListenerWithSceneGraphPriority(m_contactListener, &scene);
+*/
     return true;
 }
