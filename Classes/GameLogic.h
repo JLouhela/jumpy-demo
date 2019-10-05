@@ -34,12 +34,13 @@
 class BunnyController;
 class BeeSpawner;
 class InputHandler;
+class b2World;
 
 enum GameState : std::uint8_t { start, active, wait, end };
 
 class GameLogic {
 public:
-    bool init(cocos2d::Scene& scene);
+    bool init(cocos2d::Scene& scene, b2World& world);
 
 private:
     void initStage(const StageInfo& stageInfo);

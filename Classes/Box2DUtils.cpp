@@ -21,6 +21,11 @@
 #include "Box2DUtils.h"
 #include "PTM.h"
 
+namespace {
+static constexpr float degToRad = 0.0174533f;
+static constexpr float radToDeg = 57.2958f;
+}  // namespace
+
 namespace utils {
 namespace box2d {
 
@@ -42,6 +47,26 @@ b2PolygonShape getBoxShape(const cocos2d::Vec2& sizePixels)
 b2Vec2 pixelsToMeters(const cocos2d::Vec2& pixelPos)
 {
     return {pixelPos.x / PTM::ptm, pixelPos.y / PTM::ptm};
+}
+
+cocos2d::Vec2 metersToPixels(const b2Vec2& meterPos)
+{
+    return {meterPos.x * PTM::ptm, meterPos.y * PTM::ptm};
+}
+
+void syncSprite(cocos2d::Sprite& sprite, const b2Vec2& newPos, float newAngleRad)
+{
+    sprite.setPosition(metersToPixels(newPos));
+    sprite.setRotation(newAngleRad * radToDeg);
+}
+
+void syncSprite(cocos2d::Sprite& sprite, const b2Vec2& newPos, float newAngle, float alpha)
+{
+    const auto curPos = sprite.getPosition();
+    const auto alphaRemainder = 1.0f - alpha;
+    sprite.setPosition({newPos.x * PTM::ptm * alpha + curPos.x * alphaRemainder,
+                        newPos.y * PTM::ptm * alpha + curPos.y * alphaRemainder});
+    sprite.setRotation({newAngle * radToDeg * alpha + sprite.getRotation() * alphaRemainder});
 }
 
 }  // namespace box2d

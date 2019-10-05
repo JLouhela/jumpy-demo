@@ -18,32 +18,22 @@
 /// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 /// IN THE SOFTWARE.
 
-#ifndef __BUNNY_CONTROLLER_H__
-#define __BUNNY_CONTROLLER_H__
+#ifndef __PHYSICS_OBJECT_H__
+#define __PHYSICS_OBJECT_H__
 
-#include <Bunny.h>
-#include <array>
 #include <cstdint>
-#include <utility>
-#include "cocos2d.h"
+#include <functional>
 
-class b2World;
+namespace cocos2d {
+class Sprite;
+}
 
-class BunnyController {
-public:
-    static constexpr std::uint8_t maxBunnyCount{4};
+struct b2Vec2;
 
-    bool init(cocos2d::Scene& scene, b2World& world);
-    void spawnBunnies(std::uint8_t count);
-    void disposeBunnies();
-    bool jumpBunny(const cocos2d::Vec2& pos);
-
-private:
-    std::vector<cocos2d::Vec2> getSpawnPoints(std::uint8_t count);
-
-    // Bunny_id equals to container index.
-    // Hardcoded init sufficient for demonstration purposes.
-    std::array<Bunny, maxBunnyCount> m_bunnyContainer;
+struct PhysicsObject {
+    cocos2d::Sprite* sprite{nullptr};
+    std::function<bool(std::uint8_t colliderGroup)> collsionOccurredCallback{nullptr};
+    std::function<bool(std::uint8_t colliderGroup)> collsionResolvedCallback{nullptr};
 };
 
-#endif  // __BUNNY_CONTROLLER_H__
+#endif  // __PHYSICS_OBJECT_H__

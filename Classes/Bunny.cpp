@@ -19,10 +19,13 @@
 /// IN THE SOFTWARE.
 
 #include "Bunny.h"
+#include "Box2D/Box2D.h"
+#include "Box2DUtils.h"
 #include "CollisionGroup.h"
+#include "PTM.h"
 
 namespace {
-
+const cocos2d::Vec2 relativeBodySize{0.95f, 0.9f};
 constexpr float velocityLimitUp{350.0f};
 constexpr float velocityLimitDown{500.0f};
 
@@ -38,7 +41,7 @@ cocos2d::Sprite* loadSprite()
 }
 
 }  // namespace
-bool Bunny::init(Bunny_id id, cocos2d::Scene& scene)
+bool Bunny::init(Bunny_id id, cocos2d::Scene& scene, b2World& world)
 {
     m_sprite = loadSprite();
 
@@ -46,22 +49,24 @@ bool Bunny::init(Bunny_id id, cocos2d::Scene& scene)
         return false;
     }
     m_id = id;
-    // Add physics body
-    /*
-    TODO: Fix to use Box2D, see all commented lines
 
-m_physicsBody = cocos2d::PhysicsBody::createBox(cocos2d::Size(36, 84),
-                                                cocos2d::PhysicsMaterial(1.0f, 0.01f, 0.0f));
-m_physicsBody->setDynamic(true);
-m_physicsBody->setGravityEnable(true);
-m_physicsBody->setVelocityLimit(velocityLimitUp);
-m_physicsBody->setRotationEnable(false);
-m_physicsBody->setCategoryBitmask(CollisionGroup::bunny);
-m_physicsBody->setCollisionBitmask(CollisionGroup::ground);
-m_physicsBody->setContactTestBitmask(CollisionGroup::bee + CollisionGroup::ground);
-m_sprite->addComponent(m_physicsBody);
-m_sprite->setUserData(this);
-    */
+    // Physics init
+    b2BodyDef bunnyBody{};
+    bunnyBody.type = b2_dynamicBody;
+    bunnyBody.angle = 0;
+    bunnyBody.userData = this;
+    bunnyBody.fixedRotation = true;
+    m_body = world.CreateBody(&bunnyBody);
+
+    b2FixtureDef groundFixtureDef;
+    const auto spriteSize = m_sprite->getContentSize();
+    auto boxShape = utils::box2d::getBoxShape(
+        {spriteSize.width * relativeBodySize.x, spriteSize.height * relativeBodySize.y});
+    groundFixtureDef.shape = &boxShape;
+    groundFixtureDef.density = 1;
+    groundFixtureDef.filter.categoryBits = CollisionGroup::bunny;
+    groundFixtureDef.filter.maskBits = CollisionGroup::bunny + CollisionGroup::ground;
+    m_body->CreateFixture(&groundFixtureDef);
     dispose();
     return true;
 }
@@ -71,7 +76,10 @@ void Bunny::activate(const cocos2d::Vec2& pos)
     // No nullcheck, BunnyController shall ensure that only initialized bunnies are accessed
     m_sprite->setVisible(true);
     m_sprite->setPosition(pos);
-    // m_physicsBody->setEnabled(true);
+    m_body->SetTransform(utils::box2d::pixelsToMeters({m_sprite->getBoundingBox().getMidX(),
+                                                       m_sprite->getBoundingBox().getMidY()}),
+                         0.0f);
+    m_body->SetAwake(true);
 }
 
 const cocos2d::Rect Bunny::getBoundingBox() const
@@ -81,20 +89,25 @@ const cocos2d::Rect Bunny::getBoundingBox() const
 
 void Bunny::jump()
 {
-    if ((m_state == BunnyState::jumped || m_state == BunnyState::doublejump)  /* &&
-        m_physicsBody->getVelocity().y < -25.0f*/) {
+    if ((m_state == BunnyState::jumped || m_state == BunnyState::doublejump) &&
+        m_body->GetLinearVelocity().y < -25.0f) {
         // Downwards dash
         m_state = BunnyState::dash;
-        // Allow more speed downwards
-        // m_physicsBody->setVelocityLimit(velocityLimitDown);
-        // m_physicsBody->applyImpulse(cocos2d::Vec2{0.0f, -4000000.0f});
+        const auto topMid = utils::box2d::pixelsToMeters(
+            {m_sprite->getBoundingBox().getMidX() * relativeBodySize.x,
+             m_sprite->getBoundingBox().getMaxY() * relativeBodySize.y});
+        m_body->ApplyLinearImpulse(b2Vec2{0.0f, 30.0f}, topMid, true);
+
         m_sprite->setFlippedY(true);
         return;
     }
 
     if (m_state == BunnyState::grounded || m_state == BunnyState::jumped) {
         m_state = (m_state == BunnyState::grounded) ? BunnyState::jumped : BunnyState::doublejump;
-        // m_physicsBody->applyImpulse(cocos2d::Vec2{0.0f, 4000000.0f});
+        const auto bottomMid = utils::box2d::pixelsToMeters(
+            {m_sprite->getBoundingBox().getMidX() * relativeBodySize.x,
+             m_sprite->getBoundingBox().getMinY() * relativeBodySize.y});
+        m_body->ApplyLinearImpulse(b2Vec2{0.0f, 20.0f}, bottomMid, true);
         const auto spriteFrame{
             cocos2d::SpriteFrameCache::getInstance()->getSpriteFrameByName("./bunny_jump_96_48")};
         m_sprite->setSpriteFrame(spriteFrame);
@@ -109,7 +122,6 @@ void Bunny::resetState()
         cocos2d::SpriteFrameCache::getInstance()->getSpriteFrameByName("./bunny_stand_96_48")};
     m_sprite->setSpriteFrame(spriteFrame);
     m_sprite->setFlippedY(false);
-    // m_physicsBody->setVelocityLimit(velocityLimitUp);
 
     m_state = BunnyState::grounded;
 }
@@ -118,7 +130,5 @@ void Bunny::dispose()
 {
     m_state = BunnyState::doublejump;
     m_sprite->setVisible(false);
-    // m_physicsBody->setEnabled(false);
-    // m_physicsBody->resetForces();
-    // m_physicsBody->setVelocity(cocos2d::Vec2{0, 0});
+    m_body->SetAwake(false);
 }

@@ -31,8 +31,8 @@
     <Filter Include="src\utils">
       <UniqueIdentifier>{375230c0-a3c3-4ed5-9e25-92d4d8bbc114}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\cocos2d">
-      <UniqueIdentifier>{33c623df-39c2-45dc-9530-c1807a4d61e4}</UniqueIdentifier>
+    <Filter Include="src\physics">
+      <UniqueIdentifier>{aace3230-55e2-4dcd-88b0-d649ff4dd532}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -82,7 +82,10 @@
       <Filter>src\utils</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\GLES-Render.cpp">
-      <Filter>src\cocos2d</Filter>
+      <Filter>src\physics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\PhysicsWorld.cpp">
+      <Filter>src\physics</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -146,11 +149,17 @@
     <ClInclude Include="..\Classes\Box2DUtils.h">
       <Filter>src\utils</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\GLES-Render.h">
-      <Filter>src\cocos2d</Filter>
-    </ClInclude>
     <ClInclude Include="..\Classes\PTM.h">
       <Filter>src\constants</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\GLES-Render.h">
+      <Filter>src\physics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\PhysicsWorld.h">
+      <Filter>src\physics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\PhysicsObject.h">
+      <Filter>src\physics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

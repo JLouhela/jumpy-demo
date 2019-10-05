@@ -19,6 +19,7 @@
 /// IN THE SOFTWARE.
 
 #include "GameLogic.h"
+#include "Box2D/Box2D.h"
 #include "CustomEvents.h"
 #include "MenuScene.h"
 
@@ -45,11 +46,11 @@ void displayVictoryLabel(cocos2d::Scene& scene)
 }
 }  // namespace
 
-bool GameLogic::init(cocos2d::Scene& scene)
+bool GameLogic::init(cocos2d::Scene& scene, b2World& world)
 {
     m_scene = &scene;
     bool ok = m_beeSpawner.init(scene);
-    ok = ok && m_bunnyController.init(scene);
+    ok = ok && m_bunnyController.init(scene, world);
     ok = ok && m_inputHandler.init(m_bunnyController);
     ok = ok && m_contactListener.init(scene);
 

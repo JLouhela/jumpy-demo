@@ -42,12 +42,12 @@ void BunnyController::disposeBunnies()
     }
 }
 
-bool BunnyController::init(cocos2d::Scene& scene)
+bool BunnyController::init(cocos2d::Scene& scene, b2World& world)
 {
     Bunny_id id{0};
     // Before modifications to scene, check if any bunny was not initialized properly
     for (auto& bunny : m_bunnyContainer) {
-        if (!bunny.init(id, scene)) {
+        if (!bunny.init(id, scene, world)) {
             return false;
         }
         ++id;

@@ -18,32 +18,45 @@
 /// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 /// IN THE SOFTWARE.
 
-#ifndef __BUNNY_CONTROLLER_H__
-#define __BUNNY_CONTROLLER_H__
+#ifndef __PHYSICS_WORLD_H__
+#define __PHYSICS_WORLD_H__
 
-#include <Bunny.h>
-#include <array>
-#include <cstdint>
-#include <utility>
-#include "cocos2d.h"
+#include "GLES-Render.h"
+#include "PTM.h"
 
-class b2World;
-
-class BunnyController {
+class PhysicsWorld {
 public:
-    static constexpr std::uint8_t maxBunnyCount{4};
+    PhysicsWorld();
+    ~PhysicsWorld();
+    PhysicsWorld(const PhysicsWorld&) = delete;
 
-    bool init(cocos2d::Scene& scene, b2World& world);
-    void spawnBunnies(std::uint8_t count);
-    void disposeBunnies();
-    bool jumpBunny(const cocos2d::Vec2& pos);
+    b2World& getWorld()
+    {
+        return *m_world;
+    }
+
+    const b2World& getWorld() const
+    {
+        return *m_world;
+    }
+
+    void setDrawDebug(bool value)
+    {
+        m_drawDebug = value;
+    }
+
+    void drawDebug(const cocos2d::Mat4& transform);
+
+    void update(double dt);
 
 private:
-    std::vector<cocos2d::Vec2> getSpawnPoints(std::uint8_t count);
+    void updateSprites(float alpha);
 
-    // Bunny_id equals to container index.
-    // Hardcoded init sufficient for demonstration purposes.
-    std::array<Bunny, maxBunnyCount> m_bunnyContainer;
+    b2World* m_world;
+    GLESDebugDraw m_debugDraw{PTM::ptm};
+    double m_lastUpdateTick{-1.0};
+    double m_tickAccumulator{0.0};
+    bool m_drawDebug{false};
 };
 
-#endif  // __BUNNY_CONTROLLER_H__
+#endif  // __PHYSICS_WORLD_H__

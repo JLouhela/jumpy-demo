@@ -64,17 +64,6 @@ cocos2d::Scene* JumpyScene::createScene()
     return JumpyScene::create();
 }
 
-JumpyScene::ScopedWorld::ScopedWorld()
-{
-    static const b2Vec2 gravity{0, -9.8f};  // earth gravity
-    m_world = new b2World(gravity);
-}
-
-JumpyScene::ScopedWorld::~ScopedWorld()
-{
-    delete m_world;
-}
-
 // on "init" you need to initialize your instance
 bool JumpyScene::init()
 {
@@ -89,10 +78,12 @@ bool JumpyScene::init()
         return false;
     }
 
-    if (!m_gameLogic.init(*this)) {
+    if (!m_gameLogic.init(*this, m_world.getWorld())) {
         cocos2d::log("Could not initialize game logic");
         return false;
     }
+
+    m_world.setDrawDebug(true);
 
     return true;
 }
@@ -115,23 +106,20 @@ bool JumpyScene::initEnvironment()
 
     // add ground sprite to the bottom of the screen
     static const float groundHeight = 128.0f;
-    auto groundSprite{initPhysicsSprite("./ground_1280_128")};
+    auto groundSprite{
+        initSprite("./ground_1280_128",
+                   cocos2d::Vec2{visibleSize.width / 2 + origin.x, groundHeight / 2 + origin.y})};
     if (!groundSprite) {
         return false;
     }
-    uint32 flags = 0;
-    flags += b2Draw::e_shapeBit;
-    flags += b2Draw::e_jointBit;
-    flags += b2Draw::e_aabbBit;
-    flags += b2Draw::e_centerOfMassBit;
-    m_debugDraw.SetFlags(flags);
-
-    m_world.getWorld().SetDebugDraw(&m_debugDraw);
 
     // Ground is solid
     b2BodyDef groundBody{};
     groundBody.type = b2_staticBody;
     groundBody.angle = 0;
+    groundBody.position = utils::box2d::pixelsToMeters(
+        {groundSprite->getBoundingBox().getMidX(), groundSprite->getBoundingBox().getMidY()});
+
     auto staticBody = m_world.getWorld().CreateBody(&groundBody);
 
     b2FixtureDef groundFixtureDef;
@@ -141,10 +129,6 @@ bool JumpyScene::initEnvironment()
     groundFixtureDef.filter.categoryBits = CollisionGroup::ground;
     groundFixtureDef.filter.maskBits = CollisionGroup::bunny;
     staticBody->CreateFixture(&groundFixtureDef);
-    groundSprite->setB2Body(staticBody);
-    groundSprite->setPTMRatio(PTM::ptm);
-    groundSprite->setPosition(
-        cocos2d::Vec2{visibleSize.width / 2 + origin.x, groundHeight / 2 + origin.y});
     this->addChild(groundSprite, ZOrder::ground);
 
     // Add (invisible) border colliders for bees
@@ -188,25 +172,9 @@ bool JumpyScene::initEnvironment()
 }
 
 void JumpyScene::update(const float dt)
-{  // get current time double
-    const auto currentTick = getCurrentTick();
-    if (m_lastUpdateTick < 0) {
-        m_lastUpdateTick = currentTick;
-    }
-
-    // determine the amount of time elapsed since our last update
-    const double frameTime = currentTick - m_lastUpdateTick;
-    m_tickAccumulator += frameTime;
-
-    static constexpr double secondsPerUpdate{0.1};
-    // update the world with the same seconds per update
-    while (m_tickAccumulator > secondsPerUpdate) {
-        m_tickAccumulator -= secondsPerUpdate;
-
-        // perform a single step of the physics simulation
-        m_world.getWorld().Step(secondsPerUpdate, 8, 1);
-    }
-    m_lastUpdateTick = currentTick;
+{
+    cocos2d::Scene::update(dt);
+    m_world.update(dt);
 }
 
 void JumpyScene::render(cocos2d::Renderer* renderer,
@@ -214,10 +182,5 @@ void JumpyScene::render(cocos2d::Renderer* renderer,
                         const cocos2d::Mat4* eyeProjection)
 {
     cocos2d::Scene::render(renderer, eyeTransform, eyeProjection);
-    auto director = cocos2d::Director::getInstance();
-    director->pushMatrix(cocos2d::MATRIX_STACK_TYPE::MATRIX_STACK_MODELVIEW);
-    director->loadMatrix(cocos2d::MATRIX_STACK_TYPE::MATRIX_STACK_MODELVIEW, eyeTransform);
-    cocos2d::GL::enableVertexAttribs(cocos2d::GL::VERTEX_ATTRIB_FLAG_POSITION);
-    m_world.getWorld().DrawDebugData();
-    director->popMatrix(cocos2d::MATRIX_STACK_TYPE::MATRIX_STACK_MODELVIEW);
+    m_world.drawDebug(eyeTransform);
 }

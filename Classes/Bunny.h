@@ -24,6 +24,9 @@
 #include <cstdint>
 #include "cocos2d.h"
 
+class b2World;
+class b2Body;
+
 // Potential refactoring: bee and bunny follow the same pattern
 // Base class extraction: "PooledEntity"
 
@@ -32,12 +35,14 @@ static constexpr Bunny_id invalidBunnyId{-1};
 
 class Bunny {
 public:
-    bool init(Bunny_id id, cocos2d::Scene& scene);
+    bool init(Bunny_id id, cocos2d::Scene& scene, b2World& world);
 
     Bunny_id getId() const
     {
         return m_id;
     }
+
+    void syncSprite(float dt);
 
     void resetState();
 
@@ -63,9 +68,8 @@ private:
     };
 
     cocos2d::Sprite* m_sprite{nullptr};
-    // cocos2d::PhysicsBody* m_physicsBody{nullptr};
+    b2Body* m_body;
     Bunny_id m_id{invalidBunnyId};
-    cocos2d::Vec2 m_pos{-100, -100};
     BunnyState m_state{BunnyState::doublejump};  // use doublejump as default to prevent jumping if
                                                  // bunny spawns in free fall
 };
