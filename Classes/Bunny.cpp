@@ -54,19 +54,21 @@ bool Bunny::init(Bunny_id id, cocos2d::Scene& scene, b2World& world)
     b2BodyDef bunnyBody{};
     bunnyBody.type = b2_dynamicBody;
     bunnyBody.angle = 0;
-    bunnyBody.userData = this;
+    bunnyBody.userData = &m_physicsObject;
     bunnyBody.fixedRotation = true;
     m_body = world.CreateBody(&bunnyBody);
 
-    b2FixtureDef groundFixtureDef;
+    b2FixtureDef bunnyFixtureDef;
     const auto spriteSize = m_sprite->getContentSize();
     auto boxShape = utils::box2d::getBoxShape(
         {spriteSize.width * relativeBodySize.x, spriteSize.height * relativeBodySize.y});
-    groundFixtureDef.shape = &boxShape;
-    groundFixtureDef.density = 1;
-    groundFixtureDef.filter.categoryBits = CollisionGroup::bunny;
-    groundFixtureDef.filter.maskBits = CollisionGroup::bunny + CollisionGroup::ground;
-    m_body->CreateFixture(&groundFixtureDef);
+    bunnyFixtureDef.shape = &boxShape;
+    bunnyFixtureDef.density = 1;
+    bunnyFixtureDef.filter.categoryBits = CollisionGroup::bunny;
+    bunnyFixtureDef.filter.maskBits = CollisionGroup::bee + CollisionGroup::ground;
+    m_body->CreateFixture(&bunnyFixtureDef);
+    // TODO set collision callback
+    m_physicsObject.sprite = m_sprite;
     dispose();
     return true;
 }
@@ -76,10 +78,8 @@ void Bunny::activate(const cocos2d::Vec2& pos)
     // No nullcheck, BunnyController shall ensure that only initialized bunnies are accessed
     m_sprite->setVisible(true);
     m_sprite->setPosition(pos);
-    m_body->SetTransform(utils::box2d::pixelsToMeters({m_sprite->getBoundingBox().getMidX(),
-                                                       m_sprite->getBoundingBox().getMidY()}),
-                         0.0f);
-    m_body->SetAwake(true);
+    m_physicsObject.active = true;
+    m_body->SetTransform(utils::box2d::pixelsToMeters(m_sprite->getPosition()), 0.0f);
 }
 
 const cocos2d::Rect Bunny::getBoundingBox() const
@@ -130,5 +130,5 @@ void Bunny::dispose()
 {
     m_state = BunnyState::doublejump;
     m_sprite->setVisible(false);
-    m_body->SetAwake(false);
+    m_physicsObject.active = false;
 }

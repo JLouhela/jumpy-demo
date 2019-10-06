@@ -28,16 +28,17 @@
 #include "BeeSpawn.h"
 #include "cocos2d.h"
 
+class b2World;
+
 class BeeSpawner {
 public:
-    bool init(cocos2d::Scene& scene);
+    bool init(cocos2d::Scene& scene, b2World& world);
     bool spawnBees(const BeeSpawns& spawn);
     void disposeBees();
 
 private:
     // Bee_id equals to container index
-    std::array<Bee, 10> m_beeContainer{Bee{0}, Bee{1}, Bee{2}, Bee{3}, Bee{4},
-                                       Bee{5}, Bee{6}, Bee{7}, Bee{8}, Bee{9}};
+    std::array<Bee, 10> m_beeContainer{};
 
     cocos2d::Node* m_actionNode{nullptr};
 };

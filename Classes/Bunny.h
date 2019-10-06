@@ -22,6 +22,7 @@
 #define __BUNNY_H__
 
 #include <cstdint>
+#include "PhysicsObject.h"
 #include "cocos2d.h"
 
 class b2World;
@@ -68,8 +69,9 @@ private:
     };
 
     cocos2d::Sprite* m_sprite{nullptr};
-    b2Body* m_body;
+    b2Body* m_body{nullptr};
     Bunny_id m_id{invalidBunnyId};
+    PhysicsObject m_physicsObject;
     BunnyState m_state{BunnyState::doublejump};  // use doublejump as default to prevent jumping if
                                                  // bunny spawns in free fall
 };

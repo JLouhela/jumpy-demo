@@ -50,7 +50,7 @@ public:
     void update(double dt);
 
 private:
-    void updateSprites(float alpha);
+    void syncBodies(float alpha);
 
     b2World* m_world;
     GLESDebugDraw m_debugDraw{PTM::ptm};

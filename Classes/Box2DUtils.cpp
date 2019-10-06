@@ -20,10 +20,12 @@
 
 #include "Box2DUtils.h"
 #include "PTM.h"
+#include "PhysicSObject.h"
 
 namespace {
 static constexpr float degToRad = 0.0174533f;
 static constexpr float radToDeg = 57.2958f;
+
 }  // namespace
 
 namespace utils {
@@ -31,8 +33,7 @@ namespace box2d {
 
 void setPosition(b2BodyDef& body, const cocos2d::Sprite& sprite)
 {
-    const auto worldCoords{sprite.convertToWorldSpace(
-        {sprite.getBoundingBox().getMidX(), sprite.getBoundingBox().getMidY()})};
+    const auto worldCoords{sprite.convertToWorldSpace(sprite.getPosition())};
     body.position = {worldCoords.x / PTM::ptm, worldCoords.y / PTM::ptm};
 }
 
@@ -54,19 +55,23 @@ cocos2d::Vec2 metersToPixels(const b2Vec2& meterPos)
     return {meterPos.x * PTM::ptm, meterPos.y * PTM::ptm};
 }
 
-void syncSprite(cocos2d::Sprite& sprite, const b2Vec2& newPos, float newAngleRad)
+void transformSprite(cocos2d::Sprite& sprite, const b2Vec2& newPos, float newAngleRad)
 {
     sprite.setPosition(metersToPixels(newPos));
     sprite.setRotation(newAngleRad * radToDeg);
 }
 
-void syncSprite(cocos2d::Sprite& sprite, const b2Vec2& newPos, float newAngle, float alpha)
+void syncPhysicsToSprite(PhysicsObject& physObj, const b2Vec2& newPos, float newAngle, float alpha)
 {
-    const auto curPos = sprite.getPosition();
+    if (physObj.prevPos.x < invalidCoord || physObj.prevPos.y < invalidCoord) {
+        transformSprite(*physObj.sprite, newPos, newAngle);
+        return;
+    }
     const auto alphaRemainder = 1.0f - alpha;
-    sprite.setPosition({newPos.x * PTM::ptm * alpha + curPos.x * alphaRemainder,
-                        newPos.y * PTM::ptm * alpha + curPos.y * alphaRemainder});
-    sprite.setRotation({newAngle * radToDeg * alpha + sprite.getRotation() * alphaRemainder});
+    physObj.sprite->setPosition((newPos.x * alpha + physObj.prevPos.x * alphaRemainder) * PTM::ptm,
+                                (newPos.y * alpha + physObj.prevPos.y * alphaRemainder) * PTM::ptm);
+    physObj.sprite->setRotation(
+        {newAngle * radToDeg * alpha + physObj.sprite->getRotation() * alphaRemainder});
 }
 
 }  // namespace box2d

@@ -24,14 +24,16 @@
 #include "Box2D/Box2D.h"
 #include "cocos2d.h"
 
+struct PhysicsObject;
+
 namespace utils {
 namespace box2d {
 void setPosition(b2BodyDef& body, const cocos2d::Sprite& sprite);
 b2PolygonShape getBoxShape(const cocos2d::Vec2& sizePixels);
 b2Vec2 pixelsToMeters(const cocos2d::Vec2& pixelPos);
 cocos2d::Vec2 metersToPixels(const b2Vec2& meterPos);
-void syncSprite(cocos2d::Sprite& sprite, const b2Vec2& newPos, float newAngleRad);
-void syncSprite(cocos2d::Sprite& sprite, const b2Vec2& newPos, float newAngle, float alpha);
+void transformSprite(cocos2d::Sprite& sprite, const b2Vec2& newPos, float newAngleRad);
+void syncPhysicsToSprite(PhysicsObject& physObj, const b2Vec2& newPos, float newAngle, float alpha);
 
 }  // namespace box2d
 }  // namespace utils

@@ -49,7 +49,7 @@ void displayVictoryLabel(cocos2d::Scene& scene)
 bool GameLogic::init(cocos2d::Scene& scene, b2World& world)
 {
     m_scene = &scene;
-    bool ok = m_beeSpawner.init(scene);
+    bool ok = m_beeSpawner.init(scene, world);
     ok = ok && m_bunnyController.init(scene, world);
     ok = ok && m_inputHandler.init(m_bunnyController);
     ok = ok && m_contactListener.init(scene);

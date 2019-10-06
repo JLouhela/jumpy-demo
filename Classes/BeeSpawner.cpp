@@ -61,11 +61,12 @@ bool BeeSpawner::spawnBees(const BeeSpawns& spawn)
     return true;
 }
 
-bool BeeSpawner::init(cocos2d::Scene& scene)
+bool BeeSpawner::init(cocos2d::Scene& scene, b2World& world)
 {
     // Before modifications to scene, check if any bunny was not initialized properly
-    for (const auto& bee : m_beeContainer) {
-        if (bee.getId() == invalidBeeId) {
+    Bee_id id{0};
+    for (auto& bee : m_beeContainer) {
+        if (!bee.init(id++, world)) {
             return false;
         }
     }

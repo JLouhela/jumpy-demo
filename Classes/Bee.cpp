@@ -19,9 +19,13 @@
 /// IN THE SOFTWARE.
 
 #include "Bee.h"
+#include "Box2D/Box2D.h"
+#include "Box2DUtils.h"
 #include "CollisionGroup.h"
 
 namespace {
+
+constexpr float velocity{5.0f};
 
 cocos2d::Sprite* loadSprite()
 {
@@ -36,57 +40,66 @@ cocos2d::Sprite* loadSprite()
 
 }  // namespace
 
-Bee::Bee(const Bee_id id) : m_id{id}, m_sprite{loadSprite()}
+bool Bee::init(const Bee_id id, b2World& world)
 {
-    // If ctor fails, put bee to fail state
+    m_sprite = loadSprite();
+    // If ctor fails, leave bee to fail state
     if (!m_sprite) {
         m_id = invalidBeeId;
-        return;
+        return false;
     }
-    // Add physics body
-    /*
-    // TODO convert to Box2D, see other commented linesb
-m_physicsBody = cocos2d::PhysicsBody::createBox(cocos2d::Size(26, 20),
-                                                cocos2d::PhysicsMaterial(0.1f, 0.1f, 0.0f));
-m_physicsBody->setDynamic(true);
-m_physicsBody->setGravityEnable(false);
-m_physicsBody->setCategoryBitmask(CollisionGroup::bee);
-m_physicsBody->setVelocityLimit(150.0f);
-m_physicsBody->setContactTestBitmask(CollisionGroup::bunny + CollisionGroup::border);
-m_physicsBody->setCollisionBitmask(0x00);
-m_sprite->setUserData(this);
-m_sprite->addComponent(m_physicsBody);
-    
 
+    // Physics init
+    b2BodyDef beeBody{};
+    beeBody.type = b2_dynamicBody;
+    beeBody.angle = 0;
+    beeBody.userData = &m_physicsObject;
+    beeBody.fixedRotation = true;
+    beeBody.gravityScale = 0.0f;
+    m_body = world.CreateBody(&beeBody);
 
+    b2FixtureDef beeFixtureDef;
+    const auto spriteSize = m_sprite->getContentSize();
+    const static cocos2d::Vec2 relativeBodySize{0.9f, 0.8f};
 
+    auto boxShape = utils::box2d::getBoxShape(
+        {spriteSize.width * relativeBodySize.x, spriteSize.height * relativeBodySize.y});
+    beeFixtureDef.shape = &boxShape;
+    beeFixtureDef.density = 1;
+    beeFixtureDef.filter.categoryBits = CollisionGroup::bee;
+    beeFixtureDef.filter.maskBits = CollisionGroup::bunny + CollisionGroup::border;
+    m_body->CreateFixture(&beeFixtureDef);
 
-    */
-
+    // TODO set collision callbacks
+    m_physicsObject.sprite = m_sprite;
     dispose();
+    return true;
 }
 
 void Bee::dispose()
 {
     m_sprite->setPosition(cocos2d::Vec2{-500, -500});
-    // m_physicsBody->setEnabled(false);
-    // m_physicsBody->resetForces();
-    // m_physicsBody->setVelocity(cocos2d::Vec2{0, 0});
+    m_body->SetTransform(utils::box2d::pixelsToMeters({m_sprite->getBoundingBox().getMidX(),
+                                                       m_sprite->getBoundingBox().getMidY()}),
+                         0.0f);
+    m_body->SetLinearVelocity({0.0f, 0.0f});
+    m_physicsObject.active = false;
     m_sprite->setVisible(false);
     m_state = BeeState::inactive;
 }
 
 void Bee::spawn(const cocos2d::Vec2& pos, direction dir)
 {
-    // m_physicsBody->setEnabled(true);
+    m_physicsObject.active = true;
     m_sprite->setPosition(pos);
     m_sprite->setVisible(true);
-    /*
-const float velocityX = (dir == direction::right) ? m_physicsBody->getVelocityLimit()
-                                                  : (m_physicsBody->getVelocityLimit() * -1);
-*/
+    m_body->SetTransform(utils::box2d::pixelsToMeters({m_sprite->getBoundingBox().getMidX(),
+                                                       m_sprite->getBoundingBox().getMidY()}),
+                         0.0f);
+    static const b2Vec2 velocityLeft{-velocity, 0.0f};
+    static const b2Vec2 velocityRight{velocity, 0.0f};
+    m_body->SetLinearVelocity(dir == direction::right ? velocityRight : velocityLeft);
     m_sprite->setFlippedX(dir == direction::right);
-    // m_physicsBody->setVelocity(cocos2d::Vec2{velocityX, 0});
 }
 
 void Bee::activate()

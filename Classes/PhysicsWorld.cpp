@@ -62,21 +62,26 @@ void PhysicsWorld::update(double dt)
 
     // determine the amount of time elapsed since our last update
     const double frameTime = currentTick - m_lastUpdateTick;
-    m_tickAccumulator += frameTime;
+    m_tickAccumulator += dt;
 
     static constexpr double secondsPerUpdate{1.0f / 60.0f};
+    bool updatePerformed{false};
     // update the world with the same seconds per update
-    while (m_tickAccumulator > secondsPerUpdate) {
+    while (m_tickAccumulator >= secondsPerUpdate) {
         m_tickAccumulator -= secondsPerUpdate;
 
         // perform a single step of the physics simulation
         m_world->Step(static_cast<float>(secondsPerUpdate), 8, 3);
+        updatePerformed = true;
     }
-    updateSprites(m_tickAccumulator / secondsPerUpdate);
+    m_world->ClearForces();
+    if (updatePerformed) {
+        syncBodies(m_tickAccumulator / secondsPerUpdate);
+    }
     m_lastUpdateTick = currentTick;
 }
 
-void PhysicsWorld::updateSprites(float alpha)
+void PhysicsWorld::syncBodies(float alpha)
 {
     for (b2Body* b = m_world->GetBodyList(); b; b = b->GetNext()) {
         if (b->GetType() == b2BodyType::b2_staticBody) {
@@ -86,7 +91,17 @@ void PhysicsWorld::updateSprites(float alpha)
             continue;
         }
         auto physicsObj = static_cast<PhysicsObject*>(b->GetUserData());
-        utils::box2d::syncSprite(*physicsObj->sprite, b->GetPosition(), b->GetAngle(), alpha);
+        // Dirty activation / deactivation:
+        if (physicsObj->active && !b->IsActive()) {
+            b->SetActive(true);
+        }
+        else if (!physicsObj->active && b->IsActive()) {
+            b->SetActive(false);
+        }
+        // sprite sync
+        utils::box2d::syncPhysicsToSprite(*physicsObj, b->GetPosition(), b->GetAngle(), alpha);
+        physicsObj->prevAngle = b->GetAngle();
+        physicsObj->prevPos = b->GetPosition();
     }
 }
 

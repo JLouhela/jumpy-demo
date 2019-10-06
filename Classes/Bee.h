@@ -23,7 +23,11 @@
 
 #include <cstdint>
 #include "Direction.h"
+#include "PhysicsObject.h"
 #include "cocos2d.h"
+
+class b2World;
+class b2Body;
 
 using Bee_id = std::int8_t;
 static constexpr Bee_id invalidBeeId{-1};
@@ -32,7 +36,7 @@ enum class BeeState : std::uint8_t { active, inactive };
 
 class Bee {
 public:
-    explicit Bee(Bee_id id);
+    bool init(Bee_id id, b2World& world);
 
     Bee_id getId() const
     {
@@ -57,7 +61,8 @@ public:
 
 private:
     cocos2d::Sprite* m_sprite{nullptr};
-    // cocos2d::PhysicsBody* m_physicsBody{nullptr};
+    b2Body* m_body{nullptr};
+    PhysicsObject m_physicsObject;
     Bee_id m_id{invalidBeeId};
     cocos2d::Vec2 m_pos{-500, -500};
     BeeState m_state{BeeState::inactive};
