@@ -68,6 +68,7 @@ bool Bunny::init(Bunny_id id, cocos2d::Scene& scene, b2World& world)
     bunnyFixtureDef.filter.categoryBits = CollisionGroup::bunny;
     bunnyFixtureDef.filter.maskBits = CollisionGroup::bee + CollisionGroup::ground;
     m_body->CreateFixture(&bunnyFixtureDef);
+    m_body->SetSleepingAllowed(false);
     m_physicsObject.sprite = m_sprite;
     m_physicsObject.collisionOccurredCallback = [this](const std::uint8_t colliderGroup) -> bool {
         if (colliderGroup == CollisionGroup::ground) {
