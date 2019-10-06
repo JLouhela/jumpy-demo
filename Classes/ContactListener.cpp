@@ -25,93 +25,38 @@
 #include "CollisionGroup.h"
 #include "CustomEvents.h"
 
-bool bunnyToBeeCollision(const std::int32_t a, const std::int32_t b)
+void ContactListener::BeginContact(b2Contact *contact)
 {
-    return (a == CollisionGroup::bee || a == CollisionGroup::bunny) &&
-           (b == CollisionGroup::bee || b == CollisionGroup::bunny) && (a != b);
-}
+    const auto maskA = contact->GetFixtureA()->GetFilterData().categoryBits;
+    const auto maskB = contact->GetFixtureB()->GetFilterData().categoryBits;
 
-bool bunnyToGroundCollision(const std::int32_t a, const std::int32_t b)
-{
-    return (a == CollisionGroup::ground || a == CollisionGroup::bunny) &&
-           (b == CollisionGroup::ground || b == CollisionGroup::bunny) && (a != b);
-}
-
-bool beeToBorderCollision(const std::int32_t a, const std::int32_t b)
-{
-    return (a == CollisionGroup::bee || a == CollisionGroup::border) &&
-           (b == CollisionGroup::bee || b == CollisionGroup::border) && (a != b);
-}
-
-void fireBunnyHitEvent(cocos2d::EventDispatcher& eventDispatcher)
-{
-    cocos2d::EventCustom event(CustomEvent::bunnyHitEvent);
-    eventDispatcher.dispatchEvent(&event);
-}
-void fireBeeThroughEvent(cocos2d::EventDispatcher& eventDispatcher)
-{
-    cocos2d::EventCustom event(CustomEvent::beeThroughEvent);
-    eventDispatcher.dispatchEvent(&event);
-}
-
-bool ContactListener::init(cocos2d::Scene& scene)
-{
-    m_eventDispatcher = scene.getEventDispatcher();
-    if (!m_eventDispatcher) {
-        cocos2d::log("Could not get event dispatcher");
-        return false;
+    auto physA = static_cast<PhysicsObject *>(contact->GetFixtureA()->GetBody()->GetUserData());
+    if (physA && physA->collisionOccurredCallback) {
+        physA->collisionOccurredCallback(maskB);
     }
-    // TODO inherit from b2ContactListener
-    //   m_world->SetContactListener(&myContactListenerInstance);
-    // etc, see https://www.iforce2d.net/b2dtut/collision-callbacks
-
-    /*
-m_contactListener = cocos2d::EventListenerPhysicsContact::create();
-if (!m_contactListener) {
-    cocos2d::log("Could not create contact listener");
-    return false;
+    auto physB = static_cast<PhysicsObject *>(contact->GetFixtureB()->GetBody()->GetUserData());
+    if (physB && physB->collisionOccurredCallback) {
+        physB->collisionOccurredCallback(maskA);
+    }
 }
-m_contactListener->setEnabled(true);
-m_contactListener->onContactBegin = [this](cocos2d::PhysicsContact& contact) -> bool {
-    const auto maskA = contact.getShapeA()->getBody()->getCategoryBitmask();
-    const auto maskB = contact.getShapeB()->getBody()->getCategoryBitmask();
-    if (bunnyToBeeCollision(maskA, maskB)) {
-        fireBunnyHitEvent(*m_eventDispatcher);
-        return true;
+
+void ContactListener::EndContact(b2Contact *contact)
+{
+    const auto maskA = contact->GetFixtureA()->GetFilterData().categoryBits;
+    const auto maskB = contact->GetFixtureB()->GetFilterData().categoryBits;
+
+    auto physA = static_cast<PhysicsObject *>(contact->GetFixtureA()->GetBody()->GetUserData());
+    if (physA && physA->collisionResolvedCallback) {
+        physA->collisionResolvedCallback(maskB);
     }
-    // Not sure how I feel about directly invoking Bunny methods here.
-    // api getting bloated, although usage is in logical place.
-    // Ideally Bunny would be responsible for it's own collisions, but cocos2d seems to
-    // prefer single collision detector which for sure is more efficient on this design.
-    if (bunnyToGroundCollision(maskA, maskB)) {
-        if (maskA == CollisionGroup::bunny) {
-            static_cast<Bunny*>(contact.getShapeA()->getBody()->getNode()->getUserData())
-                ->resetState();
-        }
-        if (maskB == CollisionGroup::bunny) {
-            static_cast<Bunny*>(contact.getShapeB()->getBody()->getNode()->getUserData())
-                ->resetState();
-        }
-        return true;
+    auto physB = static_cast<PhysicsObject *>(contact->GetFixtureB()->GetBody()->GetUserData());
+    if (physB && physB->collisionResolvedCallback) {
+        physB->collisionResolvedCallback(maskA);
     }
-
-            
-    return false;
-};
-
-m_contactListener->onContactSeparate = [this](cocos2d::PhysicsContact& contact) -> bool {
-    const auto maskA = contact.getShapeA()->getBody()->getCategoryBitmask();
-    const auto maskB = contact.getShapeB()->getBody()->getCategoryBitmask();
-
-    if (beeToBorderCollision(maskA, maskB)) {
-        // Could also dispose the bee, probably no point.
-        fireBeeThroughEvent(*m_eventDispatcher);
-        return true;
-    }
-    return false;
-};
-
-scene.getEventDispatcher()->addEventListenerWithSceneGraphPriority(m_contactListener, &scene);
-*/
-    return true;
+}
+void ContactListener::PreSolve(b2Contact *contact, const b2Manifold *oldManifold)
+{
+}
+void ContactListener::PostSolve(b2Contact *contact, const b2ContactImpulse *impulse)
+{
 }

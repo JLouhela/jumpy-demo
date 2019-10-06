@@ -38,8 +38,8 @@ struct PhysicsObject {
     b2Vec2 prevPos{invalidCoord, invalidCoord};
     float prevAngle{0.0f};
     bool active{false};
-    std::function<bool(std::uint8_t colliderGroup)> collsionOccurredCallback{nullptr};
-    std::function<bool(std::uint8_t colliderGroup)> collsionResolvedCallback{nullptr};
+    std::function<bool(std::uint8_t colliderGroup)> collisionOccurredCallback{nullptr};
+    std::function<bool(std::uint8_t colliderGroup)> collisionResolvedCallback{nullptr};
 };
 
 #endif  // __PHYSICS_OBJECT_H__

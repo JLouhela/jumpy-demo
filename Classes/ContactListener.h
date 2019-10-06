@@ -22,15 +22,17 @@
 #define __CONTACT_LISTENER_H__
 
 #include <functional>
+#include "Box2D/Box2D.h"
 #include "cocos2d.h"
 
-class ContactListener {
+class ContactListener : public b2ContactListener {
 public:
-    bool init(cocos2d::Scene& scene);
+    virtual void BeginContact(b2Contact *contact) final;
+    virtual void EndContact(b2Contact *contact) final;
+    virtual void PreSolve(b2Contact *contact, const b2Manifold *oldManifold) final;
+    virtual void PostSolve(b2Contact *contact, const b2ContactImpulse *impulse) final;
 
 private:
-    // cocos2d::EventListenerPhysicsContact* m_contactListener{nullptr};
-    cocos2d::EventDispatcher* m_eventDispatcher{nullptr};
 };
 
 #endif  // __CONTACT_LISTENER_H__

@@ -43,10 +43,6 @@ public:
         return m_id;
     }
 
-    void syncSprite(float dt);
-
-    void resetState();
-
     void dispose();
 
     void activate(const cocos2d::Vec2& pos);
@@ -67,6 +63,7 @@ private:
         doublejump,  // Has jumped twice
         dash         // Dashing downwards
     };
+    void land();
 
     cocos2d::Sprite* m_sprite{nullptr};
     b2Body* m_body{nullptr};

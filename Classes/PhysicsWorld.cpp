@@ -54,14 +54,6 @@ PhysicsWorld::~PhysicsWorld()
 
 void PhysicsWorld::update(double dt)
 {
-    // get current time double
-    const auto currentTick = getCurrentTick();
-    if (m_lastUpdateTick < 0) {
-        m_lastUpdateTick = currentTick;
-    }
-
-    // determine the amount of time elapsed since our last update
-    const double frameTime = currentTick - m_lastUpdateTick;
     m_tickAccumulator += dt;
 
     static constexpr double secondsPerUpdate{1.0f / 60.0f};
@@ -78,7 +70,6 @@ void PhysicsWorld::update(double dt)
     if (updatePerformed) {
         syncBodies(m_tickAccumulator / secondsPerUpdate);
     }
-    m_lastUpdateTick = currentTick;
 }
 
 void PhysicsWorld::syncBodies(float alpha)

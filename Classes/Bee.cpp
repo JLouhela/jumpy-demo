@@ -22,6 +22,7 @@
 #include "Box2D/Box2D.h"
 #include "Box2DUtils.h"
 #include "CollisionGroup.h"
+#include "CustomEvents.h"
 
 namespace {
 
@@ -67,21 +68,25 @@ bool Bee::init(const Bee_id id, b2World& world)
     beeFixtureDef.shape = &boxShape;
     beeFixtureDef.density = 1;
     beeFixtureDef.filter.categoryBits = CollisionGroup::bee;
-    beeFixtureDef.filter.maskBits = CollisionGroup::bunny + CollisionGroup::border;
+    beeFixtureDef.filter.maskBits = 0x00;
     m_body->CreateFixture(&beeFixtureDef);
 
-    // TODO set collision callbacks
     m_physicsObject.sprite = m_sprite;
+    m_physicsObject.collisionResolvedCallback = [this](const std::uint8_t colliderGroup) -> bool {
+        if ((colliderGroup & m_body->GetFixtureList()->GetFilterData().maskBits) != 0) {
+            cocos2d::EventCustom event(CustomEvent::beeThroughEvent);
+            cocos2d::Director::getInstance()->getEventDispatcher()->dispatchEvent(&event);
+            // TODO play sound?
+            return true;
+        }
+        return false;
+    };
     dispose();
     return true;
 }
 
 void Bee::dispose()
 {
-    m_sprite->setPosition(cocos2d::Vec2{-500, -500});
-    m_body->SetTransform(utils::box2d::pixelsToMeters({m_sprite->getBoundingBox().getMidX(),
-                                                       m_sprite->getBoundingBox().getMidY()}),
-                         0.0f);
     m_body->SetLinearVelocity({0.0f, 0.0f});
     m_physicsObject.active = false;
     m_sprite->setVisible(false);
@@ -93,12 +98,16 @@ void Bee::spawn(const cocos2d::Vec2& pos, direction dir)
     m_physicsObject.active = true;
     m_sprite->setPosition(pos);
     m_sprite->setVisible(true);
-    m_body->SetTransform(utils::box2d::pixelsToMeters({m_sprite->getBoundingBox().getMidX(),
-                                                       m_sprite->getBoundingBox().getMidY()}),
-                         0.0f);
+    m_body->SetTransform(utils::box2d::pixelsToMeters(m_sprite->getPosition()), 0.0f);
     static const b2Vec2 velocityLeft{-velocity, 0.0f};
     static const b2Vec2 velocityRight{velocity, 0.0f};
     m_body->SetLinearVelocity(dir == direction::right ? velocityRight : velocityLeft);
+    b2Filter filter = m_body->GetFixtureList()->GetFilterData();
+    filter.maskBits =
+        CollisionGroup::bunny +
+        (dir == direction::right ? CollisionGroup::rightBorder : CollisionGroup::leftBorder);
+    m_body->GetFixtureList()->SetFilterData(filter);
+
     m_sprite->setFlippedX(dir == direction::right);
 }
 

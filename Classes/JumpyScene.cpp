@@ -143,7 +143,7 @@ bool JumpyScene::initEnvironment()
     auto leftBeeCollidershape = utils::box2d::getBoxShape({2, visibleSize.height});
     leftBeeColliderFixtureDef.shape = &leftBeeCollidershape;
     leftBeeColliderFixtureDef.density = 1;
-    leftBeeColliderFixtureDef.filter.categoryBits = CollisionGroup::border;
+    leftBeeColliderFixtureDef.filter.categoryBits = CollisionGroup::leftBorder;
     leftBeeColliderFixtureDef.filter.maskBits = CollisionGroup::bee;
     leftBeeColliderFixtureDef.isSensor = true;  // TODO verify
     staticLeftBeeColliderBody->CreateFixture(&leftBeeColliderFixtureDef);
@@ -160,7 +160,7 @@ bool JumpyScene::initEnvironment()
     auto rightBeeCollidershape = utils::box2d::getBoxShape({2, visibleSize.height});
     rightBeeColliderFixtureDef.shape = &rightBeeCollidershape;
     rightBeeColliderFixtureDef.density = 1;
-    rightBeeColliderFixtureDef.filter.categoryBits = CollisionGroup::border;
+    rightBeeColliderFixtureDef.filter.categoryBits = CollisionGroup::rightBorder;
     rightBeeColliderFixtureDef.filter.maskBits = CollisionGroup::bee;
     rightBeeColliderFixtureDef.isSensor = true;  // TODO verify
     staticRightBeeColliderBody->CreateFixture(&rightBeeColliderFixtureDef);

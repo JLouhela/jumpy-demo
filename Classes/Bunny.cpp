@@ -22,6 +22,7 @@
 #include "Box2D/Box2D.h"
 #include "Box2DUtils.h"
 #include "CollisionGroup.h"
+#include "CustomEvents.h"
 #include "PTM.h"
 
 namespace {
@@ -67,8 +68,20 @@ bool Bunny::init(Bunny_id id, cocos2d::Scene& scene, b2World& world)
     bunnyFixtureDef.filter.categoryBits = CollisionGroup::bunny;
     bunnyFixtureDef.filter.maskBits = CollisionGroup::bee + CollisionGroup::ground;
     m_body->CreateFixture(&bunnyFixtureDef);
-    // TODO set collision callback
     m_physicsObject.sprite = m_sprite;
+    m_physicsObject.collisionOccurredCallback = [this](const std::uint8_t colliderGroup) -> bool {
+        if (colliderGroup == CollisionGroup::ground) {
+            land();
+            return true;
+        }
+        if (colliderGroup == CollisionGroup::bee) {
+            cocos2d::EventCustom event(CustomEvent::bunnyHitEvent);
+            cocos2d::Director::getInstance()->getEventDispatcher()->dispatchEvent(&event);
+            // TODO play sound?
+            return true;
+        }
+        return false;
+    };
     dispose();
     return true;
 }
@@ -77,9 +90,8 @@ void Bunny::activate(const cocos2d::Vec2& pos)
 {
     // No nullcheck, BunnyController shall ensure that only initialized bunnies are accessed
     m_sprite->setVisible(true);
-    m_sprite->setPosition(pos);
     m_physicsObject.active = true;
-    m_body->SetTransform(utils::box2d::pixelsToMeters(m_sprite->getPosition()), 0.0f);
+    m_body->SetTransform(utils::box2d::pixelsToMeters(pos), 0.0f);
 }
 
 const cocos2d::Rect Bunny::getBoundingBox() const
@@ -116,7 +128,7 @@ void Bunny::jump()
     }
 }
 
-void Bunny::resetState()
+void Bunny::land()
 {
     const auto spriteFrame{
         cocos2d::SpriteFrameCache::getInstance()->getSpriteFrameByName("./bunny_stand_96_48")};

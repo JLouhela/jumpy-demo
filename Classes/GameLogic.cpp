@@ -52,7 +52,7 @@ bool GameLogic::init(cocos2d::Scene& scene, b2World& world)
     bool ok = m_beeSpawner.init(scene, world);
     ok = ok && m_bunnyController.init(scene, world);
     ok = ok && m_inputHandler.init(m_bunnyController);
-    ok = ok && m_contactListener.init(scene);
+    world.SetContactListener(&m_contactListener);
 
     auto retryCallback = [this]() {
         const auto stage = m_stageManager.getStage(m_curLvl);
