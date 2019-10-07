@@ -21,29 +21,29 @@
 #ifndef __BUNNY_CONTROLLER_H__
 #define __BUNNY_CONTROLLER_H__
 
-#include <Bunny.h>
 #include <array>
 #include <cstdint>
 #include <utility>
+#include "Bunny.h"
 #include "cocos2d.h"
 
 class b2World;
 
 class BunnyController {
 public:
-    static constexpr std::uint8_t maxBunnyCount{4};
+    static constexpr std::uint8_t bunnyCount{2};
 
     bool init(cocos2d::Scene& scene, b2World& world);
-    void spawnBunnies(std::uint8_t count);
+    void spawnBunnies();
     void disposeBunnies();
     bool jumpBunny(const cocos2d::Vec2& pos);
 
 private:
-    std::vector<cocos2d::Vec2> getSpawnPoints(std::uint8_t count);
+    std::vector<cocos2d::Vec2> BunnyController::getSpawnPoints(const std::uint8_t bunnyCount);
 
     // Bunny_id equals to container index.
     // Hardcoded init sufficient for demonstration purposes.
-    std::array<Bunny, maxBunnyCount> m_bunnyContainer;
+    std::array<Bunny, bunnyCount> m_bunnyContainer;
 };
 
 #endif  // __BUNNY_CONTROLLER_H__

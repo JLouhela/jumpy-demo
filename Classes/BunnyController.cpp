@@ -22,17 +22,16 @@
 #include <cstdint>
 #include "ZOrders.h"
 
-void BunnyController::spawnBunnies(std::uint8_t count)
-{
-    if (count > maxBunnyCount) {
-        cocos2d::log("Too many bunnies requested (%d), maximum is (%d)", count, maxBunnyCount);
-        count = maxBunnyCount;
-    }
-    const auto spawnPoints = getSpawnPoints(count);
+namespace {
+constexpr std::uint8_t leftBunny{0};
+constexpr std::uint8_t rightBunny{1};
+}  // namespace
 
-    for (std::uint8_t i{0}; i < count; ++i) {
-        m_bunnyContainer[i].activate(spawnPoints[i]);
-    }
+void BunnyController::spawnBunnies()
+{
+    const auto spawnPoints = getSpawnPoints(2);
+    m_bunnyContainer[leftBunny].activate(spawnPoints[leftBunny]);
+    m_bunnyContainer[rightBunny].activate(spawnPoints[rightBunny]);
 }
 
 void BunnyController::disposeBunnies()
@@ -63,7 +62,6 @@ std::vector<cocos2d::Vec2> BunnyController::getSpawnPoints(const std::uint8_t bu
     std::vector<cocos2d::Vec2> res;
     for (std::uint8_t i{0}; i < bunnyCount; ++i) {
         const auto visibleSize{cocos2d::Director::getInstance()->getVisibleSize()};
-        // FIXME 24.0f should come from bunny origin delta
         const float xOffset = visibleSize.width / (bunnyCount + 1);
         // There's only single stage, thus fixed yOffset. Ground height + bunny height / 2
         static constexpr float yOffset{176};
@@ -74,19 +72,12 @@ std::vector<cocos2d::Vec2> BunnyController::getSpawnPoints(const std::uint8_t bu
 
 bool BunnyController::jumpBunny(const cocos2d::Vec2& pos)
 {
-    for (auto& bunny : m_bunnyContainer) {
-        // Forget y completely, just check x
-        auto rect = bunny.getBoundingBox();
-        static constexpr float extraWidth = 40.0f;
-        rect.size.width += extraWidth;
-        rect.origin.x -= extraWidth / 2;
-
-        // In this game bunnies cannot overlap horizontally.
-        // First match can consume the jump trigger.
-        if (pos.x > rect.origin.x && pos.x < (rect.origin.x + rect.size.width)) {
-            bunny.jump();
-            return true;
-        }
+    const auto visibleSize{cocos2d::Director::getInstance()->getVisibleSize()};
+    if (pos.x < visibleSize.width / 2) {
+        m_bunnyContainer[leftBunny].jump();
     }
-    return false;
+    else {
+        m_bunnyContainer[rightBunny].jump();
+    }
+    return true;
 }

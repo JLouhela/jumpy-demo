@@ -97,7 +97,7 @@ bool GameLogic::init(cocos2d::Scene& scene, b2World& world)
 
 void GameLogic::initStage(const StageInfo& stageInfo)
 {
-    m_bunnyController.spawnBunnies(stageInfo.bunnyCount);
+    m_bunnyController.spawnBunnies();
     m_beeSpawner.spawnBees(stageInfo.beeSpawns);
     m_beeEventListener.wait(stageInfo.beeSpawns.size());
     m_inputHandler.enable();

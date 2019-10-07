@@ -31,9 +31,6 @@
 #include "StageManager.h"
 #include "cocos2d.h"
 
-class BunnyController;
-class BeeSpawner;
-class InputHandler;
 class b2World;
 
 enum GameState : std::uint8_t { start, active, wait, end };

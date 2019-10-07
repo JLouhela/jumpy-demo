@@ -21,6 +21,10 @@
 #include "InputHandler.h"
 #include "BunnyController.h"
 
+#ifndef JUMPY_USE_MOUSE
+#define JUMPY_USE_MOUSE 1
+#endif
+
 bool InputHandler::init(BunnyController& bunnyController)
 {
     m_bunnyController = &bunnyController;
@@ -38,8 +42,14 @@ bool InputHandler::init(BunnyController& bunnyController)
 
     // Separate by build target..? If no issues, don't bother for the demo.
     // These are only input listeners in the scene, fixed priority ok.
+#ifdef JUMPY_USE_MOUSE
+    // TODO replace with mouse handler
     cocos2d::Director::getInstance()->getEventDispatcher()->addEventListenerWithFixedPriority(
         m_touchListener, 2);
+#else
+    cocos2d::Director::getInstance()->getEventDispatcher()->addEventListenerWithFixedPriority(
+        m_touchListener, 2);
+#endif
     return true;
 }
 
