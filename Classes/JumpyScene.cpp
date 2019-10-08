@@ -112,7 +112,13 @@ bool JumpyScene::initEnvironment()
     if (!groundSprite) {
         return false;
     }
-
+    static const float treeHeight = 720.0f;
+    auto treeSprite{
+        initSprite("./tree_256_720", cocos2d::Vec2{visibleSize.width / 2 + origin.x,
+                                                   treeHeight / 2 + origin.y + groundHeight - 1})};
+    if (!treeSprite) {
+        return false;
+    }
     // Ground is solid
     b2BodyDef groundBody{};
     groundBody.type = b2_staticBody;
@@ -120,50 +126,37 @@ bool JumpyScene::initEnvironment()
     groundBody.position = utils::box2d::pixelsToMeters(
         {groundSprite->getBoundingBox().getMidX(), groundSprite->getBoundingBox().getMidY()});
 
-    auto staticBody = m_world.getWorld().CreateBody(&groundBody);
+    auto groundStaticBody = m_world.getWorld().CreateBody(&groundBody);
 
     b2FixtureDef groundFixtureDef;
-    auto boxShape = utils::box2d::getBoxShape(groundSprite->getContentSize());
-    groundFixtureDef.shape = &boxShape;
+    auto groundShape = utils::box2d::getBoxShape(groundSprite->getContentSize());
+    groundFixtureDef.shape = &groundShape;
     groundFixtureDef.density = 1;
     groundFixtureDef.filter.categoryBits = CollisionGroup::ground;
     groundFixtureDef.filter.maskBits = CollisionGroup::bunny;
-    staticBody->CreateFixture(&groundFixtureDef);
+    groundStaticBody->CreateFixture(&groundFixtureDef);
     this->addChild(groundSprite, ZOrder::ground);
 
-    // Add (invisible) border colliders for bees
-    // Left
-    b2BodyDef leftBeeColliderBody{};
-    leftBeeColliderBody.type = b2_staticBody;
-    leftBeeColliderBody.angle = 0;
-    leftBeeColliderBody.position = utils::box2d::pixelsToMeters({1, visibleSize.height / 2});
-    auto staticLeftBeeColliderBody = m_world.getWorld().CreateBody(&leftBeeColliderBody);
+    // Tree is a sensor
+    b2BodyDef treeBody{};
+    treeBody.type = b2_staticBody;
+    treeBody.angle = 0;
+    treeBody.position = utils::box2d::pixelsToMeters(
+        {treeSprite->getBoundingBox().getMidX(), treeSprite->getBoundingBox().getMidY()});
 
-    b2FixtureDef leftBeeColliderFixtureDef;
-    auto leftBeeCollidershape = utils::box2d::getBoxShape({2, visibleSize.height});
-    leftBeeColliderFixtureDef.shape = &leftBeeCollidershape;
-    leftBeeColliderFixtureDef.density = 1;
-    leftBeeColliderFixtureDef.filter.categoryBits = CollisionGroup::leftBorder;
-    leftBeeColliderFixtureDef.filter.maskBits = CollisionGroup::bee;
-    leftBeeColliderFixtureDef.isSensor = true;  // TODO verify
-    staticLeftBeeColliderBody->CreateFixture(&leftBeeColliderFixtureDef);
+    auto treeStaticBody = m_world.getWorld().CreateBody(&treeBody);
 
-    // Right
-    b2BodyDef rightBeeColliderBody{};
-    rightBeeColliderBody.type = b2_staticBody;
-    rightBeeColliderBody.angle = 0;
-    rightBeeColliderBody.position =
-        utils::box2d::pixelsToMeters({visibleSize.width - 1, visibleSize.height / 2});
-    auto staticRightBeeColliderBody = m_world.getWorld().CreateBody(&rightBeeColliderBody);
-
-    b2FixtureDef rightBeeColliderFixtureDef;
-    auto rightBeeCollidershape = utils::box2d::getBoxShape({2, visibleSize.height});
-    rightBeeColliderFixtureDef.shape = &rightBeeCollidershape;
-    rightBeeColliderFixtureDef.density = 1;
-    rightBeeColliderFixtureDef.filter.categoryBits = CollisionGroup::rightBorder;
-    rightBeeColliderFixtureDef.filter.maskBits = CollisionGroup::bee;
-    rightBeeColliderFixtureDef.isSensor = true;  // TODO verify
-    staticRightBeeColliderBody->CreateFixture(&rightBeeColliderFixtureDef);
+    b2FixtureDef treeFixtureDef;
+    auto treeBoxSize = treeSprite->getContentSize();
+    treeBoxSize.width *= 0.4f;
+    auto treeShape = utils::box2d::getBoxShape(treeBoxSize);
+    treeFixtureDef.shape = &treeShape;
+    treeFixtureDef.density = 1;
+    treeFixtureDef.isSensor = true;
+    treeFixtureDef.filter.categoryBits = CollisionGroup::tree;
+    treeFixtureDef.filter.maskBits = CollisionGroup::bee;
+    treeStaticBody->CreateFixture(&treeFixtureDef);
+    this->addChild(treeSprite, ZOrder::background);
 
     // World stepping
     scheduleUpdate();

@@ -15,7 +15,22 @@
     <key>spriteSourceSize</key>
     <string>{32,28}</string>
     <key>textureRect</key>
-    <string>{{100,852},{32,27}}</string>
+    <string>{{342,852},{32,27}}</string>
+    <key>textureRotated</key>
+    <false/>
+   </dict>
+   <key>./bee_32_28_2</key>
+   <dict>
+    <key>aliases</key>
+    <array/>
+    <key>spriteOffset</key>
+    <string>{0,0}</string>
+    <key>spriteSize</key>
+    <string>{32,24}</string>
+    <key>spriteSourceSize</key>
+    <string>{32,28}</string>
+    <key>textureRect</key>
+    <string>{{376,852},{32,24}}</string>
     <key>textureRotated</key>
     <false/>
    </dict>
@@ -45,7 +60,7 @@
     <key>spriteSourceSize</key>
     <string>{48,96}</string>
     <key>textureRect</key>
-    <string>{{0,852},{48,96}}</string>
+    <string>{{242,852},{48,96}}</string>
     <key>textureRotated</key>
     <false/>
    </dict>
@@ -60,7 +75,7 @@
     <key>spriteSourceSize</key>
     <string>{48,96}</string>
     <key>textureRect</key>
-    <string>{{50,852},{48,94}}</string>
+    <string>{{292,852},{48,94}}</string>
     <key>textureRotated</key>
     <false/>
    </dict>
@@ -79,13 +94,28 @@
     <key>textureRotated</key>
     <false/>
    </dict>
+   <key>./tree_256_720</key>
+   <dict>
+    <key>aliases</key>
+    <array/>
+    <key>spriteOffset</key>
+    <string>{-4,-150}</string>
+    <key>spriteSize</key>
+    <string>{240,419}</string>
+    <key>spriteSourceSize</key>
+    <string>{256,720}</string>
+    <key>textureRect</key>
+    <string>{{0,852},{240,419}}</string>
+    <key>textureRotated</key>
+    <false/>
+   </dict>
   </dict>
   <key>metadata</key>
   <dict>
    <key>format</key>
    <integer>3</integer>
    <key>size</key>
-   <string>{1282,950}</string>
+   <string>{1282,1273}</string>
    <key>textureFileName</key>
    <string>jumpy_sprites.png</string>
   </dict>

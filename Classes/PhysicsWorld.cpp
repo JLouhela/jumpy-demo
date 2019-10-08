@@ -35,7 +35,7 @@ double getCurrentTick()
 
 PhysicsWorld::PhysicsWorld()
 {
-    static const b2Vec2 gravity{0, -15.0f};  // earth gravity
+    static const b2Vec2 gravity{0, -30.0f};
     m_world = new b2World(gravity);
 
     uint32 flags = 0;

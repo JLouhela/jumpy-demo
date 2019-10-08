@@ -30,12 +30,22 @@ constexpr float velocity{5.0f};
 
 cocos2d::Sprite* loadSprite()
 {
-    const auto beeSpriteFrame{
-        cocos2d::SpriteFrameCache::getInstance()->getSpriteFrameByName("./bee_32_28")};
-    auto beeSprite{cocos2d::Sprite::createWithSpriteFrame(beeSpriteFrame)};
+    cocos2d::Vector<cocos2d::SpriteFrame*> animFrames;
+    animFrames.reserve(12);
+
+    animFrames.pushBack(
+        cocos2d::SpriteFrameCache::getInstance()->getSpriteFrameByName("./bee_32_28"));
+    animFrames.pushBack(
+        cocos2d::SpriteFrameCache::getInstance()->getSpriteFrameByName("./bee_32_28_2"));
+    auto beeSprite{cocos2d::Sprite::createWithSpriteFrame(animFrames.at(0))};
     if (beeSprite == nullptr) {
         cocos2d::log("Could not load bee_32_28");
     }
+    cocos2d::Animation* animation = cocos2d::Animation::createWithSpriteFrames(animFrames, 0.01f);
+    cocos2d::Animate* animate = cocos2d::Animate::create(animation);
+
+    // run it and repeat it forever
+    beeSprite->runAction(cocos2d::RepeatForever::create(animate));
     return beeSprite;
 }
 
@@ -72,10 +82,11 @@ bool Bee::init(const Bee_id id, b2World& world)
     m_body->CreateFixture(&beeFixtureDef);
 
     m_physicsObject.sprite = m_sprite;
-    m_physicsObject.collisionResolvedCallback = [this](const std::uint8_t colliderGroup) -> bool {
-        if ((colliderGroup & m_body->GetFixtureList()->GetFilterData().maskBits) != 0) {
+    m_physicsObject.collisionOccurredCallback = [this](const std::uint8_t colliderGroup) -> bool {
+        if (colliderGroup == CollisionGroup::tree) {
             cocos2d::EventCustom event(CustomEvent::beeThroughEvent);
             cocos2d::Director::getInstance()->getEventDispatcher()->dispatchEvent(&event);
+            dispose();
             return true;
         }
         return false;
@@ -99,9 +110,7 @@ void Bee::spawn(const cocos2d::Vec2& pos, Direction dir)
     static const b2Vec2 velocityRight{velocity, 0.0f};
     m_body->SetLinearVelocity(dir == Direction::right ? velocityRight : velocityLeft);
     b2Filter filter = m_body->GetFixtureList()->GetFilterData();
-    filter.maskBits =
-        CollisionGroup::bunny +
-        (dir == Direction::right ? CollisionGroup::rightBorder : CollisionGroup::leftBorder);
+    filter.maskBits = CollisionGroup::bunny + CollisionGroup::tree;
     m_body->GetFixtureList()->SetFilterData(filter);
 
     m_sprite->setFlippedX(dir == Direction::right);

@@ -27,8 +27,7 @@ namespace CollisionGroup {
 static constexpr std::uint8_t bunny{0x01};
 static constexpr std::uint8_t ground{0x02};
 static constexpr std::uint8_t bee{0x04};
-static constexpr std::uint8_t leftBorder{0x08};
-static constexpr std::uint8_t rightBorder{0x10};
+static constexpr std::uint8_t tree{0x08};
 }  // namespace CollisionGroup
 
 #endif  // __COLLISION_GROUP_H__
