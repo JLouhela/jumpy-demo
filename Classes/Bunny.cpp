@@ -70,6 +70,7 @@ bool Bunny::init(Bunny_id id, cocos2d::Scene& scene, b2World& world)
     m_body->CreateFixture(&bunnyFixtureDef);
     m_body->SetSleepingAllowed(false);
     m_physicsObject.sprite = m_sprite;
+    m_physicsObject.hiddenPos = {-300.0f, -300.0f};
     m_physicsObject.collisionOccurredCallback = [this](const std::uint8_t colliderGroup) -> bool {
         if (colliderGroup == CollisionGroup::ground) {
             land();
@@ -90,7 +91,6 @@ bool Bunny::init(Bunny_id id, cocos2d::Scene& scene, b2World& world)
 void Bunny::activate(const cocos2d::Vec2& pos)
 {
     // No nullcheck, BunnyController shall ensure that only initialized bunnies are accessed
-    m_sprite->setVisible(true);
     m_physicsObject.active = true;
     m_body->SetTransform(utils::box2d::pixelsToMeters(pos), 0.0f);
 }
@@ -147,6 +147,5 @@ void Bunny::land()
 void Bunny::dispose()
 {
     m_state = BunnyState::doublejump;
-    m_sprite->setVisible(false);
     m_physicsObject.active = false;
 }

@@ -76,7 +76,6 @@ bool Bee::init(const Bee_id id, b2World& world)
         if ((colliderGroup & m_body->GetFixtureList()->GetFilterData().maskBits) != 0) {
             cocos2d::EventCustom event(CustomEvent::beeThroughEvent);
             cocos2d::Director::getInstance()->getEventDispatcher()->dispatchEvent(&event);
-            // TODO play sound?
             return true;
         }
         return false;
@@ -89,16 +88,13 @@ void Bee::dispose()
 {
     m_body->SetLinearVelocity({0.0f, 0.0f});
     m_physicsObject.active = false;
-    m_sprite->setVisible(false);
     m_state = BeeState::inactive;
 }
 
 void Bee::spawn(const cocos2d::Vec2& pos, Direction dir)
 {
     m_physicsObject.active = true;
-    m_sprite->setPosition(pos);
-    m_sprite->setVisible(true);
-    m_body->SetTransform(utils::box2d::pixelsToMeters(m_sprite->getPosition()), 0.0f);
+    m_body->SetTransform(utils::box2d::pixelsToMeters(pos), 0.0f);
     static const b2Vec2 velocityLeft{-velocity, 0.0f};
     static const b2Vec2 velocityRight{velocity, 0.0f};
     m_body->SetLinearVelocity(dir == Direction::right ? velocityRight : velocityLeft);

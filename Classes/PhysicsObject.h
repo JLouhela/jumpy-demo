@@ -31,11 +31,12 @@ class Sprite;
 
 struct b2Vec2;
 
-static constexpr float invalidCoord{-9999.0f};
+static constexpr float invalidCoord{-100.0f};
 
 struct PhysicsObject {
     cocos2d::Sprite* sprite{nullptr};
     b2Vec2 prevPos{invalidCoord, invalidCoord};
+    b2Vec2 hiddenPos{invalidCoord, invalidCoord};
     bool active{false};
     std::function<bool(std::uint8_t colliderGroup)> collisionOccurredCallback{nullptr};
     std::function<bool(std::uint8_t colliderGroup)> collisionResolvedCallback{nullptr};

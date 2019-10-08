@@ -82,12 +82,16 @@ void PhysicsWorld::syncBodies(float alpha)
             continue;
         }
         auto physicsObj = static_cast<PhysicsObject*>(b->GetUserData());
+
         // Dirty activation / deactivation:
         if (physicsObj->active && !b->IsActive()) {
             b->SetActive(true);
+            physicsObj->sprite->setVisible(true);
         }
         else if (!physicsObj->active && b->IsActive()) {
             b->SetActive(false);
+            physicsObj->sprite->setVisible(false);
+            b->SetTransform(physicsObj->hiddenPos, 0.0f);
         }
         // sprite sync: position only, rotation not considered in this game
         utils::box2d::syncPhysicsToSprite(*physicsObj, b->GetPosition(), alpha);
