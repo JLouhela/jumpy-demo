@@ -22,13 +22,12 @@
 #define __GAME_LOGIC_H__
 
 #include <cstdint>
-#include "BeeEventListener.h"
 #include "BeeSpawner.h"
 #include "BunnyController.h"
 #include "ContactListener.h"
+#include "GameOverOverlay.h"
 #include "InputHandler.h"
-#include "RetryOverlay.h"
-#include "StageManager.h"
+#include "ScoreCounter.h"
 #include "cocos2d.h"
 
 class b2World;
@@ -40,17 +39,16 @@ public:
     bool init(cocos2d::Scene& scene, b2World& world);
 
 private:
-    void initStage(const StageInfo& stageInfo);
-    void endStage();
-    void cleanStage();
+    void initGame();
+    void endGame();
+    void cleanState();
 
     cocos2d::Scene* m_scene;
     BunnyController m_bunnyController;
     BeeSpawner m_beeSpawner;
-    StageManager m_stageManager;
-    RetryOverlay m_retryOverlay;
+    GameOverOverlay m_gameOverOverlay;
     cocos2d::Node* m_actionNode{nullptr};
-    BeeEventListener m_beeEventListener;
+    ScoreCounter m_scoreCounter;
     ContactListener m_contactListener;
     cocos2d::EventListenerCustom* m_bunnyEventListener{nullptr};
     GameState m_state{GameState::start};

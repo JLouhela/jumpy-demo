@@ -18,27 +18,27 @@
 /// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 /// IN THE SOFTWARE.
 
-#include "RetryOverlay.h"
+#include "GameOverOverlay.h"
 #include "MenuScene.h"
 
-bool RetryOverlay::init(std::function<void()> retryCallback, cocos2d::Scene& scene)
+bool GameOverOverlay::init(std::function<void()> retryCallback, cocos2d::Scene& scene)
 {
     const auto visibleSize{cocos2d::Director::getInstance()->getVisibleSize()};
     const auto origin{cocos2d::Director::getInstance()->getVisibleOrigin()};
 
-    // ouch label
-    auto ouchLabel = cocos2d::Label::createWithTTF("Ouch!", "fonts/Marker Felt.ttf", 100);
-    ouchLabel->setRotation(315);
-    ouchLabel->setColor(cocos2d::Color3B::RED);
+    // Ouch label
+    auto gameOverLabel = cocos2d::Label::createWithTTF("Game over!", "fonts/Marker Felt.ttf", 100);
+    gameOverLabel->setRotation(315);
+    gameOverLabel->setColor(cocos2d::Color3B::RED);
 
-    if (ouchLabel == nullptr || ouchLabel->getContentSize().width <= 0 ||
-        ouchLabel->getContentSize().height <= 0) {
+    if (gameOverLabel == nullptr || gameOverLabel->getContentSize().width <= 0 ||
+        gameOverLabel->getContentSize().height <= 0) {
         cocos2d::log("Could not load font");
         return false;
     }
-    ouchLabel->setPosition(cocos2d::Vec2{
-        origin.x + visibleSize.width / 3,
-        origin.y + 3 * visibleSize.height / 4 + ouchLabel->getContentSize().height / 2});
+    gameOverLabel->setPosition(cocos2d::Vec2{
+        origin.x + visibleSize.width / 4,
+        origin.y + 3 * visibleSize.height / 5 + gameOverLabel->getContentSize().height / 2});
 
     // Retry label
     auto retryLabel = cocos2d::Label::createWithTTF("Try again", "fonts/Marker Felt.ttf", 100);
@@ -54,7 +54,7 @@ bool RetryOverlay::init(std::function<void()> retryCallback, cocos2d::Scene& sce
 
     retryButton->setPosition(
         cocos2d::Vec2{origin.x + visibleSize.width / 2,
-                      origin.y + visibleSize.height / 2 + ouchLabel->getContentSize().height});
+                      origin.y + visibleSize.height / 2 + gameOverLabel->getContentSize().height});
 
     // Main menu label
     auto menuLabel = cocos2d::Label::createWithTTF("Main Menu", "fonts/Marker Felt.ttf", 50);
@@ -78,21 +78,22 @@ bool RetryOverlay::init(std::function<void()> retryCallback, cocos2d::Scene& sce
     auto menu = cocos2d::Menu::createWithArray({retryButton, menuButton});
     menu->setPosition(cocos2d::Vec2::ZERO);
     m_overlay = cocos2d::Node::create();
-    m_overlay->addChild(ouchLabel);
+    m_overlay->addChild(gameOverLabel);
     m_overlay->addChild(menu, 1);
     scene.addChild(m_overlay);
     hide();
     return true;
 }
 
-void RetryOverlay::show()
+void GameOverOverlay::show(const std::int64_t score)
 {
     if (m_overlay) {
+        // TODO update score label
         m_overlay->setVisible(true);
     }
 }
 
-void RetryOverlay::hide()
+void GameOverOverlay::hide()
 {
     if (m_overlay) {
         m_overlay->setVisible(false);

@@ -25,20 +25,22 @@
 #include <chrono>
 #include <cstdint>
 #include "Bee.h"
-#include "BeeSpawn.h"
 #include "cocos2d.h"
 
 class b2World;
 
 class BeeSpawner {
 public:
+    using BeeContainer = std::array<Bee, 20>;
     bool init(cocos2d::Scene& scene, b2World& world);
-    bool spawnBees(const BeeSpawns& spawn);
-    void disposeBees();
+    bool spawnBees();
+    void stop();
 
 private:
+    void spawnBee();
+    void scheduleSpawn();
     // Bee_id equals to container index
-    std::array<Bee, 10> m_beeContainer{};
+    BeeContainer m_beeContainer{};
 
     cocos2d::Node* m_actionNode{nullptr};
 };

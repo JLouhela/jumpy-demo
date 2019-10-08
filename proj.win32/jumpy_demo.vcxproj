@@ -151,27 +151,24 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)\Resources\" /D /E /I /F /Y
   <ItemGroup>
     <ClCompile Include="..\Classes\AppDelegate.cpp" />
     <ClCompile Include="..\Classes\Bee.cpp" />
-    <ClCompile Include="..\Classes\BeeEventListener.cpp" />
     <ClCompile Include="..\Classes\BeeSpawner.cpp" />
     <ClCompile Include="..\Classes\Box2DUtils.cpp" />
     <ClCompile Include="..\Classes\Bunny.cpp" />
     <ClCompile Include="..\Classes\BunnyController.cpp" />
     <ClCompile Include="..\Classes\ContactListener.cpp" />
     <ClCompile Include="..\Classes\GameLogic.cpp" />
+    <ClCompile Include="..\Classes\GameOverOverlay.cpp" />
     <ClCompile Include="..\Classes\GLES-Render.cpp" />
     <ClCompile Include="..\Classes\InputHandler.cpp" />
     <ClCompile Include="..\Classes\JumpyScene.cpp" />
     <ClCompile Include="..\Classes\MenuScene.cpp" />
     <ClCompile Include="..\Classes\PhysicsWorld.cpp" />
-    <ClCompile Include="..\Classes\RetryOverlay.cpp" />
-    <ClCompile Include="..\Classes\StageManager.cpp" />
+    <ClCompile Include="..\Classes\ScoreCounter.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Classes\AppDelegate.h" />
     <ClInclude Include="..\Classes\Bee.h" />
-    <ClInclude Include="..\Classes\BeeEventListener.h" />
-    <ClInclude Include="..\Classes\BeeSpawn.h" />
     <ClInclude Include="..\Classes\BeeSpawner.h" />
     <ClInclude Include="..\Classes\Box2DUtils.h" />
     <ClInclude Include="..\Classes\Bunny.h" />
@@ -181,6 +178,7 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)\Resources\" /D /E /I /F /Y
     <ClInclude Include="..\Classes\CustomEvents.h" />
     <ClInclude Include="..\Classes\Direction.h" />
     <ClInclude Include="..\Classes\GameLogic.h" />
+    <ClInclude Include="..\Classes\GameOverOverlay.h" />
     <ClInclude Include="..\Classes\GLES-Render.h" />
     <ClInclude Include="..\Classes\InputHandler.h" />
     <ClInclude Include="..\Classes\JumpyScene.h" />
@@ -188,8 +186,7 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)\Resources\" /D /E /I /F /Y
     <ClInclude Include="..\Classes\PhysicsObject.h" />
     <ClInclude Include="..\Classes\PhysicsWorld.h" />
     <ClInclude Include="..\Classes\PTM.h" />
-    <ClInclude Include="..\Classes\RetryOverlay.h" />
-    <ClInclude Include="..\Classes\StageManager.h" />
+    <ClInclude Include="..\Classes\ScoreCounter.h" />
     <ClInclude Include="..\Classes\ZOrders.h" />
     <ClInclude Include="main.h" />
   </ItemGroup>

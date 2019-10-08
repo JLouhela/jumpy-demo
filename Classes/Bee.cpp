@@ -93,7 +93,7 @@ void Bee::dispose()
     m_state = BeeState::inactive;
 }
 
-void Bee::spawn(const cocos2d::Vec2& pos, direction dir)
+void Bee::spawn(const cocos2d::Vec2& pos, Direction dir)
 {
     m_physicsObject.active = true;
     m_sprite->setPosition(pos);
@@ -101,14 +101,14 @@ void Bee::spawn(const cocos2d::Vec2& pos, direction dir)
     m_body->SetTransform(utils::box2d::pixelsToMeters(m_sprite->getPosition()), 0.0f);
     static const b2Vec2 velocityLeft{-velocity, 0.0f};
     static const b2Vec2 velocityRight{velocity, 0.0f};
-    m_body->SetLinearVelocity(dir == direction::right ? velocityRight : velocityLeft);
+    m_body->SetLinearVelocity(dir == Direction::right ? velocityRight : velocityLeft);
     b2Filter filter = m_body->GetFixtureList()->GetFilterData();
     filter.maskBits =
         CollisionGroup::bunny +
-        (dir == direction::right ? CollisionGroup::rightBorder : CollisionGroup::leftBorder);
+        (dir == Direction::right ? CollisionGroup::rightBorder : CollisionGroup::leftBorder);
     m_body->GetFixtureList()->SetFilterData(filter);
 
-    m_sprite->setFlippedX(dir == direction::right);
+    m_sprite->setFlippedX(dir == Direction::right);
 }
 
 void Bee::activate()

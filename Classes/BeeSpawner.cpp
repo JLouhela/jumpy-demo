@@ -23,8 +23,10 @@
 #include "ZOrders.h"
 
 namespace {
+// TODO meaningful value
+constexpr float bpm = 1.5f;
 
-Bee* getAvailableBee(std::array<Bee, 10>& bees)
+Bee* getAvailableBee(BeeSpawner::BeeContainer& bees)
 {
     for (auto& bee : bees) {
         if (bee.getState() == BeeState::inactive) {
@@ -39,26 +41,40 @@ Bee* getAvailableBee(std::array<Bee, 10>& bees)
 
 }  // namespace
 
-bool BeeSpawner::spawnBees(const BeeSpawns& spawn)
+bool BeeSpawner::spawnBees()
 {
-    for (const auto& spawnBee : spawn) {
-        auto bee = getAvailableBee(m_beeContainer);
-        if (!bee) {
-            cocos2d::log("No free bees to spawn");
-            return false;
-        }
-
-        const auto visibleSize{cocos2d::Director::getInstance()->getVisibleSize()};
-        static constexpr float xOffset = 20.0f;
-        const float x = (spawnBee.dir == direction::left) ? (visibleSize.width - xOffset) : xOffset;
-
-        auto delayAction = cocos2d::DelayTime::create(spawnBee.delay);
-        auto callback = cocos2d::CallFunc::create([bee, spawnBee, x]() {
-            bee->spawn(cocos2d::Vec2{x, spawnBee.y}, spawnBee.dir);
-        });
-        m_actionNode->runAction(cocos2d::Sequence::create(delayAction, callback, nullptr));
+    if (m_actionNode->getNumberOfRunningActions() > 0) {
+        return false;
     }
+    scheduleSpawn();
     return true;
+}
+
+void BeeSpawner::spawnBee()
+{
+    scheduleSpawn();
+
+    auto bee = getAvailableBee(m_beeContainer);
+    if (!bee) {
+        cocos2d::log("No free bees to spawn");
+        return;
+    }
+
+    const auto visibleSize{cocos2d::Director::getInstance()->getVisibleSize()};
+    static constexpr float xOffset = 20.0f;
+    Direction dir = (cocos2d::random() % 2) == 0 ? Direction::left : Direction::right;
+    const float x = (dir == Direction::left) ? (visibleSize.width - xOffset) : xOffset;
+
+    // TODO variance
+    static constexpr float beeY{180.0f};
+    bee->spawn(cocos2d::Vec2{x, beeY}, dir);
+}
+
+void BeeSpawner::scheduleSpawn()
+{
+    auto delayAction = cocos2d::DelayTime::create(bpm);
+    auto callback = cocos2d::CallFunc::create([this]() { spawnBee(); });
+    m_actionNode->runAction(cocos2d::Sequence::create(delayAction, callback, nullptr));
 }
 
 bool BeeSpawner::init(cocos2d::Scene& scene, b2World& world)
@@ -78,7 +94,7 @@ bool BeeSpawner::init(cocos2d::Scene& scene, b2World& world)
     return true;
 }
 
-void BeeSpawner::disposeBees()
+void BeeSpawner::stop()
 {
     for (auto& bee : m_beeContainer) {
         bee.dispose();

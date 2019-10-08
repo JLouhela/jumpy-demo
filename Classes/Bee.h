@@ -57,7 +57,7 @@ public:
 
     void dispose();
 
-    void spawn(const cocos2d::Vec2& pos, direction dir);
+    void spawn(const cocos2d::Vec2& pos, Direction dir);
 
 private:
     cocos2d::Sprite* m_sprite{nullptr};

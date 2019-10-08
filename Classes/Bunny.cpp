@@ -120,7 +120,12 @@ void Bunny::jump()
         const auto bottomMid = utils::box2d::pixelsToMeters(
             {m_sprite->getBoundingBox().getMidX() * relativeBodySize.x,
              m_sprite->getBoundingBox().getMinY() * relativeBodySize.y});
-        m_body->ApplyLinearImpulse(b2Vec2{0.0f, 20.0f}, bottomMid, true);
+
+        static constexpr float jumpForce = 40.0f;
+        static constexpr float doubleJumpForce = 15.0f;
+        auto forceY = (m_state == BunnyState::jumped ? jumpForce : doubleJumpForce);
+        m_body->ApplyLinearImpulse(b2Vec2{0.0f, forceY}, bottomMid, true);
+
         const auto spriteFrame{
             cocos2d::SpriteFrameCache::getInstance()->getSpriteFrameByName("./bunny_jump_96_48")};
         m_sprite->setSpriteFrame(spriteFrame);

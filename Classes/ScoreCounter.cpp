@@ -18,32 +18,19 @@
 /// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 /// IN THE SOFTWARE.
 
-#include "BeeEventListener.h"
+#include "ScoreCounter.h"
 #include "CustomEvents.h"
 
-void BeeEventListener::init(cocos2d::Scene& scene, std::function<void()> callback)
+void ScoreCounter::init(cocos2d::Scene& scene)
 {
-    m_callback = callback;
-    m_beeListener = cocos2d::EventListenerCustom::create(CustomEvent::beeThroughEvent,
-                                                         [this](cocos2d::EventCustom* event) {
-                                                             if (!m_waitingCount.first) {
-                                                                 return;
-                                                             }
-                                                             m_waitingCount.second--;
-                                                             if (m_waitingCount.second == 0) {
-                                                                 m_callback();
-                                                             }
-                                                         });
+    m_beeListener = cocos2d::EventListenerCustom::create(
+        CustomEvent::beeThroughEvent,
+        [& score = m_score](cocos2d::EventCustom* event) { score++; });
 
     scene.getEventDispatcher()->addEventListenerWithSceneGraphPriority(m_beeListener, &scene);
 }
 
-void BeeEventListener::reset()
+void ScoreCounter::reset()
 {
-    m_waitingCount = std::make_pair(false, 0);
-}
-
-void BeeEventListener::wait(const std::uint8_t count)
-{
-    m_waitingCount = std::make_pair(true, count);
+    m_score = 0;
 }

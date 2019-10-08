@@ -63,19 +63,10 @@
     <ClCompile Include="..\Classes\GameLogic.cpp">
       <Filter>src\gamelogic</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\BeeEventListener.cpp">
-      <Filter>src\gamelogic</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\StageManager.cpp">
-      <Filter>src\gamelogic</Filter>
-    </ClCompile>
     <ClCompile Include="..\Classes\ContactListener.cpp">
       <Filter>src\gamelogic</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\MenuScene.cpp">
-      <Filter>src\scenes</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\RetryOverlay.cpp">
       <Filter>src\scenes</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\Box2DUtils.cpp">
@@ -86,6 +77,12 @@
     </ClCompile>
     <ClCompile Include="..\Classes\PhysicsWorld.cpp">
       <Filter>src\physics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\ScoreCounter.cpp">
+      <Filter>src\gamelogic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\GameOverOverlay.cpp">
+      <Filter>src\scenes</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -119,15 +116,6 @@
     <ClInclude Include="..\Classes\GameLogic.h">
       <Filter>src\gamelogic</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\BeeEventListener.h">
-      <Filter>src\gamelogic</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\BeeSpawn.h">
-      <Filter>src\bees</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\StageManager.h">
-      <Filter>src\gamelogic</Filter>
-    </ClInclude>
     <ClInclude Include="..\Classes\Direction.h">
       <Filter>src\bees</Filter>
     </ClInclude>
@@ -141,9 +129,6 @@
       <Filter>src\gamelogic</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\MenuScene.h">
-      <Filter>src\scenes</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\RetryOverlay.h">
       <Filter>src\scenes</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\Box2DUtils.h">
@@ -160,6 +145,12 @@
     </ClInclude>
     <ClInclude Include="..\Classes\PhysicsObject.h">
       <Filter>src\physics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\ScoreCounter.h">
+      <Filter>src\gamelogic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\GameOverOverlay.h">
+      <Filter>src\scenes</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

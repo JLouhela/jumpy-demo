@@ -18,18 +18,20 @@
 /// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 /// IN THE SOFTWARE.
 
-#ifndef __BEE_SPAWN_H__
-#define __BEE_SPAWN_H__
+#ifndef __RETRY_OVERLAY__
+#define __RETRY_OVERLAY__
 
-#include <vector>
-#include "Direction.h"
+#include <functional>
+#include "cocos2d.h"
 
-struct BeeSpawn {
-    float delay;  // seconds
-    float y;
-    direction dir;
+class GameOverOverlay {
+public:
+    bool init(std::function<void()> retryCallback, cocos2d::Scene& scene);
+    void show(const std::int64_t score);
+    void hide();
+
+private:
+    cocos2d::Node* m_overlay{nullptr};
 };
 
-using BeeSpawns = std::vector<BeeSpawn>;
-
-#endif  // __BEE_SPAWN_H__
+#endif  // __RETRY_OVERLAY__

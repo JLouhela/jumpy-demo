@@ -18,20 +18,25 @@
 /// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 /// IN THE SOFTWARE.
 
-#ifndef __RETRY_OVERLAY__
-#define __RETRY_OVERLAY__
+#ifndef __SCORE_COUNTER_H__
+#define __SCORE_COUNTER_H__
 
-#include <functional>
+#include <cstdint>
 #include "cocos2d.h"
 
-class RetryOverlay {
+class ScoreCounter {
 public:
-    bool init(std::function<void()> retryCallback, cocos2d::Scene& scene);
-    void show();
-    void hide();
+    void init(cocos2d::Scene& scene);
+    void reset();
+
+    std::int64_t getScore()
+    {
+        return m_score;
+    }
 
 private:
-    cocos2d::Node* m_overlay{nullptr};
+    cocos2d::EventListenerCustom* m_beeListener{nullptr};
+    std::uint64_t m_score{0};
 };
 
-#endif  // __RETRY_OVERLAY__
+#endif  // __SCORE_COUNTER_H__

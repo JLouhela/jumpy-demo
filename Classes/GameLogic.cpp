@@ -55,34 +55,23 @@ bool GameLogic::init(cocos2d::Scene& scene, b2World& world)
     world.SetContactListener(&m_contactListener);
 
     auto retryCallback = [this]() {
-        const auto stage = m_stageManager.getStage(m_curLvl);
-        // Guaranteed to be found when retrying
-        m_retryOverlay.hide();
-        initStage(*stage);
+        m_gameOverOverlay.hide();
+        initGame();
     };
 
-    ok = ok && m_retryOverlay.init(retryCallback, scene);
+    ok = ok && m_gameOverOverlay.init(retryCallback, scene);
     if (!ok) {
         cocos2d::log("Game logic initialization failed");
         return false;
     }
-    const auto stage = m_stageManager.getStage(m_curLvl);
-    if (!stage) {
-        cocos2d::log("Cannot get first stage");
-        return false;
-    }
-
-    m_beeEventListener.init(scene, [this]() {
-        if (m_state == GameState::active) {
-            endStage();
-        }
-    });
+    m_scoreCounter.init(scene);
 
     m_bunnyEventListener = cocos2d::EventListenerCustom::create(
         CustomEvent::bunnyHitEvent, [this](cocos2d::EventCustom* event) {
             if (m_state == GameState::active) {
-                cleanStage();
-                m_retryOverlay.show();
+                const auto finalScore = m_scoreCounter.getScore();
+                cleanState();
+                m_gameOverOverlay.show(finalScore);
             }
         });
     scene.getEventDispatcher()->addEventListenerWithSceneGraphPriority(m_bunnyEventListener,
@@ -91,50 +80,27 @@ bool GameLogic::init(cocos2d::Scene& scene, b2World& world)
     m_actionNode = cocos2d::Node::create();
     scene.addChild(m_actionNode);
 
-    initStage(*stage);
+    initGame();
     return true;
 }
 
-void GameLogic::initStage(const StageInfo& stageInfo)
+void GameLogic::initGame()
 {
     m_bunnyController.spawnBunnies();
-    m_beeSpawner.spawnBees(stageInfo.beeSpawns);
-    m_beeEventListener.wait(stageInfo.beeSpawns.size());
+    m_beeSpawner.spawnBees();
+    m_scoreCounter.reset();
     m_inputHandler.enable();
     m_state = GameState::active;
 }
 
-void GameLogic::endStage()
+void GameLogic::endGame()
 {
-    m_state = GameState::wait;
-    ++m_curLvl;
-    m_inputHandler.disable();
-    const auto stageTransitionDelay = cocos2d::DelayTime::create(2.0f);
-    auto stageTransitionCallback = cocos2d::CallFunc::create([this]() {
-        cleanStage();
-        const auto stage = m_stageManager.getStage(m_curLvl);
-        if (!stage) {
-            displayVictoryLabel(*m_scene);
-
-            const auto gameEndDelay = cocos2d::DelayTime::create(5.0f);
-            auto menuTransitionCallback = cocos2d::CallFunc::create([this]() {
-                auto menuScene = MenuScene::create();
-                cocos2d::Director::getInstance()->replaceScene(menuScene);
-            });
-            m_actionNode->runAction(
-                cocos2d::Sequence::create(gameEndDelay, menuTransitionCallback, nullptr));
-            return;
-        }
-        initStage(*stage);
-    });
-
-    m_actionNode->runAction(
-        cocos2d::Sequence::create(stageTransitionDelay, stageTransitionCallback, nullptr));
+    // TODO
 }
 
-void GameLogic::cleanStage()
+void GameLogic::cleanState()
 {
     m_bunnyController.disposeBunnies();
-    m_beeSpawner.disposeBees();
-    m_beeEventListener.reset();
+    m_beeSpawner.stop();
+    m_scoreCounter.reset();
 }

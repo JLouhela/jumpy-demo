@@ -23,6 +23,6 @@
 
 #include <cstdint>
 
-enum class direction : std::uint8_t { left, right };
+enum class Direction : std::uint8_t { left, right };
 
 #endif  // __DIRECTION_H__

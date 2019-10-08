@@ -83,7 +83,7 @@ bool JumpyScene::init()
         return false;
     }
 
-    m_world.setDrawDebug(true);
+    m_world.setDrawDebug(false);
 
     return true;
 }
