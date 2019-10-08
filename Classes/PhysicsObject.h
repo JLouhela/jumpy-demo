@@ -36,7 +36,6 @@ static constexpr float invalidCoord{-9999.0f};
 struct PhysicsObject {
     cocos2d::Sprite* sprite{nullptr};
     b2Vec2 prevPos{invalidCoord, invalidCoord};
-    float prevAngle{0.0f};
     bool active{false};
     std::function<bool(std::uint8_t colliderGroup)> collisionOccurredCallback{nullptr};
     std::function<bool(std::uint8_t colliderGroup)> collisionResolvedCallback{nullptr};

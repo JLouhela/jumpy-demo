@@ -106,10 +106,7 @@ void Bunny::jump()
         m_body->GetLinearVelocity().y < -25.0f) {
         // Downwards dash
         m_state = BunnyState::dash;
-        const auto topMid = utils::box2d::pixelsToMeters(
-            {m_sprite->getBoundingBox().getMidX() * relativeBodySize.x,
-             m_sprite->getBoundingBox().getMaxY() * relativeBodySize.y});
-        m_body->ApplyLinearImpulse(b2Vec2{0.0f, 30.0f}, topMid, true);
+        m_body->ApplyLinearImpulse(b2Vec2{0.0f, 30.0f}, m_body->GetWorldCenter(), true);
 
         m_sprite->setFlippedY(true);
         return;
@@ -117,29 +114,32 @@ void Bunny::jump()
 
     if (m_state == BunnyState::grounded || m_state == BunnyState::jumped) {
         m_state = (m_state == BunnyState::grounded) ? BunnyState::jumped : BunnyState::doublejump;
-        const auto bottomMid = utils::box2d::pixelsToMeters(
-            {m_sprite->getBoundingBox().getMidX() * relativeBodySize.x,
-             m_sprite->getBoundingBox().getMinY() * relativeBodySize.y});
-
-        static constexpr float jumpForce = 40.0f;
-        static constexpr float doubleJumpForce = 15.0f;
-        auto forceY = (m_state == BunnyState::jumped ? jumpForce : doubleJumpForce);
-        m_body->ApplyLinearImpulse(b2Vec2{0.0f, forceY}, bottomMid, true);
 
         const auto spriteFrame{
             cocos2d::SpriteFrameCache::getInstance()->getSpriteFrameByName("./bunny_jump_96_48")};
         m_sprite->setSpriteFrame(spriteFrame);
-        m_sprite->setFlippedY(false);
-        return;
+
+        static constexpr float jumpForce = 11.0f;
+        static constexpr float doubleJumpForce = 8.0f;
+        auto forceY = jumpForce;
+        if (m_state == BunnyState::doublejump) {
+            forceY = doubleJumpForce;
+            auto rotateBy = cocos2d::RotateBy::create(0.3f, 180.0f);
+            auto rotateEaseIn = cocos2d::EaseInOut::create(rotateBy, 1.0f);
+            m_sprite->runAction(rotateEaseIn);
+        }
+        m_body->SetLinearVelocity(b2Vec2{0.0f, forceY});
     }
 }
 
 void Bunny::land()
 {
+    m_sprite->stopAllActions();
     const auto spriteFrame{
         cocos2d::SpriteFrameCache::getInstance()->getSpriteFrameByName("./bunny_stand_96_48")};
     m_sprite->setSpriteFrame(spriteFrame);
     m_sprite->setFlippedY(false);
+    m_sprite->setRotation(0);
 
     m_state = BunnyState::grounded;
 }

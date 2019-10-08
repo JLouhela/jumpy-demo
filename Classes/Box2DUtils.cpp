@@ -55,23 +55,15 @@ cocos2d::Vec2 metersToPixels(const b2Vec2& meterPos)
     return {meterPos.x * PTM::ptm, meterPos.y * PTM::ptm};
 }
 
-void transformSprite(cocos2d::Sprite& sprite, const b2Vec2& newPos, float newAngleRad)
-{
-    sprite.setPosition(metersToPixels(newPos));
-    sprite.setRotation(newAngleRad * radToDeg);
-}
-
-void syncPhysicsToSprite(PhysicsObject& physObj, const b2Vec2& newPos, float newAngle, float alpha)
+void syncPhysicsToSprite(PhysicsObject& physObj, const b2Vec2& newPos, float alpha)
 {
     if (physObj.prevPos.x < invalidCoord || physObj.prevPos.y < invalidCoord) {
-        transformSprite(*physObj.sprite, newPos, newAngle);
+        physObj.sprite->setPosition(metersToPixels(newPos));
         return;
     }
     const auto alphaRemainder = 1.0f - alpha;
     physObj.sprite->setPosition((newPos.x * alpha + physObj.prevPos.x * alphaRemainder) * PTM::ptm,
                                 (newPos.y * alpha + physObj.prevPos.y * alphaRemainder) * PTM::ptm);
-    physObj.sprite->setRotation(
-        {newAngle * radToDeg * alpha + physObj.sprite->getRotation() * alphaRemainder});
 }
 
 }  // namespace box2d

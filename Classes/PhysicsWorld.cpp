@@ -89,9 +89,8 @@ void PhysicsWorld::syncBodies(float alpha)
         else if (!physicsObj->active && b->IsActive()) {
             b->SetActive(false);
         }
-        // sprite sync
-        utils::box2d::syncPhysicsToSprite(*physicsObj, b->GetPosition(), b->GetAngle(), alpha);
-        physicsObj->prevAngle = b->GetAngle();
+        // sprite sync: position only, rotation not considered in this game
+        utils::box2d::syncPhysicsToSprite(*physicsObj, b->GetPosition(), alpha);
         physicsObj->prevPos = b->GetPosition();
     }
 }
