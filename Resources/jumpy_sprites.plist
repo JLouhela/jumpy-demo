@@ -15,7 +15,7 @@
     <key>spriteSourceSize</key>
     <string>{32,28}</string>
     <key>textureRect</key>
-    <string>{{342,852},{32,27}}</string>
+    <string>{{258,919},{32,27}}</string>
     <key>textureRotated</key>
     <false/>
    </dict>
@@ -30,7 +30,7 @@
     <key>spriteSourceSize</key>
     <string>{32,28}</string>
     <key>textureRect</key>
-    <string>{{376,852},{32,24}}</string>
+    <string>{{441,852},{32,24}}</string>
     <key>textureRotated</key>
     <false/>
    </dict>
@@ -60,7 +60,7 @@
     <key>spriteSourceSize</key>
     <string>{48,96}</string>
     <key>textureRect</key>
-    <string>{{242,852},{48,96}}</string>
+    <string>{{341,852},{48,96}}</string>
     <key>textureRotated</key>
     <false/>
    </dict>
@@ -75,7 +75,22 @@
     <key>spriteSourceSize</key>
     <string>{48,96}</string>
     <key>textureRect</key>
-    <string>{{292,852},{48,94}}</string>
+    <string>{{391,852},{48,94}}</string>
+    <key>textureRotated</key>
+    <false/>
+   </dict>
+   <key>./finger_83_68</key>
+   <dict>
+    <key>aliases</key>
+    <array/>
+    <key>spriteOffset</key>
+    <string>{0,0}</string>
+    <key>spriteSize</key>
+    <string>{81,65}</string>
+    <key>spriteSourceSize</key>
+    <string>{83,68}</string>
+    <key>textureRect</key>
+    <string>{{258,852},{81,65}}</string>
     <key>textureRotated</key>
     <false/>
    </dict>
@@ -99,13 +114,13 @@
     <key>aliases</key>
     <array/>
     <key>spriteOffset</key>
-    <string>{-4,-150}</string>
+    <string>{0,-130}</string>
     <key>spriteSize</key>
-    <string>{240,419}</string>
+    <string>{256,460}</string>
     <key>spriteSourceSize</key>
     <string>{256,720}</string>
     <key>textureRect</key>
-    <string>{{0,852},{240,419}}</string>
+    <string>{{0,852},{256,460}}</string>
     <key>textureRotated</key>
     <false/>
    </dict>
@@ -115,7 +130,7 @@
    <key>format</key>
    <integer>3</integer>
    <key>size</key>
-   <string>{1282,1273}</string>
+   <string>{1282,1314}</string>
    <key>textureFileName</key>
    <string>jumpy_sprites.png</string>
   </dict>

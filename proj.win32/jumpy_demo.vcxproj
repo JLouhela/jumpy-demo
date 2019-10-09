@@ -156,6 +156,7 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)\Resources\" /D /E /I /F /Y
     <ClCompile Include="..\Classes\Bunny.cpp" />
     <ClCompile Include="..\Classes\BunnyController.cpp" />
     <ClCompile Include="..\Classes\ContactListener.cpp" />
+    <ClCompile Include="..\Classes\EnvironmentBuilder.cpp" />
     <ClCompile Include="..\Classes\GameLogic.cpp" />
     <ClCompile Include="..\Classes\GameOverOverlay.cpp" />
     <ClCompile Include="..\Classes\GLES-Render.cpp" />
@@ -164,6 +165,9 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)\Resources\" /D /E /I /F /Y
     <ClCompile Include="..\Classes\MenuScene.cpp" />
     <ClCompile Include="..\Classes\PhysicsWorld.cpp" />
     <ClCompile Include="..\Classes\ScoreCounter.cpp" />
+    <ClCompile Include="..\Classes\TutorialInputHandler.cpp" />
+    <ClCompile Include="..\Classes\TutorialOverlay.cpp" />
+    <ClCompile Include="..\Classes\TutorialScene.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -177,6 +181,7 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)\Resources\" /D /E /I /F /Y
     <ClInclude Include="..\Classes\ContactListener.h" />
     <ClInclude Include="..\Classes\CustomEvents.h" />
     <ClInclude Include="..\Classes\Direction.h" />
+    <ClInclude Include="..\Classes\EnvironmentBuilder.h" />
     <ClInclude Include="..\Classes\GameLogic.h" />
     <ClInclude Include="..\Classes\GameOverOverlay.h" />
     <ClInclude Include="..\Classes\GLES-Render.h" />
@@ -187,6 +192,9 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)\Resources\" /D /E /I /F /Y
     <ClInclude Include="..\Classes\PhysicsWorld.h" />
     <ClInclude Include="..\Classes\PTM.h" />
     <ClInclude Include="..\Classes\ScoreCounter.h" />
+    <ClInclude Include="..\Classes\TutorialInputHandler.h" />
+    <ClInclude Include="..\Classes\TutorialOverlay.h" />
+    <ClInclude Include="..\Classes\TutorialScene.h" />
     <ClInclude Include="..\Classes\ZOrders.h" />
     <ClInclude Include="main.h" />
   </ItemGroup>

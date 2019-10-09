@@ -81,3 +81,15 @@ bool BunnyController::jumpBunny(const cocos2d::Vec2& pos)
     }
     return true;
 }
+
+bool BunnyController::diveBunny(const cocos2d::Vec2& pos)
+{
+    const auto visibleSize{cocos2d::Director::getInstance()->getVisibleSize()};
+    if (pos.x < visibleSize.width / 2) {
+        m_bunnyContainer[leftBunny].dive();
+    }
+    else {
+        m_bunnyContainer[rightBunny].dive();
+    }
+    return true;
+}

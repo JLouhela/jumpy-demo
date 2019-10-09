@@ -84,6 +84,18 @@
     <ClCompile Include="..\Classes\GameOverOverlay.cpp">
       <Filter>src\scenes</Filter>
     </ClCompile>
+    <ClCompile Include="..\Classes\TutorialScene.cpp">
+      <Filter>src\scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\EnvironmentBuilder.cpp">
+      <Filter>src\scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\TutorialInputHandler.cpp">
+      <Filter>src\input</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\TutorialOverlay.cpp">
+      <Filter>src\scenes</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
@@ -150,6 +162,18 @@
       <Filter>src\gamelogic</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\GameOverOverlay.h">
+      <Filter>src\scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\TutorialScene.h">
+      <Filter>src\scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\EnvironmentBuilder.h">
+      <Filter>src\scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\TutorialInputHandler.h">
+      <Filter>src\input</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\TutorialOverlay.h">
       <Filter>src\scenes</Filter>
     </ClInclude>
   </ItemGroup>

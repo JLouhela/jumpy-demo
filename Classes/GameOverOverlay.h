@@ -18,8 +18,8 @@
 /// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 /// IN THE SOFTWARE.
 
-#ifndef __RETRY_OVERLAY__
-#define __RETRY_OVERLAY__
+#ifndef __GAME_OVER_OVERLAY_H__
+#define __GAME_OVER_OVERLAY_H__
 
 #include <functional>
 #include "cocos2d.h"
@@ -34,4 +34,4 @@ private:
     cocos2d::Node* m_overlay{nullptr};
 };
 
-#endif  // __RETRY_OVERLAY__
+#endif  // __GAME_OVER_OVERLAY_H__

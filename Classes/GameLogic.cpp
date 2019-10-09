@@ -51,9 +51,6 @@ bool GameLogic::init(cocos2d::Scene& scene, b2World& world)
     m_scene = &scene;
     bool ok = m_beeSpawner.init(scene, world);
     ok = ok && m_bunnyController.init(scene, world);
-    ok = ok && m_inputHandler.init(m_bunnyController);
-    world.SetContactListener(&m_contactListener);
-
     auto retryCallback = [this]() {
         m_gameOverOverlay.hide();
         initGame();
@@ -64,6 +61,9 @@ bool GameLogic::init(cocos2d::Scene& scene, b2World& world)
         cocos2d::log("Game logic initialization failed");
         return false;
     }
+
+    world.SetContactListener(&m_contactListener);
+    m_inputHandler.init(m_bunnyController);
     m_scoreCounter.init(scene);
 
     m_bunnyEventListener = cocos2d::EventListenerCustom::create(

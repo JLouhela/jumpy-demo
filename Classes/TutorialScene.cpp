@@ -18,17 +18,17 @@
 /// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 /// IN THE SOFTWARE.
 
-#include "JumpyScene.h"
+#include "TutorialScene.h"
 #include "EnvironmentBuilder.h"
 #include "SimpleAudioEngine.h"
 
-cocos2d::Scene* JumpyScene::createScene()
+cocos2d::Scene* TutorialScene::createScene()
 {
-    return JumpyScene::create();
+    return TutorialScene::create();
 }
 
 // on "init" you need to initialize your instance
-bool JumpyScene::init()
+bool TutorialScene::init()
 {
     // super init always first
     if (!cocos2d::Scene::init()) {
@@ -40,28 +40,37 @@ bool JumpyScene::init()
         cocos2d::log("Could not initialize gfx for scene");
         return false;
     }
+    m_tutorialOverlay.init(*this);
+    m_world.getWorld().SetContactListener(&m_contactListener);
+    m_bunnyController.init(*this, m_world.getWorld());
+    m_bunnyController.spawnBunnies();
+    m_inputHandler.init(m_bunnyController);
 
-    if (!m_gameLogic.init(*this, m_world.getWorld())) {
-        cocos2d::log("Could not initialize game logic");
-        return false;
-    }
-
+    initTutorialLogic();
     scheduleUpdate();
     m_world.setDrawDebug(false);
 
     return true;
 }
 
-void JumpyScene::update(const float dt)
+void TutorialScene::update(const float dt)
 {
     cocos2d::Scene::update(dt);
     m_world.update(dt);
 }
 
-void JumpyScene::render(cocos2d::Renderer* renderer,
-                        const cocos2d::Mat4& eyeTransform,
-                        const cocos2d::Mat4* eyeProjection)
+void TutorialScene::initTutorialLogic()
 {
-    cocos2d::Scene::render(renderer, eyeTransform, eyeProjection);
-    m_world.drawDebug(eyeTransform);
+    const auto visibleSize{cocos2d::Director::getInstance()->getVisibleSize()};
+    const cocos2d::Vec2 origin{cocos2d::Director::getInstance()->getVisibleOrigin()};
+
+    // TODO display briefing text
+    // wait for any click..
+    // TODO show left shader + instructions
+    // wait for left click
+    m_tutorialOverlay.showLeftArea();
+    m_tutorialOverlay.showText(
+        {origin.x + visibleSize.height / 2, origin.y + visibleSize.height / 2}, "paska testi");
+    // TODO wait for callback left click
+    // Display text
 }

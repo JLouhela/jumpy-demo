@@ -37,6 +37,7 @@ public:
     void spawnBunnies();
     void disposeBunnies();
     bool jumpBunny(const cocos2d::Vec2& pos);
+    bool diveBunny(const cocos2d::Vec2& pos);
 
 private:
     std::vector<cocos2d::Vec2> BunnyController::getSpawnPoints(const std::uint8_t bunnyCount);

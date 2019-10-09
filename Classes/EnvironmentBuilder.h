@@ -18,38 +18,17 @@
 /// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 /// IN THE SOFTWARE.
 
-#ifndef __INPUT_HANDLER_H__
-#define __INPUT_HANDLER_H__
+#ifndef __ENVIRONMENT_BUILDER_H__
+#define __ENVIRONMENT_BUILDER_H__
 
-#include "cocos2d.h"
+namespace cocos2d {
+class Scene;
+}
 
-class BunnyController;
+class b2World;
 
-class InputHandler {
-public:
-    void init(BunnyController& bunnyController);
+namespace environment {
+bool buildEnvironment(cocos2d::Scene& scene, b2World& world);
+}  // namespace environment
 
-    void disable()
-    {
-        m_enabled = false;
-    }
-
-    void enable()
-    {
-        m_enabled = true;
-    }
-
-    ~InputHandler();
-
-private:
-    enum class InputType : bool { jump, dive };
-
-    bool resolveInput(const cocos2d::Vec2& screenPos, InputType inputType);
-
-    cocos2d::EventListenerMouse* m_mouseListener{nullptr};
-    cocos2d::EventListenerTouchOneByOne* m_touchListener{nullptr};
-    BunnyController* m_bunnyController{nullptr};
-    bool m_enabled{false};
-};
-
-#endif  // __INPUT_HANDLER_H__
+#endif  // __ENVIRONMENT_BUILDER_H__

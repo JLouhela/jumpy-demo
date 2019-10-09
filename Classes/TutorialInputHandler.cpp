@@ -18,13 +18,21 @@
 /// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 /// IN THE SOFTWARE.
 
-#include "InputHandler.h"
+#include "TutorialInputHandler.h"
 #include "BunnyController.h"
 
-void InputHandler::init(BunnyController& bunnyController)
-{
-    m_bunnyController = &bunnyController;
+namespace {
 
+double getCurrentTick()
+{
+    static struct timeval currentTime;
+    cocos2d::gettimeofday(&currentTime, nullptr);
+    return (currentTime.tv_sec) + (currentTime.tv_usec / 1000000.0);
+}
+}  // namespace
+
+TutorialInputHandler::TutorialInputHandler()
+{
 #ifdef JUMPY_USE_MOUSE
     m_mouseListener = cocos2d::EventListenerMouse::create();
     m_mouseListener->onMouseDown = [this](cocos2d::EventMouse* event) {
@@ -34,10 +42,10 @@ void InputHandler::init(BunnyController& bunnyController)
                 ? InputType::jump
                 : InputType::dive;
         resolveInput(location, inputType);
+        return false;  // never consume
     };
     cocos2d::Director::getInstance()->getEventDispatcher()->addEventListenerWithFixedPriority(
-        m_mouseListener, 2);
-
+        m_mouseListener, 1);
 #else
 
     // TODO swipe handling
@@ -48,19 +56,33 @@ void InputHandler::init(BunnyController& bunnyController)
         return false;  // Never consume here
     };
     cocos2d::Director::getInstance()->getEventDispatcher()->addEventListenerWithFixedPriority(
-        m_touchListener, 2);
+        m_touchListener, 1);
 #endif
 }
 
-bool InputHandler::resolveInput(const cocos2d::Vec2& screenPos, InputType inputType)
+void TutorialInputHandler::resolveInput(const cocos2d::Vec2& screenPos, InputType inputType)
 {
-    if (inputType == InputType::jump) {
-        return m_bunnyController->jumpBunny(screenPos);
+    const auto curTick = getCurrentTick();
+    const auto dt = m_lastClick.first - curTick;
+
+    const auto visibleSize{cocos2d::Director::getInstance()->getVisibleSize()};
+    Side side = (screenPos.x < visibleSize.width / 2) ? Side::left : Side::right;
+    m_lastClick = std::make_pair(curTick, side);
+    if (dt <= 2.0 && m_doubleJumpCallback) {
+        m_doubleJumpCallback();
     }
-    return m_bunnyController->diveBunny(screenPos);
+    if (inputType == InputType::dive && m_diveCallback) {
+        m_diveCallback();
+    }
+    if (side == Side::left && m_leftJumpCallback) {
+        m_leftJumpCallback();
+    }
+    if (m_rightJumpCallback) {
+        m_rightJumpCallback();
+    }
 }
 
-InputHandler::~InputHandler()
+TutorialInputHandler::~TutorialInputHandler()
 {
 #ifdef JUMPY_USE_MOUSE
     cocos2d::Director::getInstance()->getEventDispatcher()->removeEventListener(m_mouseListener);

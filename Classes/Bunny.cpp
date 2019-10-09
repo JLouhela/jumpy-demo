@@ -26,7 +26,7 @@
 #include "PTM.h"
 
 namespace {
-const cocos2d::Vec2 relativeBodySize{0.95f, 0.9f};
+const cocos2d::Vec2 relativeBodySize{0.85f, 0.9f};
 constexpr float velocityLimitUp{350.0f};
 constexpr float velocityLimitDown{500.0f};
 
@@ -102,16 +102,6 @@ const cocos2d::Rect Bunny::getBoundingBox() const
 
 void Bunny::jump()
 {
-    if ((m_state == BunnyState::jumped || m_state == BunnyState::doublejump) &&
-        m_body->GetLinearVelocity().y < -25.0f) {
-        // Downwards dash
-        m_state = BunnyState::dash;
-        m_body->ApplyLinearImpulse(b2Vec2{0.0f, 30.0f}, m_body->GetWorldCenter(), true);
-
-        m_sprite->setFlippedY(true);
-        return;
-    }
-
     if (m_state == BunnyState::grounded || m_state == BunnyState::jumped) {
         m_state = (m_state == BunnyState::grounded) ? BunnyState::jumped : BunnyState::doublejump;
 
@@ -120,7 +110,7 @@ void Bunny::jump()
         m_sprite->setSpriteFrame(spriteFrame);
 
         static constexpr float jumpForce = 15.0f;
-        static constexpr float doubleJumpForce = 10.0f;
+        static constexpr float doubleJumpForce = 11.0f;
         auto forceY = jumpForce;
         if (m_state == BunnyState::doublejump) {
             forceY = doubleJumpForce;
@@ -129,6 +119,18 @@ void Bunny::jump()
             m_sprite->runAction(rotateEaseIn);
         }
         m_body->SetLinearVelocity(b2Vec2{0.0f, forceY});
+    }
+}
+
+void Bunny::dive()
+{
+    if (m_state == BunnyState::jumped || m_state == BunnyState::doublejump) {
+        m_sprite->stopAllActions();
+        m_state = BunnyState::dash;
+        m_sprite->setRotation(180);
+        static constexpr float dashForce = -15.0f;
+        m_body->SetLinearVelocity(b2Vec2{0.0f, dashForce});
+        return;
     }
 }
 

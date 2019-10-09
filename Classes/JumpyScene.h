@@ -40,7 +40,6 @@ public:
 private:
     bool initEnvironment();
 
-    // From Box2D demo
     PhysicsWorld m_world;
     GameLogic m_gameLogic;
 

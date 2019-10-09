@@ -18,38 +18,37 @@
 /// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 /// IN THE SOFTWARE.
 
-#ifndef __INPUT_HANDLER_H__
-#define __INPUT_HANDLER_H__
+#ifndef __TUTORIAL_SCENE_H__
+#define __TUTORIAL_SCENE_H__
 
+#include "BunnyController.h"
+#include "ContactListener.h"
+#include "InputHandler.h"
+#include "PhysicsWorld.h"
+#include "TutorialInputHandler.h"
+#include "TutorialOverlay.h"
 #include "cocos2d.h"
 
-class BunnyController;
+class b2World;
 
-class InputHandler {
+class TutorialScene : public cocos2d::Scene {
 public:
-    void init(BunnyController& bunnyController);
+    static cocos2d::Scene* createScene();
 
-    void disable()
-    {
-        m_enabled = false;
-    }
-
-    void enable()
-    {
-        m_enabled = true;
-    }
-
-    ~InputHandler();
+    virtual bool init() final;
+    void update(float dt) final;
 
 private:
-    enum class InputType : bool { jump, dive };
+    void initTutorialLogic();
+    PhysicsWorld m_world;
+    InputHandler m_inputHandler;
+    ContactListener m_contactListener;
+    TutorialInputHandler m_tutorialInputHandler;
+    TutorialOverlay m_tutorialOverlay;
+    BunnyController m_bunnyController;
 
-    bool resolveInput(const cocos2d::Vec2& screenPos, InputType inputType);
-
-    cocos2d::EventListenerMouse* m_mouseListener{nullptr};
-    cocos2d::EventListenerTouchOneByOne* m_touchListener{nullptr};
-    BunnyController* m_bunnyController{nullptr};
-    bool m_enabled{false};
+    // implement the "static create()" method manually
+    CREATE_FUNC(TutorialScene);
 };
 
-#endif  // __INPUT_HANDLER_H__
+#endif  // __TUTORIAL_SCENE_H__

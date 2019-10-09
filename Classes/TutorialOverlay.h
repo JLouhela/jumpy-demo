@@ -18,38 +18,26 @@
 /// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 /// IN THE SOFTWARE.
 
-#ifndef __INPUT_HANDLER_H__
-#define __INPUT_HANDLER_H__
+#ifndef __TUTORIAL_OVERLAY_H__
+#define __TUTORIAL_OVERLAY_H__
 
+#include <functional>
 #include "cocos2d.h"
 
-class BunnyController;
-
-class InputHandler {
+class TutorialOverlay {
 public:
-    void init(BunnyController& bunnyController);
-
-    void disable()
-    {
-        m_enabled = false;
-    }
-
-    void enable()
-    {
-        m_enabled = true;
-    }
-
-    ~InputHandler();
+    bool init(cocos2d::Scene& scene);
+    void showText(const cocos2d::Vec2& pos, const std::string& text);
+    void showLeftArea();
+    void showRightArea();
+    void showFinger(const cocos2d::Vec2& pos);
+    void hide();
 
 private:
-    enum class InputType : bool { jump, dive };
-
-    bool resolveInput(const cocos2d::Vec2& screenPos, InputType inputType);
-
-    cocos2d::EventListenerMouse* m_mouseListener{nullptr};
-    cocos2d::EventListenerTouchOneByOne* m_touchListener{nullptr};
-    BunnyController* m_bunnyController{nullptr};
-    bool m_enabled{false};
+    cocos2d::Label* m_label{nullptr};
+    cocos2d::RenderTexture* m_leftRect{nullptr};
+    cocos2d::RenderTexture* m_rightRect{nullptr};
+    cocos2d::Node* m_overlay{nullptr};
 };
 
-#endif  // __INPUT_HANDLER_H__
+#endif  // __TUTORIAL_OVERLAY_H__

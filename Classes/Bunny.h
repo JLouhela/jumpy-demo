@@ -49,6 +49,8 @@ public:
 
     void jump();
 
+    void dive();
+
     const cocos2d::Rect getBoundingBox() const;
 
     cocos2d::Sprite* getSprite() const

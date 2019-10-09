@@ -28,6 +28,7 @@ static constexpr std::int8_t background{0};
 static constexpr std::int8_t bunny{1};
 static constexpr std::int8_t ground{1};
 static constexpr std::int8_t bee{2};
+static constexpr std::int8_t overlay{127};
 }  // namespace ZOrder
 
 #endif  // __Z_ORDERS_H__
