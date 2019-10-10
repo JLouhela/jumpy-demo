@@ -40,6 +40,12 @@ public:
 
 private:
     void initTutorialLogic();
+    void jumpLeftTutorial();
+    void jumpRightTutorial();
+    void doubleJumpTutorial();
+    void clearInteractions();
+    void delayedText(float delay, const std::string& text);
+
     PhysicsWorld m_world;
     InputHandler m_inputHandler;
     ContactListener m_contactListener;

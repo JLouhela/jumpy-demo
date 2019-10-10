@@ -21,6 +21,7 @@
 #include "AppDelegate.h"
 #include "JumpyScene.h"
 #include "MenuScene.h"
+#include "TutorialScene.h"
 
 // #define USE_AUDIO_ENGINE 1
 #define USE_SIMPLE_AUDIO_ENGINE 1
@@ -36,6 +37,10 @@ using namespace cocos2d::experimental;
 #elif USE_SIMPLE_AUDIO_ENGINE
 #include "audio/include/SimpleAudioEngine.h"
 using namespace CocosDenshion;
+#endif
+
+#ifndef JUMPY_USE_MOUSE
+#define JUMPY_USE_MOUSE 1
 #endif
 
 USING_NS_CC;
@@ -110,8 +115,11 @@ bool AppDelegate::applicationDidFinishLaunching()
     auto scene = MenuScene::createScene();
 
     // run
-    director->runWithScene(scene);
+    // director->runWithScene(scene);
 
+    // DEBUG tutorial scene
+    auto scene2 = TutorialScene::createScene();
+    director->runWithScene(scene2);
     return true;
 }
 

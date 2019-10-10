@@ -28,6 +28,9 @@ void InputHandler::init(BunnyController& bunnyController)
 #ifdef JUMPY_USE_MOUSE
     m_mouseListener = cocos2d::EventListenerMouse::create();
     m_mouseListener->onMouseDown = [this](cocos2d::EventMouse* event) {
+        if (!m_enabled) {
+            return false;
+        }
         const auto location = event->getLocationInView();
         InputType inputType =
             (event->getMouseButton() == cocos2d::EventMouse::MouseButton::BUTTON_LEFT)
@@ -43,6 +46,9 @@ void InputHandler::init(BunnyController& bunnyController)
     // TODO swipe handling
     m_touchListener = cocos2d::EventListenerTouchOneByOne::create();
     m_touchListener->onTouchBegan = [this](cocos2d::Touch* touch, cocos2d::Event* event) {
+        if (!m_enabled) {
+            return false;
+        }
         auto location = touch->getLocationInView();
         location.y = cocos2d::Director::getInstance()->getVisibleSize().height - location.y;
         return false;  // Never consume here

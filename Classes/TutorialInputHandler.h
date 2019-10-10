@@ -31,10 +31,13 @@ public:
     TutorialInputHandler();
     ~TutorialInputHandler();
 
+    void setClickCallback(std::function<void()> cb);
+
     void setLeftJumpCallback(std::function<void()> cb)
     {
         m_leftJumpCallback = cb;
     }
+
     void setRightJumpCallback(std::function<void()> cb)
     {
         m_rightJumpCallback = cb;
@@ -47,6 +50,8 @@ public:
     {
         m_diveCallback = cb;
     }
+
+    void resetCallbacks();
 
 private:
     enum class Side : bool { left, right };

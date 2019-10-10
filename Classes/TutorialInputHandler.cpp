@@ -77,9 +77,23 @@ void TutorialInputHandler::resolveInput(const cocos2d::Vec2& screenPos, InputTyp
     if (side == Side::left && m_leftJumpCallback) {
         m_leftJumpCallback();
     }
-    if (m_rightJumpCallback) {
+    else if (side == Side::right && m_rightJumpCallback) {
         m_rightJumpCallback();
     }
+}
+
+void TutorialInputHandler::resetCallbacks()
+{
+    m_doubleJumpCallback = nullptr;
+    m_diveCallback = nullptr;
+    m_leftJumpCallback = nullptr;
+    m_rightJumpCallback = nullptr;
+}
+
+void TutorialInputHandler::setClickCallback(std::function<void()> cb)
+{
+    m_leftJumpCallback = cb;
+    m_rightJumpCallback = cb;
 }
 
 TutorialInputHandler::~TutorialInputHandler()

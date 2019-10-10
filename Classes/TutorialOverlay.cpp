@@ -22,31 +22,53 @@
 #include "MenuScene.h"
 #include "ZOrders.h"
 
+namespace {
+cocos2d::Label* createLabel(cocos2d::Scene& scene)
+{
+    const auto visibleSize{cocos2d::Director::getInstance()->getVisibleSize()};
+    const auto origin{cocos2d::Director::getInstance()->getVisibleOrigin()};
+
+    auto label = cocos2d::Label::createWithTTF("Placeholder", "fonts/Marker Felt.ttf", 80);
+    label->setColor(cocos2d::Color3B::YELLOW);
+
+    if (label == nullptr || label->getContentSize().width <= 0 ||
+        label->getContentSize().height <= 0) {
+        cocos2d::log("Could not load font");
+        return false;
+    }
+    label->setPosition(
+        cocos2d::Vec2{origin.x + visibleSize.width / 2, origin.y + visibleSize.height / 2});
+
+    label->setAnchorPoint({0.0f, 1.0f});
+    label->enableOutline(cocos2d::Color4B::BLACK, 2);
+    return label;
+}
+}  // namespace
+
 bool TutorialOverlay::init(cocos2d::Scene& scene)
 {
     const auto visibleSize{cocos2d::Director::getInstance()->getVisibleSize()};
     const auto origin{cocos2d::Director::getInstance()->getVisibleOrigin()};
 
-    // Ouch label
-    m_label = cocos2d::Label::createWithTTF("Placeholder", "fonts/Marker Felt.ttf", 80);
-    m_label->setColor(cocos2d::Color3B::YELLOW);
-
-    if (m_label == nullptr || m_label->getContentSize().width <= 0 ||
-        m_label->getContentSize().height <= 0) {
-        cocos2d::log("Could not load font");
-        return false;
-    }
-    m_label->setPosition(
-        cocos2d::Vec2{origin.x + visibleSize.width / 2, origin.y + visibleSize.height / 2});
+    m_label = createLabel(scene);
+    m_secondaryLabel = createLabel(scene);
+    m_secondaryLabel->setScale(0.75f);
 
     m_leftRect = cocos2d::RenderTexture::create(visibleSize.width / 2, visibleSize.height);
     m_leftRect->clear(0.2f, 0.2f, 0.0f, 0.0f);
     m_leftRect->setPosition(
         cocos2d::Vec2{origin.x + visibleSize.width / 4, origin.y + visibleSize.height / 2});
 
+    m_rightRect = cocos2d::RenderTexture::create(visibleSize.width / 2, visibleSize.height);
+    m_rightRect->clear(0.2f, 0.2f, 0.0f, 0.0f);
+    m_rightRect->setPosition(
+        cocos2d::Vec2{origin.x + visibleSize.width / 4 * 3, origin.y + visibleSize.height / 2});
+
     m_overlay = cocos2d::Node::create();
     m_overlay->addChild(m_label);
+    m_overlay->addChild(m_secondaryLabel);
     m_overlay->addChild(m_leftRect, ZOrder::overlay);
+    m_overlay->addChild(m_rightRect, ZOrder::overlay);
     scene.addChild(m_overlay, ZOrder::overlay);
     hide();
     return true;
@@ -64,9 +86,30 @@ void TutorialOverlay::hide()
 
 void TutorialOverlay::showText(const cocos2d::Vec2& pos, const std::string& text)
 {
-    m_label->setString(text);
-    m_label->setPosition(pos);
-    m_label->setVisible(true);
+    showLabel(m_label, pos, text);
+}
+
+void TutorialOverlay::showText(const std::string& text)
+{
+    showLabel(m_label, m_label->getPosition(), text);
+}
+
+void TutorialOverlay::showSecondaryText(const std::string& text)
+{
+    auto pos = m_label->getPosition();
+    pos.y -= m_label->getContentSize().height * 1.1f;
+    showLabel(m_secondaryLabel, pos, text);
+}
+
+void TutorialOverlay::showLabel(cocos2d::Label* label,
+                                const cocos2d::Vec2& pos,
+                                const std::string& text)
+{
+    auto moveTo = cocos2d::MoveTo::create(0.1f, pos);
+    label->setString(text);
+    label->setPosition({-label->getContentSize().width, pos.y});
+    label->runAction(moveTo);
+    label->setVisible(true);
     m_overlay->setVisible(true);
 }
 
@@ -77,8 +120,8 @@ void TutorialOverlay::showLeftArea()
 }
 void TutorialOverlay::showRightArea()
 {
-    // TODO
-    m_overlay->setVisible(false);
+    m_rightRect->setVisible(true);
+    m_overlay->setVisible(true);
 }
 void TutorialOverlay::showFinger(const cocos2d::Vec2& pos)
 {

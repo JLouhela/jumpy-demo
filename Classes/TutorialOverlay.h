@@ -28,13 +28,18 @@ class TutorialOverlay {
 public:
     bool init(cocos2d::Scene& scene);
     void showText(const cocos2d::Vec2& pos, const std::string& text);
+    void showSecondaryText(const cocos2d::Vec2& pos, const std::string& text);
+    void showText(const std::string& text);
+    void showSecondaryText(const std::string& text);
     void showLeftArea();
     void showRightArea();
     void showFinger(const cocos2d::Vec2& pos);
     void hide();
 
 private:
+    void showLabel(cocos2d::Label* label, const cocos2d::Vec2& pos, const std::string& text);
     cocos2d::Label* m_label{nullptr};
+    cocos2d::Label* m_secondaryLabel{nullptr};
     cocos2d::RenderTexture* m_leftRect{nullptr};
     cocos2d::RenderTexture* m_rightRect{nullptr};
     cocos2d::Node* m_overlay{nullptr};
