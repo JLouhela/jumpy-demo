@@ -115,11 +115,7 @@ bool AppDelegate::applicationDidFinishLaunching()
     auto scene = MenuScene::createScene();
 
     // run
-    // director->runWithScene(scene);
-
-    // DEBUG tutorial scene
-    auto scene2 = TutorialScene::createScene();
-    director->runWithScene(scene2);
+    director->runWithScene(scene);
     return true;
 }
 

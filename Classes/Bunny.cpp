@@ -109,6 +109,7 @@ void Bunny::jump()
             cocos2d::SpriteFrameCache::getInstance()->getSpriteFrameByName("./bunny_jump_96_48")};
         m_sprite->setSpriteFrame(spriteFrame);
 
+        // Lol, change to jumpforce leads to changes into TutorialInputHandler timings.
         static constexpr float jumpForce = 15.0f;
         static constexpr float doubleJumpForce = 11.0f;
         auto forceY = jumpForce;

@@ -22,6 +22,7 @@
 #define __TUTORIAL_INPUT_HANDLER_H__
 
 #include <functional>
+#include <tuple>
 #include "cocos2d.h"
 
 class BunnyController;
@@ -52,6 +53,7 @@ public:
     }
 
     void resetCallbacks();
+    void resetLastClick(bool hardReset);
 
 private:
     enum class Side : bool { left, right };
@@ -64,7 +66,7 @@ private:
     std::function<void()> m_rightJumpCallback{nullptr};
     std::function<void()> m_doubleJumpCallback{nullptr};
     std::function<void()> m_diveCallback{nullptr};
-    std::pair<double, Side> m_lastClick{-1.0f, Side::left};
+    std::tuple<double, Side, InputType> m_lastClick{-1.0f, Side::left, InputType::jump};
 };
 
 #endif  // __TUTORIAL_INPUT_HANDLER_H__

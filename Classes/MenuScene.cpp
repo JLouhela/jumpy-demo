@@ -20,6 +20,7 @@
 
 #include "MenuScene.h"
 #include "JumpyScene.h"
+#include "TutorialScene.h"
 
 cocos2d::Scene* MenuScene::createScene()
 {
@@ -53,6 +54,23 @@ bool MenuScene::init()
         cocos2d::Vec2{origin.x + visibleSize.width / 2,
                       origin.y + visibleSize.height / 2 + startLabel->getContentSize().height / 2});
 
+    // tutorial label
+    auto tutorialLabel = cocos2d::Label::createWithTTF("Tutorial", "fonts/Marker Felt.ttf", 100);
+    auto tutorialLabelButton = cocos2d::MenuItemLabel::create(tutorialLabel, [](Ref* sender) {
+        auto scene = TutorialScene::createScene();
+        cocos2d::Director::getInstance()->replaceScene(scene);
+    });
+
+    if (tutorialLabelButton == nullptr || tutorialLabelButton->getContentSize().width <= 0 ||
+        tutorialLabelButton->getContentSize().height <= 0) {
+        cocos2d::log("Could not load font");
+        return false;
+    }
+
+    tutorialLabelButton->setPosition(
+        cocos2d::Vec2{startLabelButton->getPosition().x,
+                      startLabelButton->getPosition().y - startLabel->getContentSize().height});
+
     // Exit label
     auto exitLabel = cocos2d::Label::createWithTTF("Quit", "fonts/Marker Felt.ttf", 100);
     auto exitLabelButton = cocos2d::MenuItemLabel::create(
@@ -64,12 +82,14 @@ bool MenuScene::init()
         return false;
     }
 
-    exitLabelButton->setPosition(
-        cocos2d::Vec2{startLabelButton->getPosition().x,
-                      startLabelButton->getPosition().y - startLabel->getContentSize().height});
+    exitLabelButton->setPosition(cocos2d::Vec2{startLabelButton->getPosition().x,
+                                               startLabelButton->getPosition().y -
+                                                   startLabel->getContentSize().height -
+                                                   tutorialLabel->getContentSize().height});
 
     // create menu, it's an autorelease object
-    auto menu = cocos2d::Menu::createWithArray({startLabelButton, exitLabelButton});
+    auto menu =
+        cocos2d::Menu::createWithArray({startLabelButton, tutorialLabelButton, exitLabelButton});
     menu->setPosition(cocos2d::Vec2::ZERO);
     this->addChild(menu, 1);
     return true;

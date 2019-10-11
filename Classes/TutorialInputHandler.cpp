@@ -63,22 +63,30 @@ TutorialInputHandler::TutorialInputHandler()
 void TutorialInputHandler::resolveInput(const cocos2d::Vec2& screenPos, InputType inputType)
 {
     const auto curTick = getCurrentTick();
-    const auto dt = m_lastClick.first - curTick;
+    const auto dt = curTick - std::get<0>(m_lastClick);
 
     const auto visibleSize{cocos2d::Director::getInstance()->getVisibleSize()};
     Side side = (screenPos.x < visibleSize.width / 2) ? Side::left : Side::right;
-    m_lastClick = std::make_pair(curTick, side);
-    if (dt <= 2.0 && m_doubleJumpCallback) {
+    auto prevSide = std::get<1>(m_lastClick);
+    auto prevInput = std::get<2>(m_lastClick);
+    m_lastClick = std::make_tuple(curTick, side, inputType);
+    if (prevInput == InputType::jump && inputType == InputType::jump && side == prevSide &&
+        dt <= 1.0 && m_doubleJumpCallback) {
         m_doubleJumpCallback();
+        return;
     }
-    if (inputType == InputType::dive && m_diveCallback) {
+    if (prevInput == InputType::jump && inputType == InputType::dive && side == prevSide &&
+        dt <= 1.0 && m_diveCallback) {
         m_diveCallback();
+        return;
     }
     if (side == Side::left && m_leftJumpCallback) {
         m_leftJumpCallback();
+        return;
     }
     else if (side == Side::right && m_rightJumpCallback) {
         m_rightJumpCallback();
+        return;
     }
 }
 
@@ -88,6 +96,17 @@ void TutorialInputHandler::resetCallbacks()
     m_diveCallback = nullptr;
     m_leftJumpCallback = nullptr;
     m_rightJumpCallback = nullptr;
+    resetLastClick(true);
+}
+
+void TutorialInputHandler::resetLastClick(const bool hardReset)
+{
+    if (hardReset) {
+        m_lastClick = std::make_tuple(-1.0f, Side::left, InputType::jump);
+        return;
+    }
+    m_lastClick =
+        std::make_tuple(getCurrentTick(), std::get<1>(m_lastClick), std::get<2>(m_lastClick));
 }
 
 void TutorialInputHandler::setClickCallback(std::function<void()> cb)

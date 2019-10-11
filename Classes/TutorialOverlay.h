@@ -28,7 +28,6 @@ class TutorialOverlay {
 public:
     bool init(cocos2d::Scene& scene);
     void showText(const cocos2d::Vec2& pos, const std::string& text);
-    void showSecondaryText(const cocos2d::Vec2& pos, const std::string& text);
     void showText(const std::string& text);
     void showSecondaryText(const std::string& text);
     void showLeftArea();

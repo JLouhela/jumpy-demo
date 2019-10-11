@@ -34,6 +34,7 @@ class b2World;
 class TutorialScene : public cocos2d::Scene {
 public:
     static cocos2d::Scene* createScene();
+    ~TutorialScene();
 
     virtual bool init() final;
     void update(float dt) final;
@@ -43,6 +44,12 @@ private:
     void jumpLeftTutorial();
     void jumpRightTutorial();
     void doubleJumpTutorial();
+    void doubleJumpPreparation();
+    void doubleJumpClosure();
+    void dashPreparation();
+    void dashTutorial();
+    void tutorialClosure();
+
     void clearInteractions();
     void delayedText(float delay, const std::string& text);
 
@@ -52,6 +59,7 @@ private:
     TutorialInputHandler m_tutorialInputHandler;
     TutorialOverlay m_tutorialOverlay;
     BunnyController m_bunnyController;
+    cocos2d::EventListenerKeyboard* m_keyListener{nullptr};
 
     // implement the "static create()" method manually
     CREATE_FUNC(TutorialScene);
