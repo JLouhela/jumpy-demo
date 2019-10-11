@@ -37,6 +37,9 @@ bool MenuScene::init()
     const auto visibleSize{cocos2d::Director::getInstance()->getVisibleSize()};
     const auto origin{cocos2d::Director::getInstance()->getVisibleOrigin()};
 
+    auto bgSprite = cocos2d::Sprite::create("main_menu_1280_720.png");
+    bgSprite->setPosition(visibleSize.width / 2, visibleSize.height / 2);
+
     // Start label
     auto startLabel = cocos2d::Label::createWithTTF("Start", "fonts/Marker Felt.ttf", 200);
     auto startLabelButton = cocos2d::MenuItemLabel::create(startLabel, [](Ref* sender) {
@@ -49,13 +52,15 @@ bool MenuScene::init()
         cocos2d::log("Could not load font");
         return false;
     }
-
+    startLabel->setColor(cocos2d::Color3B(161, 210, 230));
+    startLabel->enableOutline(cocos2d::Color4B::BLACK, 2);
     startLabelButton->setPosition(
         cocos2d::Vec2{origin.x + visibleSize.width / 2,
                       origin.y + visibleSize.height / 2 + startLabel->getContentSize().height / 2});
 
     // tutorial label
     auto tutorialLabel = cocos2d::Label::createWithTTF("Tutorial", "fonts/Marker Felt.ttf", 100);
+
     auto tutorialLabelButton = cocos2d::MenuItemLabel::create(tutorialLabel, [](Ref* sender) {
         auto scene = TutorialScene::createScene();
         cocos2d::Director::getInstance()->replaceScene(scene);
@@ -66,7 +71,8 @@ bool MenuScene::init()
         cocos2d::log("Could not load font");
         return false;
     }
-
+    tutorialLabel->setColor(cocos2d::Color3B(161, 210, 230));
+    tutorialLabel->enableOutline(cocos2d::Color4B::BLACK, 2);
     tutorialLabelButton->setPosition(
         cocos2d::Vec2{startLabelButton->getPosition().x,
                       startLabelButton->getPosition().y - startLabel->getContentSize().height});
@@ -82,6 +88,8 @@ bool MenuScene::init()
         return false;
     }
 
+    exitLabel->setColor(cocos2d::Color3B(161, 210, 230));
+    exitLabel->enableOutline(cocos2d::Color4B::BLACK, 2);
     exitLabelButton->setPosition(cocos2d::Vec2{startLabelButton->getPosition().x,
                                                startLabelButton->getPosition().y -
                                                    startLabel->getContentSize().height -
@@ -91,6 +99,7 @@ bool MenuScene::init()
     auto menu =
         cocos2d::Menu::createWithArray({startLabelButton, tutorialLabelButton, exitLabelButton});
     menu->setPosition(cocos2d::Vec2::ZERO);
+    this->addChild(bgSprite, 0);
     this->addChild(menu, 1);
     return true;
 }

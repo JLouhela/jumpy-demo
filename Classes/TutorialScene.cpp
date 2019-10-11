@@ -106,8 +106,8 @@ void TutorialScene::initTutorialLogic()
         std::function<void()> changeText = [this]() {
             clearInteractions();
             m_tutorialOverlay.hide();
-            m_tutorialOverlay.showText("Great!");
-            delayedText(0.5f, "Let's jump right into action");
+            m_tutorialOverlay.showText("You will learn how to bunny");
+            delayedText(0.5f, "Let's jump right into action!");
             m_tutorialInputHandler.setClickCallback([this]() { jumpLeftTutorial(); });
 
             auto delayNoclick = cocos2d::DelayTime::create(5.0f);
