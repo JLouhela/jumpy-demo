@@ -61,6 +61,7 @@ private:
     enum class Side : bool { left, right };
     enum class InputType : bool { jump, dive };
     void resolveInput(const cocos2d::Vec2& screenPos, InputType inputType);
+
     cocos2d::EventListenerTouchOneByOne* m_touchListener{nullptr};
     cocos2d::EventListenerMouse* m_mouseListener{nullptr};
     std::function<void()> m_leftJumpCallback{nullptr};

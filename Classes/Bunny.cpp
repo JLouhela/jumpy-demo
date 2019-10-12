@@ -137,9 +137,6 @@ void Bunny::dive()
         m_body->SetLinearVelocity(b2Vec2{0.0f, dashForce});
         return;
     }
-    else if (m_state == BunnyState::grounded) {
-        jump();
-    }
 }
 
 void Bunny::land()

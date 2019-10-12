@@ -21,6 +21,7 @@
 #ifndef __INPUT_HANDLER_H__
 #define __INPUT_HANDLER_H__
 
+#include <array>
 #include <utility>
 #include "cocos2d.h"
 
@@ -28,6 +29,7 @@ class BunnyController;
 
 class InputHandler {
 public:
+    enum class Side : bool { left, right };
     void init(BunnyController& bunnyController);
 
     void disable();
@@ -44,13 +46,23 @@ public:
 private:
     enum class InputType : bool { jump, dive };
 
+    bool resolveTouch(Side side);
     bool resolveInput(const cocos2d::Vec2& screenPos, InputType inputType);
+    void resetCurrentTouch(Side side);
+    void resetCurrentTouches();
+    bool isTouchActive();
 
-    cocos2d::EventListenerMouse* m_mouseListener{nullptr};
-    cocos2d::EventListenerTouchOneByOne* m_touchListener{nullptr};
+    cocos2d::EventListenerTouchAllAtOnce* m_touchListener{nullptr};
     BunnyController* m_bunnyController{nullptr};
     bool m_enabled{false};
-    std::pair<double, cocos2d::Vec2> m_touchBegin{-1.0, {}};
+
+    std::array<std::pair<double, cocos2d::Vec2>, 2> m_touchBegins{
+        std::pair<double, cocos2d::Vec2>{-1.0, cocos2d::Vec2{}},
+        std::pair<double, cocos2d::Vec2>{-1.0, cocos2d::Vec2{}}};
+
+    std::array<std::pair<bool, cocos2d::Vec2>, 2> m_curTouches{
+        std::pair<double, cocos2d::Vec2>{false, cocos2d::Vec2{}},
+        std::pair<double, cocos2d::Vec2>{false, cocos2d::Vec2{}}};
 };
 
 #endif  // __INPUT_HANDLER_H__
