@@ -54,17 +54,18 @@ list(APPEND GAME_SOURCE
      Classes/Box2DUtils.cpp
      Classes/Bunny.cpp
      Classes/BunnyController.cpp
+     Classes/Clock.cpp
      Classes/ContactListener.cpp
      Classes/EnvironmentBuilder.cpp
      Classes/GameLogic.cpp
      Classes/GameOverOverlay.cpp
      Classes/GLES-Render.cpp
-     Classes/InputHandler.cpp
+     Classes/InputHandlerTouch.cpp
      Classes/JumpyScene.cpp
      Classes/MenuScene.cpp
      Classes/PhysicsWorld.cpp
      Classes/ScoreCounter.cpp
-     Classes/TutorialInputHandler.cpp
+     Classes/TutorialInputHandlerTouch.cpp
      Classes/TutorialOverlay.cpp
      Classes/TutorialScene.cpp
      )
@@ -75,6 +76,7 @@ list(APPEND GAME_HEADER
      Classes/Box2DUtils.h
      Classes/Bunny.h
      Classes/BunnyController.h
+     Classes/Clock.h
      Classes/CollisionGroup.h
      Classes/ContactListener.h
      Classes/CustomEvents.h
@@ -83,14 +85,14 @@ list(APPEND GAME_HEADER
      Classes/GameLogic.h
      Classes/GameOverOverlay.h
      Classes/GLES-Render.h
-     Classes/InputHandler.h
+     Classes/InputHandlerTouch.h
      Classes/JumpyScene.h
      Classes/MenuScene.h
      Classes/PhysicsObject.h
      Classes/PhysicsWorld.h
      Classes/PTM.h
      Classes/ScoreCounter.h
-     Classes/TutorialInputHandler.h
+     Classes/TutorialInputHandlerTouch.h
      Classes/TutorialOverlay.h
      Classes/TutorialScene.h
      Classes/ZOrders.h
@@ -102,7 +104,6 @@ if(ANDROID)
     list(APPEND GAME_SOURCE
          proj.android/app/jni/hellocpp/main.cpp
          )
-    add_definitions(-DJUMPY_USE_TOUCH)
 elseif(LINUX)
     list(APPEND GAME_SOURCE
          proj.linux/main.cpp

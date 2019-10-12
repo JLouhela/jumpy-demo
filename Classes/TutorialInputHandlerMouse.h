@@ -27,7 +27,7 @@
 
 class BunnyController;
 
-class TutorialInputHandler {
+class TutorialInputHandler : public TutorialInputHandler {
 public:
     TutorialInputHandler();
     ~TutorialInputHandler();

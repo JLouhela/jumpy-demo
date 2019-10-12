@@ -39,10 +39,6 @@ using namespace cocos2d::experimental;
 using namespace CocosDenshion;
 #endif
 
-#ifndef JUMPY_USE_MOUSE
-#define JUMPY_USE_MOUSE 1
-#endif
-
 USING_NS_CC;
 
 static const cocos2d::Size designResolutionSize = cocos2d::Size(1280, 720);

@@ -38,8 +38,6 @@ public:
                 const cocos2d::Mat4* eyeProjection = nullptr) final;
 
 private:
-    bool initEnvironment();
-
     PhysicsWorld m_world;
     GameLogic m_gameLogic;
 

@@ -111,7 +111,7 @@ void Bunny::jump()
 
         // Lol, change to jumpforce leads to changes into TutorialInputHandler timings.
         static constexpr float jumpForce = 15.0f;
-        static constexpr float doubleJumpForce = 11.0f;
+        static constexpr float doubleJumpForce = 12.0f;
         auto forceY = jumpForce;
         if (m_state == BunnyState::doublejump) {
             forceY = doubleJumpForce;
@@ -127,11 +127,18 @@ void Bunny::dive()
 {
     if (m_state == BunnyState::jumped || m_state == BunnyState::doublejump) {
         m_sprite->stopAllActions();
+
+        const auto spriteFrame{
+            cocos2d::SpriteFrameCache::getInstance()->getSpriteFrameByName("./bunny_dive_96_48")};
+        m_sprite->setSpriteFrame(spriteFrame);
         m_state = BunnyState::dash;
         m_sprite->setRotation(180);
-        static constexpr float dashForce = -15.0f;
+        static constexpr float dashForce = -16.0f;
         m_body->SetLinearVelocity(b2Vec2{0.0f, dashForce});
         return;
+    }
+    else if (m_state == BunnyState::grounded) {
+        jump();
     }
 }
 

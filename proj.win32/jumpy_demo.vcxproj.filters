@@ -51,9 +51,6 @@
     <ClCompile Include="..\Classes\BunnyController.cpp">
       <Filter>src\bunny</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\InputHandler.cpp">
-      <Filter>src\input</Filter>
-    </ClCompile>
     <ClCompile Include="..\Classes\Bee.cpp">
       <Filter>src\bees</Filter>
     </ClCompile>
@@ -90,11 +87,17 @@
     <ClCompile Include="..\Classes\EnvironmentBuilder.cpp">
       <Filter>src\scenes</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\TutorialInputHandler.cpp">
-      <Filter>src\input</Filter>
-    </ClCompile>
     <ClCompile Include="..\Classes\TutorialOverlay.cpp">
       <Filter>src\scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\InputHandlerTouch.cpp">
+      <Filter>src\input</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\TutorialInputHandlerTouch.cpp">
+      <Filter>src\input</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Clock.cpp">
+      <Filter>src\utils</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -115,9 +118,6 @@
     </ClInclude>
     <ClInclude Include="..\Classes\BunnyController.h">
       <Filter>src\bunny</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\InputHandler.h">
-      <Filter>src\input</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\Bee.h">
       <Filter>src\bees</Filter>
@@ -170,11 +170,17 @@
     <ClInclude Include="..\Classes\EnvironmentBuilder.h">
       <Filter>src\scenes</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\TutorialInputHandler.h">
-      <Filter>src\input</Filter>
-    </ClInclude>
     <ClInclude Include="..\Classes\TutorialOverlay.h">
       <Filter>src\scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\InputHandlerTouch.h">
+      <Filter>src\input</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\TutorialInputHandlerTouch.h">
+      <Filter>src\input</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Clock.h">
+      <Filter>src\utils</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

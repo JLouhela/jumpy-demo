@@ -23,11 +23,17 @@
 
 #include "BunnyController.h"
 #include "ContactListener.h"
-#include "InputHandler.h"
 #include "PhysicsWorld.h"
-#include "TutorialInputHandler.h"
 #include "TutorialOverlay.h"
 #include "cocos2d.h"
+
+#if JUMPY_USE_MOUSE
+#include "InputHandlerMouse.h"
+#include "TutorialInputHandlerMouse.h"
+#else
+#include "InputHandlerTouch.h"
+#include "TutorialInputHandlerTouch.h"
+#endif
 
 class b2World;
 

@@ -18,48 +18,39 @@
 /// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 /// IN THE SOFTWARE.
 
-#ifndef __GAME_LOGIC_H__
-#define __GAME_LOGIC_H__
+#ifndef __INPUT_HANDLER_H__
+#define __INPUT_HANDLER_H__
 
-#include <cstdint>
-#include "BeeSpawner.h"
-#include "BunnyController.h"
-#include "ContactListener.h"
-#include "GameOverOverlay.h"
-#include "ScoreCounter.h"
+#include <utility>
 #include "cocos2d.h"
 
-#if JUMPY_USE_MOUSE
-#include "InputHandlerMouse.h"
-#else
-#include "InputHandlerTouch.h"
-#endif
+class BunnyController;
 
-class b2World;
-
-enum GameState : std::uint8_t { start, active, wait, end };
-
-class GameLogic {
+class InputHandler {
 public:
-    bool init(cocos2d::Scene& scene, b2World& world);
+    void init(BunnyController& bunnyController);
+
+    void disable();
+
+    void enable()
+    {
+        m_enabled = true;
+    }
+
+    void update(float dt);
+
+    ~InputHandler();
 
 private:
-    void initGame();
-    void endGame();
-    void cleanState();
+    enum class InputType : bool { jump, dive };
 
-    cocos2d::Scene* m_scene;
-    BunnyController m_bunnyController;
-    BeeSpawner m_beeSpawner;
-    GameOverOverlay m_gameOverOverlay;
-    cocos2d::Node* m_actionNode{nullptr};
-    ScoreCounter m_scoreCounter;
-    ContactListener m_contactListener;
-    cocos2d::EventListenerCustom* m_bunnyEventListener{nullptr};
-    GameState m_state{GameState::start};
-    std::int32_t m_curLvl{0};
-    std::uint8_t m_bunnyCount{0};
-    InputHandler m_inputHandler;
+    bool resolveInput(const cocos2d::Vec2& screenPos, InputType inputType);
+
+    cocos2d::EventListenerMouse* m_mouseListener{nullptr};
+    cocos2d::EventListenerTouchOneByOne* m_touchListener{nullptr};
+    BunnyController* m_bunnyController{nullptr};
+    bool m_enabled{false};
+    std::pair<double, cocos2d::Vec2> m_touchBegin{-1.0, {}};
 };
 
-#endif  // __GAME_LOGIC_H__
+#endif  // __INPUT_HANDLER_H__

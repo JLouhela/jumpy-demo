@@ -18,48 +18,38 @@
 /// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 /// IN THE SOFTWARE.
 
-#ifndef __GAME_LOGIC_H__
-#define __GAME_LOGIC_H__
-
-#include <cstdint>
-#include "BeeSpawner.h"
-#include "BunnyController.h"
-#include "ContactListener.h"
-#include "GameOverOverlay.h"
-#include "ScoreCounter.h"
-#include "cocos2d.h"
-
-#if JUMPY_USE_MOUSE
 #include "InputHandlerMouse.h"
-#else
-#include "InputHandlerTouch.h"
-#endif
+#include "BunnyController.h"
 
-class b2World;
+void InputHandler::init(BunnyController& bunnyController)
+{
+    m_bunnyController = &bunnyController;
 
-enum GameState : std::uint8_t { start, active, wait, end };
+    m_mouseListener = cocos2d::EventListenerMouse::create();
+    m_mouseListener->onMouseDown = [this](cocos2d::EventMouse* event) {
+        if (!m_enabled) {
+            return false;
+        }
+        const auto location = event->getLocationInView();
+        InputType inputType =
+            (event->getMouseButton() == cocos2d::EventMouse::MouseButton::BUTTON_LEFT)
+                ? InputType::jump
+                : InputType::dive;
+        return resolveInput(location, inputType);
+    };
+    cocos2d::Director::getInstance()->getEventDispatcher()->addEventListenerWithFixedPriority(
+        m_mouseListener, 2);
+}
 
-class GameLogic {
-public:
-    bool init(cocos2d::Scene& scene, b2World& world);
+bool InputHandler::resolveInput(const cocos2d::Vec2& screenPos, InputType inputType)
+{
+    if (inputType == InputType::jump) {
+        return m_bunnyController->jumpBunny(screenPos);
+    }
+    return m_bunnyController->diveBunny(screenPos);
+}
 
-private:
-    void initGame();
-    void endGame();
-    void cleanState();
-
-    cocos2d::Scene* m_scene;
-    BunnyController m_bunnyController;
-    BeeSpawner m_beeSpawner;
-    GameOverOverlay m_gameOverOverlay;
-    cocos2d::Node* m_actionNode{nullptr};
-    ScoreCounter m_scoreCounter;
-    ContactListener m_contactListener;
-    cocos2d::EventListenerCustom* m_bunnyEventListener{nullptr};
-    GameState m_state{GameState::start};
-    std::int32_t m_curLvl{0};
-    std::uint8_t m_bunnyCount{0};
-    InputHandler m_inputHandler;
-};
-
-#endif  // __GAME_LOGIC_H__
+InputHandler::~InputHandler()
+{
+    cocos2d::Director::getInstance()->getEventDispatcher()->removeEventListener(m_mouseListener);
+}

@@ -18,32 +18,14 @@
 /// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 /// IN THE SOFTWARE.
 
-#include "InputHandler.h"
+#include "InputHandlerTouch.h"
 #include "BunnyController.h"
+#include "Clock.h"
 
 void InputHandler::init(BunnyController& bunnyController)
 {
     m_bunnyController = &bunnyController;
 
-#ifdef JUMPY_USE_MOUSE
-    m_mouseListener = cocos2d::EventListenerMouse::create();
-    m_mouseListener->onMouseDown = [this](cocos2d::EventMouse* event) {
-        if (!m_enabled) {
-            return false;
-        }
-        const auto location = event->getLocationInView();
-        InputType inputType =
-            (event->getMouseButton() == cocos2d::EventMouse::MouseButton::BUTTON_LEFT)
-                ? InputType::jump
-                : InputType::dive;
-        return resolveInput(location, inputType);
-    };
-    cocos2d::Director::getInstance()->getEventDispatcher()->addEventListenerWithFixedPriority(
-        m_mouseListener, 2);
-
-#else
-
-    // TODO swipe handling
     m_touchListener = cocos2d::EventListenerTouchOneByOne::create();
     m_touchListener->onTouchBegan = [this](cocos2d::Touch* touch, cocos2d::Event* event) {
         if (!m_enabled) {
@@ -51,11 +33,35 @@ void InputHandler::init(BunnyController& bunnyController)
         }
         auto location = touch->getLocationInView();
         location.y = cocos2d::Director::getInstance()->getVisibleSize().height - location.y;
-        return false;  // Never consume here
+        m_touchBegin = std::make_pair(utils::clock::getCurrentTick(), location);
+        return true;
+    };
+    m_touchListener->onTouchEnded = [this](cocos2d::Touch* touch, cocos2d::Event* event) {
+        if (!m_enabled || m_touchBegin.first < 0.0) {
+            return false;
+        }
+        auto location = touch->getLocationInView();
+        location.y = cocos2d::Director::getInstance()->getVisibleSize().height - location.y;
+        m_touchBegin.first = -1;
+        return resolveInput(location, InputType::jump);
+    };
+    m_touchListener->onTouchMoved = [this](cocos2d::Touch* touch, cocos2d::Event* event) {
+        if (!m_enabled || m_touchBegin.first < 0.0) {
+            return false;
+        }
+        auto curY = cocos2d::Director::getInstance()->getVisibleSize().height -
+                    touch->getLocationInView().y;
+        InputType type = InputType::jump;
+        static constexpr float swipeThreshold{1.0f};
+        if (m_touchBegin.second.y - curY > swipeThreshold) {
+            type = InputType::dive;
+        }
+        m_touchBegin.first = -1;
+        return resolveInput(m_touchBegin.second, type);
     };
     cocos2d::Director::getInstance()->getEventDispatcher()->addEventListenerWithFixedPriority(
         m_touchListener, 2);
-#endif
+    cocos2d::Director::getInstance()->getScheduler()->scheduleUpdate(this, 1, false);
 }
 
 bool InputHandler::resolveInput(const cocos2d::Vec2& screenPos, InputType inputType)
@@ -68,9 +74,24 @@ bool InputHandler::resolveInput(const cocos2d::Vec2& screenPos, InputType inputT
 
 InputHandler::~InputHandler()
 {
-#ifdef JUMPY_USE_MOUSE
-    cocos2d::Director::getInstance()->getEventDispatcher()->removeEventListener(m_mouseListener);
-#else
     cocos2d::Director::getInstance()->getEventDispatcher()->removeEventListener(m_touchListener);
-#endif
+}
+
+void InputHandler::update(float /*dt*/)
+{
+    if (!m_enabled || m_touchBegin.first < 0.0) {
+        return;
+    }
+    const auto tick = utils::clock::getCurrentTick();
+    static constexpr float resolveTouchTime{1.0f / 30};
+    if (tick - m_touchBegin.first > resolveTouchTime) {
+        resolveInput(m_touchBegin.second, InputType::jump);
+        m_touchBegin.first = -1.0;
+    }
+}
+
+void InputHandler::disable()
+{
+    m_touchBegin.first = -1.0;
+    m_enabled = false;
 }

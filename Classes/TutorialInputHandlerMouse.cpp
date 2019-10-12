@@ -18,24 +18,12 @@
 /// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 /// IN THE SOFTWARE.
 
-#include "TutorialInputHandler.h"
-#include <chrono>
+#include "TutorialInputHandlerMouse.h"
 #include "BunnyController.h"
-
-namespace {
-
-double getCurrentTick()
-{
-    return static_cast<double>(std::chrono::duration_cast<std::chrono::milliseconds>(
-                                   std::chrono::system_clock::now().time_since_epoch())
-                                   .count() /
-                               1000.0);
-}
-}  // namespace
+#include "Clock.h"
 
 TutorialInputHandler::TutorialInputHandler()
 {
-#ifdef JUMPY_USE_MOUSE
     m_mouseListener = cocos2d::EventListenerMouse::create();
     m_mouseListener->onMouseDown = [this](cocos2d::EventMouse* event) {
         const auto location = event->getLocationInView();
@@ -48,23 +36,11 @@ TutorialInputHandler::TutorialInputHandler()
     };
     cocos2d::Director::getInstance()->getEventDispatcher()->addEventListenerWithFixedPriority(
         m_mouseListener, 1);
-#else
-
-    // TODO swipe handling
-    m_touchListener = cocos2d::EventListenerTouchOneByOne::create();
-    m_touchListener->onTouchBegan = [this](cocos2d::Touch* touch, cocos2d::Event* event) {
-        auto location = touch->getLocationInView();
-        location.y = cocos2d::Director::getInstance()->getVisibleSize().height - location.y;
-        return false;  // Never consume here
-    };
-    cocos2d::Director::getInstance()->getEventDispatcher()->addEventListenerWithFixedPriority(
-        m_touchListener, 1);
-#endif
 }
 
 void TutorialInputHandler::resolveInput(const cocos2d::Vec2& screenPos, InputType inputType)
 {
-    const auto curTick = getCurrentTick();
+    const auto curTick = utils::clock::getCurrentTick();
     const auto dt = curTick - std::get<0>(m_lastClick);
 
     const auto visibleSize{cocos2d::Director::getInstance()->getVisibleSize()};
@@ -107,8 +83,8 @@ void TutorialInputHandler::resetLastClick(const bool hardReset)
         m_lastClick = std::make_tuple(-1.0f, Side::left, InputType::jump);
         return;
     }
-    m_lastClick =
-        std::make_tuple(getCurrentTick(), std::get<1>(m_lastClick), std::get<2>(m_lastClick));
+    m_lastClick = std::make_tuple(utils::clock::getCurrentTick(), std::get<1>(m_lastClick),
+                                  std::get<2>(m_lastClick));
 }
 
 void TutorialInputHandler::setClickCallback(std::function<void()> cb)
@@ -119,9 +95,5 @@ void TutorialInputHandler::setClickCallback(std::function<void()> cb)
 
 TutorialInputHandler::~TutorialInputHandler()
 {
-#ifdef JUMPY_USE_MOUSE
     cocos2d::Director::getInstance()->getEventDispatcher()->removeEventListener(m_mouseListener);
-#else
-    cocos2d::Director::getInstance()->getEventDispatcher()->removeEventListener(m_touchListener);
-#endif
 }

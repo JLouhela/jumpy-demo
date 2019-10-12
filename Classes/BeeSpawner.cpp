@@ -66,7 +66,7 @@ void BeeSpawner::spawnBee()
     const float x = (dir == Direction::left) ? (visibleSize.width - xOffset) : xOffset;
 
     // TODO variance
-    static constexpr float beeY{180.0f};
+    static constexpr float beeY{170.0f};
     bee->spawn(cocos2d::Vec2{x, beeY}, dir);
 }
 

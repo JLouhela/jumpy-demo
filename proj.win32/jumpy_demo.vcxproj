@@ -77,7 +77,7 @@
     <ClCompile>
       <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>$(EngineRoot);$(EngineRoot)external;$(EngineRoot)cocos\audio\include;$(EngineRoot)external\chipmunk\include\chipmunk;$(EngineRoot)extensions;..\Classes;..;%(AdditionalIncludeDirectories);$(_COCOS_HEADER_WIN32_BEGIN);$(_COCOS_HEADER_WIN32_END)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USE_MATH_DEFINES;GL_GLEXT_PROTOTYPES;COCOS2D_DEBUG=1;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;JUMPY_USE_MOUSE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USE_MATH_DEFINES;GL_GLEXT_PROTOTYPES;COCOS2D_DEBUG=1;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>false</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
@@ -155,17 +155,18 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)\Resources\" /D /E /I /F /Y
     <ClCompile Include="..\Classes\Box2DUtils.cpp" />
     <ClCompile Include="..\Classes\Bunny.cpp" />
     <ClCompile Include="..\Classes\BunnyController.cpp" />
+    <ClCompile Include="..\Classes\Clock.cpp" />
     <ClCompile Include="..\Classes\ContactListener.cpp" />
     <ClCompile Include="..\Classes\EnvironmentBuilder.cpp" />
     <ClCompile Include="..\Classes\GameLogic.cpp" />
     <ClCompile Include="..\Classes\GameOverOverlay.cpp" />
     <ClCompile Include="..\Classes\GLES-Render.cpp" />
-    <ClCompile Include="..\Classes\InputHandler.cpp" />
+    <ClCompile Include="..\Classes\InputHandlerTouch.cpp" />
     <ClCompile Include="..\Classes\JumpyScene.cpp" />
     <ClCompile Include="..\Classes\MenuScene.cpp" />
     <ClCompile Include="..\Classes\PhysicsWorld.cpp" />
     <ClCompile Include="..\Classes\ScoreCounter.cpp" />
-    <ClCompile Include="..\Classes\TutorialInputHandler.cpp" />
+    <ClCompile Include="..\Classes\TutorialInputHandlerTouch.cpp" />
     <ClCompile Include="..\Classes\TutorialOverlay.cpp" />
     <ClCompile Include="..\Classes\TutorialScene.cpp" />
     <ClCompile Include="main.cpp" />
@@ -177,6 +178,7 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)\Resources\" /D /E /I /F /Y
     <ClInclude Include="..\Classes\Box2DUtils.h" />
     <ClInclude Include="..\Classes\Bunny.h" />
     <ClInclude Include="..\Classes\BunnyController.h" />
+    <ClInclude Include="..\Classes\Clock.h" />
     <ClInclude Include="..\Classes\CollisionGroup.h" />
     <ClInclude Include="..\Classes\ContactListener.h" />
     <ClInclude Include="..\Classes\CustomEvents.h" />
@@ -185,14 +187,14 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)\Resources\" /D /E /I /F /Y
     <ClInclude Include="..\Classes\GameLogic.h" />
     <ClInclude Include="..\Classes\GameOverOverlay.h" />
     <ClInclude Include="..\Classes\GLES-Render.h" />
-    <ClInclude Include="..\Classes\InputHandler.h" />
+    <ClInclude Include="..\Classes\InputHandlerTouch.h" />
     <ClInclude Include="..\Classes\JumpyScene.h" />
     <ClInclude Include="..\Classes\MenuScene.h" />
     <ClInclude Include="..\Classes\PhysicsObject.h" />
     <ClInclude Include="..\Classes\PhysicsWorld.h" />
     <ClInclude Include="..\Classes\PTM.h" />
     <ClInclude Include="..\Classes\ScoreCounter.h" />
-    <ClInclude Include="..\Classes\TutorialInputHandler.h" />
+    <ClInclude Include="..\Classes\TutorialInputHandlerTouch.h" />
     <ClInclude Include="..\Classes\TutorialOverlay.h" />
     <ClInclude Include="..\Classes\TutorialScene.h" />
     <ClInclude Include="..\Classes\ZOrders.h" />

@@ -18,48 +18,13 @@
 /// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 /// IN THE SOFTWARE.
 
-#ifndef __GAME_LOGIC_H__
-#define __GAME_LOGIC_H__
+#ifndef __CLOCK_H__
+#define __CLOCK_H__
 
-#include <cstdint>
-#include "BeeSpawner.h"
-#include "BunnyController.h"
-#include "ContactListener.h"
-#include "GameOverOverlay.h"
-#include "ScoreCounter.h"
-#include "cocos2d.h"
+namespace utils {
+namespace clock {
+double getCurrentTick();
+}  // namespace clock
+}  // namespace utils
 
-#if JUMPY_USE_MOUSE
-#include "InputHandlerMouse.h"
-#else
-#include "InputHandlerTouch.h"
-#endif
-
-class b2World;
-
-enum GameState : std::uint8_t { start, active, wait, end };
-
-class GameLogic {
-public:
-    bool init(cocos2d::Scene& scene, b2World& world);
-
-private:
-    void initGame();
-    void endGame();
-    void cleanState();
-
-    cocos2d::Scene* m_scene;
-    BunnyController m_bunnyController;
-    BeeSpawner m_beeSpawner;
-    GameOverOverlay m_gameOverOverlay;
-    cocos2d::Node* m_actionNode{nullptr};
-    ScoreCounter m_scoreCounter;
-    ContactListener m_contactListener;
-    cocos2d::EventListenerCustom* m_bunnyEventListener{nullptr};
-    GameState m_state{GameState::start};
-    std::int32_t m_curLvl{0};
-    std::uint8_t m_bunnyCount{0};
-    InputHandler m_inputHandler;
-};
-
-#endif  // __GAME_LOGIC_H__
+#endif  // __ENVIRONMENT_BUILDER_H__
