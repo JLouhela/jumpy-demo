@@ -20,7 +20,6 @@
 
 #include "TutorialScene.h"
 #include "EnvironmentBuilder.h"
-#include "JumpyScene.h"
 #include "MenuScene.h"
 #include "SimpleAudioEngine.h"
 
@@ -229,7 +228,7 @@ void TutorialScene::doubleJumpPreparation()
 
     auto delayAction_1 = cocos2d::DelayTime::create(0.5f);
     auto callback_1 = cocos2d::CallFunc::create([this]() {
-        m_tutorialOverlay.showSecondaryText("DOUBLE JUMP?");
+        m_tutorialOverlay.showSecondaryText("a DOUBLE JUMP?");
         clearInteractions();
 
         auto delayAction_2 = cocos2d::DelayTime::create(3.0f);
@@ -238,13 +237,13 @@ void TutorialScene::doubleJumpPreparation()
             m_tutorialOverlay.hide();
             m_tutorialOverlay.showText("Let's give it a shot");
 
-            m_tutorialInputHandler.setClickCallback([this]() { doubleJumpTutorial(); });
+            m_tutorialInputHandler.setClickCallback([this]() { doubleJumpTutorial(); }, 0.7f);
             auto delayNoclick = cocos2d::DelayTime::create(5.0f);
             auto transitionCallback = cocos2d::CallFunc::create([this]() { doubleJumpTutorial(); });
             runAction(cocos2d::Sequence::create(delayNoclick, transitionCallback, nullptr));
         };
 
-        m_tutorialInputHandler.setClickCallback(lambdaCallback_2);
+        m_tutorialInputHandler.setClickCallback(lambdaCallback_2, 0.7f);
         auto callback_2 = cocos2d::CallFunc::create([lambdaCallback_2]() { lambdaCallback_2(); });
         runAction(cocos2d::Sequence::create(delayAction_2, callback_2, nullptr));
     });
@@ -262,39 +261,31 @@ void TutorialScene::doubleJumpTutorial()
 
     m_tutorialOverlay.showText(
         {origin.x + visibleSize.width / 9, origin.y + visibleSize.height / 4 * 3},
-        "Tap once for a single jump");
+        "Swipe once for a single jump");
 
     auto delayAction = cocos2d::DelayTime::create(0.5f);
     auto callbackLambda = [this]() {
         clearInteractions();
-        m_tutorialOverlay.showSecondaryText("Tap twice for double jump, try it!");
+        m_tutorialOverlay.showSecondaryText("Swipe twice for double jump, try it!");
 
         m_tutorialInputHandler.setDoubleJumpCallback([this]() {
             clearInteractions();
-            auto transitionLambda = [this]() {
-                clearInteractions();
-                m_tutorialInputHandler.resetCallbacks();
-                m_tutorialInputHandler.setClickCallback([this]() { doubleJumpClosure(); });
-                m_tutorialOverlay.hide();
-                m_tutorialOverlay.showText("Splendid!");
-                delayedText(0.1f, "just remember..!");
-                m_inputHandler.disable();
-                auto delayNoclick = cocos2d::DelayTime::create(5.0f);
-                auto transitionCallback =
-                    cocos2d::CallFunc::create([this]() { doubleJumpClosure(); });
-                runAction(cocos2d::Sequence::create(delayNoclick, transitionCallback, nullptr));
-            };
-            auto delayTransition = cocos2d::DelayTime::create(0.1f);
-            auto transitionCallback =
-                cocos2d::CallFunc::create([transitionLambda]() { transitionLambda(); });
-            runAction(cocos2d::Sequence::create(delayTransition, transitionCallback, nullptr));
+            m_inputHandler.disable();
+            m_tutorialInputHandler.resetCallbacks();
+            m_tutorialInputHandler.setClickCallback([this]() { doubleJumpClosure(); }, 0.8f);
+            m_tutorialOverlay.hide();
+            m_tutorialOverlay.showText("Splendid!");
+            delayedText(0.1f, "just remember..!");
+            auto delayNoclick = cocos2d::DelayTime::create(5.0f);
+            auto transitionCallback = cocos2d::CallFunc::create([this]() { doubleJumpClosure(); });
+            runAction(cocos2d::Sequence::create(delayNoclick, transitionCallback, nullptr));
         });
 
         auto delayInput = cocos2d::DelayTime::create(0.1f);
         auto inputCallback = cocos2d::CallFunc::create([this]() { m_inputHandler.enable(); });
         runAction(cocos2d::Sequence::create(delayInput, inputCallback, nullptr));
     };
-    m_tutorialInputHandler.setClickCallback(callbackLambda);
+    m_tutorialInputHandler.setClickCallback(callbackLambda, 0.2f);
     auto callback = cocos2d::CallFunc::create([callbackLambda]() { callbackLambda(); });
     runAction(cocos2d::Sequence::create(delayAction, callback, nullptr));
 }
@@ -320,13 +311,13 @@ void TutorialScene::doubleJumpClosure()
             m_tutorialOverlay.hide();
             m_tutorialOverlay.showText("You cannot jump again more");
             delayedText(0.1f, "than once until you land again.");
-            m_tutorialInputHandler.setClickCallback([this]() { dashPreparation(); });
+            m_tutorialInputHandler.setClickCallback([this]() { dashPreparation(); }, 1.0f);
 
             auto delayNoclick = cocos2d::DelayTime::create(5.0f);
             auto transitionCallback = cocos2d::CallFunc::create([this]() { dashPreparation(); });
             runAction(cocos2d::Sequence::create(delayNoclick, transitionCallback, nullptr));
         };
-        m_tutorialInputHandler.setClickCallback(changeText);
+        m_tutorialInputHandler.setClickCallback(changeText, 0.7f);
     });
     runAction(cocos2d::Sequence::create(delay, callback, nullptr));
 }
@@ -355,13 +346,13 @@ void TutorialScene::dashPreparation()
             m_tutorialOverlay.hide();
             m_tutorialOverlay.showText("*drumroll* .. it's DIVE");
 
-            m_tutorialInputHandler.setClickCallback([this]() { dashTutorial(); });
+            m_tutorialInputHandler.setClickCallback([this]() { dashTutorial(); }, 0.9f);
             auto delayNoclick = cocos2d::DelayTime::create(5.0f);
             auto transitionCallback = cocos2d::CallFunc::create([this]() { dashTutorial(); });
             runAction(cocos2d::Sequence::create(delayNoclick, transitionCallback, nullptr));
         };
 
-        m_tutorialInputHandler.setClickCallback(lambdaCallback_2);
+        m_tutorialInputHandler.setClickCallback(lambdaCallback_2, 0.7f);
         auto callback_2 = cocos2d::CallFunc::create([lambdaCallback_2]() { lambdaCallback_2(); });
         runAction(cocos2d::Sequence::create(delayAction_2, callback_2, nullptr));
     });
@@ -379,22 +370,22 @@ void TutorialScene::dashTutorial()
 
     m_tutorialOverlay.showText(
         {origin.x + visibleSize.width / 9, origin.y + visibleSize.height / 4 * 3},
-        "Diving is simple");
+        "Diving is quite simple");
     delayedText(0.1f, "yet it may save your tail one day.");
 
-    auto delayAction = cocos2d::DelayTime::create(3.0f);
+    auto delayAction = cocos2d::DelayTime::create(4.0f);
     auto callbackLambda = [this]() {
         clearInteractions();
         m_tutorialOverlay.hide();
-        m_tutorialOverlay.showText("Get airborne first");
-        delayedText(0.1f, "And swipe down the screen to dive. Try it!");
+        m_tutorialOverlay.showText("Swipe up to get some air");
+        delayedText(0.2f, "Then swipe down to dive. Try it!");
         // TODO display finger
         m_tutorialInputHandler.setDiveCallback([this]() {
             clearInteractions();
-            m_tutorialInputHandler.setClickCallback([this]() { tutorialClosure(); });
+            m_tutorialInputHandler.setClickCallback([this]() { tutorialClosure(); }, 0.8f);
             m_tutorialOverlay.hide();
             m_tutorialOverlay.showText("WOOHOO!");
-            delayedText(0.2f, "What a speed!");
+            delayedText(0.2f, "Tremendous speed!");
             auto delayNoclick = cocos2d::DelayTime::create(5.0f);
             auto transitionCallback = cocos2d::CallFunc::create([this]() { tutorialClosure(); });
             runAction(cocos2d::Sequence::create(delayNoclick, transitionCallback, nullptr));
@@ -405,7 +396,7 @@ void TutorialScene::dashTutorial()
         runAction(cocos2d::Sequence::create(delayInput, inputCallback, nullptr));
     };
 
-    m_tutorialInputHandler.setClickCallback(callbackLambda);
+    m_tutorialInputHandler.setClickCallback(callbackLambda, 1.0f);
     auto callback = cocos2d::CallFunc::create([callbackLambda]() { callbackLambda(); });
     runAction(cocos2d::Sequence::create(delayAction, callback, nullptr));
 }
@@ -417,12 +408,26 @@ void TutorialScene::tutorialClosure()
     m_tutorialOverlay.hide();
     const auto visibleSize{cocos2d::Director::getInstance()->getVisibleSize()};
     const cocos2d::Vec2 origin{cocos2d::Director::getInstance()->getVisibleOrigin()};
+
     m_tutorialOverlay.showText(
         {origin.x + visibleSize.width / 9, origin.y + visibleSize.height / 4 * 3},
-        "You are ready to begin!");
-    delayedText(0.1f, "Tap to continue");
-    m_tutorialInputHandler.setClickCallback([this]() {
-        auto scene = JumpyScene::createScene();
-        cocos2d::Director::getInstance()->replaceScene(scene);
-    });
+        "You can dive from a double jump too!");
+
+    auto delayAction = cocos2d::DelayTime::create(3.0f);
+    auto callbackLambda = [this]() {
+        clearInteractions();
+        m_tutorialOverlay.hide();
+        m_tutorialOverlay.showText("That settles the tutorial");
+        delayedText(0.1f, "Tap to return to main menu");
+        m_tutorialInputHandler.setClickCallback(
+            [this]() {
+                auto scene = MenuScene::createScene();
+                cocos2d::Director::getInstance()->replaceScene(scene);
+            },
+            0.7f);
+    };
+
+    m_tutorialInputHandler.setClickCallback(callbackLambda, 0.7f);
+    auto callback = cocos2d::CallFunc::create([callbackLambda]() { callbackLambda(); });
+    runAction(cocos2d::Sequence::create(delayAction, callback, nullptr));
 }

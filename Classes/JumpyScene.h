@@ -30,6 +30,7 @@ class b2World;
 class JumpyScene : public cocos2d::Scene {
 public:
     static cocos2d::Scene* createScene();
+    ~JumpyScene();
 
     virtual bool init() final;
     void update(float dt) final;
@@ -40,6 +41,7 @@ public:
 private:
     PhysicsWorld m_world;
     GameLogic m_gameLogic;
+    cocos2d::EventListenerKeyboard* m_keyListener{nullptr};
 
     // implement the "static create()" method manually
     CREATE_FUNC(JumpyScene);

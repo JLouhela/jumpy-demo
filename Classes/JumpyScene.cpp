@@ -20,6 +20,7 @@
 
 #include "JumpyScene.h"
 #include "EnvironmentBuilder.h"
+#include "MenuScene.h"
 #include "SimpleAudioEngine.h"
 
 cocos2d::Scene* JumpyScene::createScene()
@@ -46,10 +47,27 @@ bool JumpyScene::init()
         return false;
     }
 
+    // android back press event
+    m_keyListener = cocos2d::EventListenerKeyboard::create();
+    m_keyListener->onKeyReleased = [](cocos2d::EventKeyboard::KeyCode keyCode,
+                                      cocos2d::Event* event) {
+        if (keyCode == cocos2d::EventKeyboard::KeyCode::KEY_BACK ||
+            keyCode == cocos2d::EventKeyboard::KeyCode::KEY_ESCAPE) {
+            auto scene = MenuScene::createScene();
+            cocos2d::Director::getInstance()->replaceScene(scene);
+        }
+    };
+    _eventDispatcher->addEventListenerWithSceneGraphPriority(m_keyListener, this);
+
     scheduleUpdate();
     m_world.setDrawDebug(false);
 
     return true;
+}
+
+JumpyScene::~JumpyScene()
+{
+    cocos2d::Director::getInstance()->getEventDispatcher()->removeEventListener(m_keyListener);
 }
 
 void JumpyScene::update(const float dt)
