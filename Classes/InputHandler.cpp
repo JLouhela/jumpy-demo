@@ -162,12 +162,12 @@ void InputHandler::disable()
 
 void InputHandler::disable(Side side)
 {
-    m_enabled[getIndex(side)] = true;
+    m_enabled[getIndex(side)] = false;
 }
 
 void InputHandler::enable(Side side)
 {
-    m_enabled[getIndex(side)] = false;
+    m_enabled[getIndex(side)] = true;
 }
 
 bool InputHandler::resolveTouch(Side side)

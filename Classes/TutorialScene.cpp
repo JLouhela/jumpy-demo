@@ -96,30 +96,29 @@ void TutorialScene::delayedText(const float delay, const std::string& text)
 
 void TutorialScene::initTutorialLogic()
 {
-    auto delay = cocos2d::DelayTime::create(0.5f);
+    auto delay = cocos2d::DelayTime::create(0.2f);
     auto callback = cocos2d::CallFunc::create([this]() {
         const auto visibleSize{cocos2d::Director::getInstance()->getVisibleSize()};
         const cocos2d::Vec2 origin{cocos2d::Director::getInstance()->getVisibleOrigin()};
         m_tutorialOverlay.showText(
-            {origin.x + visibleSize.width / 9, origin.y + visibleSize.height / 4 * 3},
-            "Welcome to the tutorial");
+            {origin.x + visibleSize.width / 9, origin.y + visibleSize.height / 4 * 3}, "Welcome!");
 
         std::function<void()> changeText = [this]() {
             clearInteractions();
             m_tutorialOverlay.hide();
-            m_tutorialOverlay.showText("You will learn how to bunny");
-            delayedText(0.5f, "Let's jump right into action!");
-            m_tutorialInputHandler.setClickCallback([this]() { jumpLeftTutorial(); });
+            m_tutorialOverlay.showText("I will teach you how to bunny");
+            delayedText(0.7f, "It's like being a ninja, but furry!");
+            m_tutorialInputHandler.setClickCallback([this]() { jumpLeftTutorial(); }, 1.7f);
 
             auto delayNoclick = cocos2d::DelayTime::create(5.0f);
             auto transitionCallback = cocos2d::CallFunc::create([this]() { jumpLeftTutorial(); });
             runAction(cocos2d::Sequence::create(delayNoclick, transitionCallback, nullptr));
         };
-        m_tutorialInputHandler.setClickCallback(changeText);
+        m_tutorialInputHandler.setClickCallback(changeText, 0.5f);
     });
     runAction(cocos2d::Sequence::create(delay, callback, nullptr));
 
-    delayedText(5.0f, " .. tap the screen to continue!");
+    delayedText(2.0f, ".. (tap the screen to continue)");
 }
 
 void TutorialScene::jumpLeftTutorial()
@@ -127,37 +126,48 @@ void TutorialScene::jumpLeftTutorial()
     m_inputHandler.disable();
     clearInteractions();
     m_tutorialOverlay.hide();
+    m_tutorialInputHandler.resetCallbacks();
 
     const auto visibleSize{cocos2d::Director::getInstance()->getVisibleSize()};
     const cocos2d::Vec2 origin{cocos2d::Director::getInstance()->getVisibleOrigin()};
 
     m_tutorialOverlay.showText(
         {origin.x + visibleSize.width / 9, origin.y + visibleSize.height / 4 * 3},
-        "You can jump by tapping the screen");
+        "Let's start with a classic");
+    delayedText(0.1f, ".. jumping!");
 
     auto delayAction = cocos2d::DelayTime::create(2.0f);
     auto callbackLambda = [this]() {
         clearInteractions();
-        m_tutorialOverlay.showSecondaryText("Try tapping left side of the screen");
-        m_tutorialOverlay.showLeftArea();
-        m_inputHandler.disable(InputHandler::Side::right);
-        m_tutorialInputHandler.setJumpCallback([this]() {
-            clearInteractions();
-            m_tutorialInputHandler.setClickCallback([this]() { jumpRightTutorial(); });
-            m_tutorialOverlay.hide();
-            m_tutorialOverlay.showText("WOW!");
-            delayedText(0.2f, "Well done!");
-            auto delayNoclick = cocos2d::DelayTime::create(5.0f);
-            auto transitionCallback = cocos2d::CallFunc::create([this]() { jumpRightTutorial(); });
-            runAction(cocos2d::Sequence::create(delayNoclick, transitionCallback, nullptr));
+        m_tutorialOverlay.hide();
+        m_tutorialOverlay.showText("Swiping up makes bunnies jump");
+        auto delayTextAction = cocos2d::DelayTime::create(1.2f);
+        auto delayTextcallback = cocos2d::CallFunc::create([this]() {
+            m_tutorialOverlay.showSecondaryText("Try it! Swipe up on the highlighted area");
+            m_tutorialOverlay.showLeftArea();
+            // TODO display finger anim
+
+            m_tutorialInputHandler.setJumpCallback([this]() {
+                clearInteractions();
+                m_tutorialInputHandler.setClickCallback([this]() { jumpRightTutorial(); }, 0.7f);
+                m_tutorialOverlay.hide();
+                m_tutorialOverlay.showText("WOW!");
+                delayedText(0.2f, "Well done!");
+                auto delayNoclick = cocos2d::DelayTime::create(5.0f);
+                auto transitionCallback =
+                    cocos2d::CallFunc::create([this]() { jumpRightTutorial(); });
+                runAction(cocos2d::Sequence::create(delayNoclick, transitionCallback, nullptr));
+            });
         });
+        runAction(cocos2d::Sequence::create(delayTextAction, delayTextcallback, nullptr));
 
         auto delayInput = cocos2d::DelayTime::create(0.1f);
-        auto inputCallback = cocos2d::CallFunc::create([this]() { m_inputHandler.enable(); });
+        auto inputCallback = cocos2d::CallFunc::create(
+            [this]() { m_inputHandler.enable(InputHandler::Side::left); });
         runAction(cocos2d::Sequence::create(delayInput, inputCallback, nullptr));
     };
 
-    m_tutorialInputHandler.setClickCallback(callbackLambda);
+    m_tutorialInputHandler.setClickCallback(callbackLambda, 1.0f);
     auto callback = cocos2d::CallFunc::create([callbackLambda]() { callbackLambda(); });
     runAction(cocos2d::Sequence::create(delayAction, callback, nullptr));
 }
@@ -167,6 +177,7 @@ void TutorialScene::jumpRightTutorial()
     clearInteractions();
     m_inputHandler.disable();
     m_tutorialOverlay.hide();
+    m_tutorialInputHandler.resetCallbacks();
 
     const auto visibleSize{cocos2d::Director::getInstance()->getVisibleSize()};
     const cocos2d::Vec2 origin{cocos2d::Director::getInstance()->getVisibleOrigin()};
@@ -178,12 +189,11 @@ void TutorialScene::jumpRightTutorial()
     auto delayAction = cocos2d::DelayTime::create(2.0f);
     auto callbackLambda = [this]() {
         clearInteractions();
-        m_tutorialOverlay.showSecondaryText("Yup. Now try tapping the right side");
+        m_tutorialOverlay.showSecondaryText("You bet! Now try to make the right bunny jump");
         m_tutorialOverlay.showRightArea();
-        m_inputHandler.disable(InputHandler::Side::left);
         m_tutorialInputHandler.setJumpCallback([this]() {
             clearInteractions();
-            m_tutorialInputHandler.setClickCallback([this]() { doubleJumpPreparation(); });
+            m_tutorialInputHandler.setClickCallback([this]() { doubleJumpPreparation(); }, 0.9f);
             m_tutorialOverlay.hide();
             m_tutorialOverlay.showText("Bunny hop!");
             delayedText(0.2f, "Masterful bunny hop!");
@@ -195,10 +205,12 @@ void TutorialScene::jumpRightTutorial()
         });
 
         auto delayInput = cocos2d::DelayTime::create(0.1f);
-        auto inputCallback = cocos2d::CallFunc::create([this]() { m_inputHandler.enable(); });
+        auto inputCallback = cocos2d::CallFunc::create(
+            [this]() { m_inputHandler.enable(InputHandler::Side::right); });
         runAction(cocos2d::Sequence::create(delayInput, inputCallback, nullptr));
     };
-    m_tutorialInputHandler.setClickCallback(callbackLambda);
+
+    m_tutorialInputHandler.setClickCallback(callbackLambda, 1.0f);
     auto callback = cocos2d::CallFunc::create([callbackLambda]() { callbackLambda(); });
     runAction(cocos2d::Sequence::create(delayAction, callback, nullptr));
 }
