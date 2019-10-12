@@ -29,8 +29,9 @@ class BunnyController;
 
 class TutorialInputHandler {
 public:
-    TutorialInputHandler(cocos2d::Scene& scene);
     ~TutorialInputHandler();
+
+    void init(cocos2d::Scene& scene);
 
     void setClickCallback(std::function<void()> cb);
     void setClickCallback(std::function<void()> cb, float waitSeconds);

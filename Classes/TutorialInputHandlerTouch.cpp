@@ -22,7 +22,7 @@
 #include "BunnyController.h"
 #include "Clock.h"
 
-TutorialInputHandler::TutorialInputHandler(cocos2d::Scene& scene)
+void TutorialInputHandler::init(cocos2d::Scene& scene)
 {
     // TODO swipe handling
     m_touchListener = cocos2d::EventListenerTouchOneByOne::create();

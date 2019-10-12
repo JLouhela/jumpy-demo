@@ -52,7 +52,7 @@ void InputHandler::init(BunnyController& bunnyController)
         auto curY = cocos2d::Director::getInstance()->getVisibleSize().height -
                     touch->getLocationInView().y;
         InputType type = InputType::jump;
-        static constexpr float swipeThreshold{1.0f};
+        static constexpr float swipeThreshold{2.0f};
         if (m_touchBegin.second.y - curY > swipeThreshold) {
             type = InputType::dive;
         }

@@ -42,6 +42,7 @@ bool TutorialScene::init()
         cocos2d::log("Could not initialize gfx for scene");
         return false;
     }
+    m_tutorialInputHandler.init(*this);
     m_tutorialOverlay.init(*this);
     m_world.getWorld().SetContactListener(&m_contactListener);
     m_bunnyController.init(*this, m_world.getWorld());
