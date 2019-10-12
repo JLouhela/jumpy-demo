@@ -140,7 +140,8 @@ void TutorialScene::jumpLeftTutorial()
         clearInteractions();
         m_tutorialOverlay.showSecondaryText("Try tapping left side of the screen");
         m_tutorialOverlay.showLeftArea();
-        m_tutorialInputHandler.setLeftJumpCallback([this]() {
+        m_inputHandler.disable(InputHandler::Side::right);
+        m_tutorialInputHandler.setJumpCallback([this]() {
             clearInteractions();
             m_tutorialInputHandler.setClickCallback([this]() { jumpRightTutorial(); });
             m_tutorialOverlay.hide();
@@ -179,7 +180,8 @@ void TutorialScene::jumpRightTutorial()
         clearInteractions();
         m_tutorialOverlay.showSecondaryText("Yup. Now try tapping the right side");
         m_tutorialOverlay.showRightArea();
-        m_tutorialInputHandler.setRightJumpCallback([this]() {
+        m_inputHandler.disable(InputHandler::Side::left);
+        m_tutorialInputHandler.setJumpCallback([this]() {
             clearInteractions();
             m_tutorialInputHandler.setClickCallback([this]() { doubleJumpPreparation(); });
             m_tutorialOverlay.hide();
@@ -254,19 +256,7 @@ void TutorialScene::doubleJumpTutorial()
     auto callbackLambda = [this]() {
         clearInteractions();
         m_tutorialOverlay.showSecondaryText("Tap twice for double jump, try it!");
-        // Workaround no time, this is getting nasty.
-        // Should init bunnycontroller in tutorial mode instead and fire events from
-        // successful actions. Now this is a guessing game.
-        m_tutorialInputHandler.setClickCallback([this]() {
-            static bool jumped{false};
-            if (jumped) {
-                m_tutorialInputHandler.resetLastClick(false);
-                jumped = false;
-            }
-            else {
-                jumped = true;
-            }
-        });
+
         m_tutorialInputHandler.setDoubleJumpCallback([this]() {
             clearInteractions();
             auto transitionLambda = [this]() {
@@ -289,10 +279,7 @@ void TutorialScene::doubleJumpTutorial()
         });
 
         auto delayInput = cocos2d::DelayTime::create(0.1f);
-        auto inputCallback = cocos2d::CallFunc::create([this]() {
-            m_inputHandler.enable();
-            m_tutorialInputHandler.resetLastClick(true);
-        });
+        auto inputCallback = cocos2d::CallFunc::create([this]() { m_inputHandler.enable(); });
         runAction(cocos2d::Sequence::create(delayInput, inputCallback, nullptr));
     };
     m_tutorialInputHandler.setClickCallback(callbackLambda);

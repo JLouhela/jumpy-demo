@@ -109,7 +109,6 @@ void Bunny::jump()
             cocos2d::SpriteFrameCache::getInstance()->getSpriteFrameByName("./bunny_jump_96_48")};
         m_sprite->setSpriteFrame(spriteFrame);
 
-        // Lol, change to jumpforce leads to changes into TutorialInputHandler timings.
         static constexpr float jumpForce = 15.0f;
         static constexpr float doubleJumpForce = 12.0f;
         auto forceY = jumpForce;
@@ -118,6 +117,12 @@ void Bunny::jump()
             auto rotateBy = cocos2d::RotateBy::create(0.3f, 180.0f);
             auto rotateEaseIn = cocos2d::EaseInOut::create(rotateBy, 1.0f);
             m_sprite->runAction(rotateEaseIn);
+            cocos2d::EventCustom event(CustomEvent::bunnyDoubleJumpEvent);
+            cocos2d::Director::getInstance()->getEventDispatcher()->dispatchEvent(&event);
+        }
+        else {
+            cocos2d::EventCustom event(CustomEvent::bunnyJumpEvent);
+            cocos2d::Director::getInstance()->getEventDispatcher()->dispatchEvent(&event);
         }
         m_body->SetLinearVelocity(b2Vec2{0.0f, forceY});
     }
@@ -135,6 +140,8 @@ void Bunny::dive()
         m_sprite->setRotation(180);
         static constexpr float dashForce = -16.0f;
         m_body->SetLinearVelocity(b2Vec2{0.0f, dashForce});
+        cocos2d::EventCustom event(CustomEvent::bunnyDiveEvent);
+        cocos2d::Director::getInstance()->getEventDispatcher()->dispatchEvent(&event);
         return;
     }
 }

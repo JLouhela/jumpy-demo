@@ -33,11 +33,14 @@ public:
     void init(BunnyController& bunnyController);
 
     void disable();
+    void disable(Side side);
 
     void enable()
     {
-        m_enabled = true;
+        m_enabled = {true, true};
     }
+
+    void enable(Side side);
 
     void update(float dt);
 
@@ -54,7 +57,7 @@ private:
 
     cocos2d::EventListenerTouchAllAtOnce* m_touchListener{nullptr};
     BunnyController* m_bunnyController{nullptr};
-    bool m_enabled{false};
+    std::array<bool, 2> m_enabled{false, false};
 
     std::array<std::pair<double, cocos2d::Vec2>, 2> m_touchBegins{
         std::pair<double, cocos2d::Vec2>{-1.0, cocos2d::Vec2{}},

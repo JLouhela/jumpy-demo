@@ -90,14 +90,14 @@
     <ClCompile Include="..\Classes\TutorialOverlay.cpp">
       <Filter>src\scenes</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\InputHandlerTouch.cpp">
-      <Filter>src\input</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\TutorialInputHandlerTouch.cpp">
-      <Filter>src\input</Filter>
-    </ClCompile>
     <ClCompile Include="..\Classes\Clock.cpp">
       <Filter>src\utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\TutorialInputHandler.cpp">
+      <Filter>src\input</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\InputHandler.cpp">
+      <Filter>src\input</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -173,14 +173,14 @@
     <ClInclude Include="..\Classes\TutorialOverlay.h">
       <Filter>src\scenes</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\InputHandlerTouch.h">
-      <Filter>src\input</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\TutorialInputHandlerTouch.h">
-      <Filter>src\input</Filter>
-    </ClInclude>
     <ClInclude Include="..\Classes\Clock.h">
       <Filter>src\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\TutorialInputHandler.h">
+      <Filter>src\input</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\InputHandler.h">
+      <Filter>src\input</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

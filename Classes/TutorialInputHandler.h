@@ -18,38 +18,54 @@
 /// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 /// IN THE SOFTWARE.
 
-#ifndef __INPUT_HANDLER_H__
-#define __INPUT_HANDLER_H__
+#ifndef __TUTORIAL_INPUT_HANDLER_H__
+#define __TUTORIAL_INPUT_HANDLER_H__
 
+#include <functional>
+#include <tuple>
 #include "cocos2d.h"
 
 class BunnyController;
 
-class InputHandler {
+class TutorialInputHandler {
 public:
-    void init(BunnyController& bunnyController);
+    ~TutorialInputHandler();
 
-    void disable()
+    void init(cocos2d::Scene& scene);
+
+    void setClickCallback(std::function<void()> cb)
     {
-        m_enabled = false;
+        m_clickCallback = cb;
     }
 
-    void enable()
+    void setClickCallback(std::function<void()> cb, float waitSeconds);
+
+    void setJumpCallback(std::function<void()> cb)
     {
-        m_enabled = true;
+        m_jumpCallback = cb;
+    }
+    void setDoubleJumpCallback(std::function<void()> cb)
+    {
+        m_doubleJumpCallback = cb;
+    }
+    void setDiveCallback(std::function<void()> cb)
+    {
+        m_diveCallback = cb;
     }
 
-    ~InputHandler();
+    void resetCallbacks();
 
 private:
-    enum class InputType : bool { jump, dive };
-
-    bool resolveInput(const cocos2d::Vec2& screenPos, InputType inputType);
-
-    cocos2d::EventListenerMouse* m_mouseListener{nullptr};
     cocos2d::EventListenerTouchOneByOne* m_touchListener{nullptr};
-    BunnyController* m_bunnyController{nullptr};
-    bool m_enabled{false};
+    cocos2d::EventListenerCustom* m_jumpListener{nullptr};
+    cocos2d::EventListenerCustom* m_doubleJumpListener{nullptr};
+    cocos2d::EventListenerCustom* m_diveListener{nullptr};
+
+    std::function<void()> m_clickCallback{nullptr};
+    std::function<void()> m_jumpCallback{nullptr};
+    std::function<void()> m_doubleJumpCallback{nullptr};
+    std::function<void()> m_diveCallback{nullptr};
+    cocos2d::Node* m_actionNode{nullptr};
 };
 
-#endif  // __INPUT_HANDLER_H__
+#endif  // __TUTORIAL_INPUT_HANDLER_H__

@@ -18,7 +18,7 @@
 /// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 /// IN THE SOFTWARE.
 
-#include "InputHandlerTouch.h"
+#include "InputHandler.h"
 #include "BunnyController.h"
 #include "Clock.h"
 
@@ -45,12 +45,13 @@ void InputHandler::init(BunnyController& bunnyController)
     m_touchListener = cocos2d::EventListenerTouchAllAtOnce::create();
     m_touchListener->onTouchesBegan = [this](const std::vector<cocos2d::Touch*>& touches,
                                              cocos2d::Event* event) {
-        if (!m_enabled) {
-            return false;
-        }
-        bool leftHandled{false};
-        bool rightHandled{false};
+        bool leftHandled{!m_enabled[getIndex(Side::left)]};
+        bool rightHandled{!m_enabled[getIndex(Side::right)]};
+
         for (const auto touch : touches) {
+            if (leftHandled && rightHandled) {
+                break;
+            }
             auto location = touch->getLocationInView();
             location.y = cocos2d::Director::getInstance()->getVisibleSize().height - location.y;
             const auto side = getSide(location);
@@ -62,18 +63,11 @@ void InputHandler::init(BunnyController& bunnyController)
 
             leftHandled = leftHandled || (side == Side::left);
             rightHandled = rightHandled || (side == Side::right);
-
-            if (leftHandled && rightHandled) {
-                break;
-            }
         }
         return true;
     };
     m_touchListener->onTouchesEnded = [this](const std::vector<cocos2d::Touch*>& touches,
                                              cocos2d::Event* event) {
-        if (!m_enabled) {
-            return false;
-        }
         for (const auto& touch : touches) {
             resetCurrentTouch(getSide(touch->getLocationInView()));
         }
@@ -81,13 +75,16 @@ void InputHandler::init(BunnyController& bunnyController)
     };
     m_touchListener->onTouchesMoved = [this](const std::vector<cocos2d::Touch*>& touches,
                                              cocos2d::Event* event) {
-        if (!m_enabled || !isTouchActive()) {
+        if (!isTouchActive()) {
             return false;
         }
 
-        bool leftHandled{false};
-        bool rightHandled{false};
+        bool leftHandled{!m_enabled[getIndex(Side::left)]};
+        bool rightHandled{!m_enabled[getIndex(Side::right)]};
         for (const auto touch : touches) {
+            if (leftHandled && rightHandled) {
+                break;
+            }
             auto location = touch->getLocationInView();
             location.y = cocos2d::Director::getInstance()->getVisibleSize().height - location.y;
 
@@ -99,10 +96,6 @@ void InputHandler::init(BunnyController& bunnyController)
 
             leftHandled = leftHandled || (side == Side::left);
             rightHandled = rightHandled || (side == Side::right);
-
-            if (leftHandled && rightHandled) {
-                break;
-            }
         }
         return true;
     };
@@ -150,17 +143,31 @@ bool InputHandler::isTouchActive()
 
 void InputHandler::update(float /*dt*/)
 {
-    if (!m_enabled || !isTouchActive()) {
+    if (!isTouchActive()) {
         return;
     }
-    resolveTouch(Side::left);
-    resolveTouch(Side::right);
+    if (m_enabled[getIndex(Side::left)]) {
+        resolveTouch(Side::left);
+    }
+    if (m_enabled[getIndex(Side::right)]) {
+        resolveTouch(Side::right);
+    }
 }
 
 void InputHandler::disable()
 {
     resetCurrentTouches();
-    m_enabled = false;
+    m_enabled = {false, false};
+}
+
+void InputHandler::disable(Side side)
+{
+    m_enabled[getIndex(side)] = true;
+}
+
+void InputHandler::enable(Side side)
+{
+    m_enabled[getIndex(side)] = false;
 }
 
 bool InputHandler::resolveTouch(Side side)

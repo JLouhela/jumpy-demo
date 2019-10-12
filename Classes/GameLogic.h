@@ -26,14 +26,9 @@
 #include "BunnyController.h"
 #include "ContactListener.h"
 #include "GameOverOverlay.h"
+#include "InputHandler.h"
 #include "ScoreCounter.h"
 #include "cocos2d.h"
-
-#if JUMPY_USE_MOUSE
-#include "InputHandlerMouse.h"
-#else
-#include "InputHandlerTouch.h"
-#endif
 
 class b2World;
 

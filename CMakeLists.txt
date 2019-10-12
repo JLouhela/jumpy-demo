@@ -60,12 +60,12 @@ list(APPEND GAME_SOURCE
      Classes/GameLogic.cpp
      Classes/GameOverOverlay.cpp
      Classes/GLES-Render.cpp
-     Classes/InputHandlerTouch.cpp
+     Classes/InputHandler.cpp
      Classes/JumpyScene.cpp
      Classes/MenuScene.cpp
      Classes/PhysicsWorld.cpp
      Classes/ScoreCounter.cpp
-     Classes/TutorialInputHandlerTouch.cpp
+     Classes/TutorialInputHandler.cpp
      Classes/TutorialOverlay.cpp
      Classes/TutorialScene.cpp
      )
@@ -85,14 +85,14 @@ list(APPEND GAME_HEADER
      Classes/GameLogic.h
      Classes/GameOverOverlay.h
      Classes/GLES-Render.h
-     Classes/InputHandlerTouch.h
+     Classes/InputHandler.h
      Classes/JumpyScene.h
      Classes/MenuScene.h
      Classes/PhysicsObject.h
      Classes/PhysicsWorld.h
      Classes/PTM.h
      Classes/ScoreCounter.h
-     Classes/TutorialInputHandlerTouch.h
+     Classes/TutorialInputHandler.h
      Classes/TutorialOverlay.h
      Classes/TutorialScene.h
      Classes/ZOrders.h

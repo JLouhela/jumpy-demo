@@ -27,13 +27,8 @@
 #include "TutorialOverlay.h"
 #include "cocos2d.h"
 
-#if JUMPY_USE_MOUSE
-#include "InputHandlerMouse.h"
-#include "TutorialInputHandlerMouse.h"
-#else
-#include "InputHandlerTouch.h"
-#include "TutorialInputHandlerTouch.h"
-#endif
+#include "InputHandler.h"
+#include "TutorialInputHandler.h"
 
 class b2World;
 

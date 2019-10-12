@@ -28,6 +28,10 @@ namespace CustomEvent {
 // pfff micro-optimizations, fast to compare
 static const std::string beeThroughEvent{"a"};
 static const std::string bunnyHitEvent{"b"};
+static const std::string bunnyJumpEvent{"c"};
+static const std::string bunnyDoubleJumpEvent{"d"};
+static const std::string bunnyDiveEvent{"e"};
+
 }  // namespace CustomEvent
 
 #endif  // __CUSTOM_EVENTS_H__
