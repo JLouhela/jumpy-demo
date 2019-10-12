@@ -40,7 +40,7 @@ public:
     bool diveBunny(const cocos2d::Vec2& pos);
 
 private:
-    std::vector<cocos2d::Vec2> BunnyController::getSpawnPoints(const std::uint8_t bunnyCount);
+    std::vector<cocos2d::Vec2> getSpawnPoints(const std::uint8_t bunnyCount);
 
     // Bunny_id equals to container index.
     // Hardcoded init sufficient for demonstration purposes.

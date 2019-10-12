@@ -388,6 +388,7 @@ void TutorialScene::dashTutorial()
         m_tutorialOverlay.hide();
         m_tutorialOverlay.showText("Get airborne first");
         delayedText(0.1f, "And swipe down the screen to dive. Try it!");
+        // TODO display finger
         m_tutorialInputHandler.setDiveCallback([this]() {
             clearInteractions();
             m_tutorialInputHandler.setClickCallback([this]() { tutorialClosure(); });

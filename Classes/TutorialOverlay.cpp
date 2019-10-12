@@ -34,7 +34,7 @@ cocos2d::Label* createLabel(cocos2d::Scene& scene)
     if (label == nullptr || label->getContentSize().width <= 0 ||
         label->getContentSize().height <= 0) {
         cocos2d::log("Could not load font");
-        return false;
+        return nullptr;
     }
     label->setPosition(
         cocos2d::Vec2{origin.x + visibleSize.width / 2, origin.y + visibleSize.height / 2});

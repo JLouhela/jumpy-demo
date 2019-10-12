@@ -19,15 +19,17 @@
 /// IN THE SOFTWARE.
 
 #include "TutorialInputHandler.h"
+#include <chrono>
 #include "BunnyController.h"
 
 namespace {
 
 double getCurrentTick()
 {
-    static struct timeval currentTime;
-    cocos2d::gettimeofday(&currentTime, nullptr);
-    return (currentTime.tv_sec) + (currentTime.tv_usec / 1000000.0);
+    return static_cast<double>(std::chrono::duration_cast<std::chrono::milliseconds>(
+                                   std::chrono::system_clock::now().time_since_epoch())
+                                   .count() /
+                               1000.0);
 }
 }  // namespace
 

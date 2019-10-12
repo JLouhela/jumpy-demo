@@ -50,36 +50,49 @@ endif()
 list(APPEND GAME_SOURCE
      Classes/AppDelegate.cpp
      Classes/Bee.cpp
-     Classes/BeeEventListener.cpp
      Classes/BeeSpawner.cpp
+     Classes/Box2DUtils.cpp
      Classes/Bunny.cpp
      Classes/BunnyController.cpp
      Classes/ContactListener.cpp
+     Classes/EnvironmentBuilder.cpp
      Classes/GameLogic.cpp
+     Classes/GameOverOverlay.cpp
+     Classes/GLES-Render.cpp
      Classes/InputHandler.cpp
      Classes/JumpyScene.cpp
      Classes/MenuScene.cpp
-     Classes/RetryOverlay.cpp
-     Classes/StageManager.cpp
+     Classes/PhysicsWorld.cpp
+     Classes/ScoreCounter.cpp
+     Classes/TutorialInputHandler.cpp
+     Classes/TutorialOverlay.cpp
+     Classes/TutorialScene.cpp
      )
 list(APPEND GAME_HEADER
      Classes/AppDelegate.h
      Classes/Bee.h
-     Classes/BeeEventListener.h
-     Classes/BeeSpawn.h
      Classes/BeeSpawner.h
+     Classes/Box2DUtils.h
      Classes/Bunny.h
      Classes/BunnyController.h
      Classes/CollisionGroup.h
      Classes/ContactListener.h
      Classes/CustomEvents.h
      Classes/Direction.h
+     Classes/EnvironmentBuilder.h
      Classes/GameLogic.h
+     Classes/GameOverOverlay.h
+     Classes/GLES-Render.h
      Classes/InputHandler.h
      Classes/JumpyScene.h
      Classes/MenuScene.h
-     Classes/RetryOverlay.h
-     Classes/StageManager.h
+     Classes/PhysicsObject.h
+     Classes/PhysicsWorld.h
+     Classes/PTM.h
+     Classes/ScoreCounter.h
+     Classes/TutorialInputHandler.h
+     Classes/TutorialOverlay.h
+     Classes/TutorialScene.h
      Classes/ZOrders.h
      )
 
@@ -89,6 +102,7 @@ if(ANDROID)
     list(APPEND GAME_SOURCE
          proj.android/app/jni/hellocpp/main.cpp
          )
+    add_definitions(-DJUMPY_USE_TOUCH)
 elseif(LINUX)
     list(APPEND GAME_SOURCE
          proj.linux/main.cpp

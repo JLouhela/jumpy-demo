@@ -36,7 +36,7 @@ void InputHandler::init(BunnyController& bunnyController)
             (event->getMouseButton() == cocos2d::EventMouse::MouseButton::BUTTON_LEFT)
                 ? InputType::jump
                 : InputType::dive;
-        resolveInput(location, inputType);
+        return resolveInput(location, inputType);
     };
     cocos2d::Director::getInstance()->getEventDispatcher()->addEventListenerWithFixedPriority(
         m_mouseListener, 2);
