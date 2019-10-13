@@ -144,11 +144,16 @@ void TutorialScene::jumpLeftTutorial()
         auto delayTextcallback = cocos2d::CallFunc::create([this]() {
             m_tutorialOverlay.showSecondaryText("Try it! Swipe up on the highlighted area");
             m_tutorialOverlay.showLeftArea();
-            // TODO display finger anim
+            const auto visibleSize{cocos2d::Director::getInstance()->getVisibleSize()};
+            const cocos2d::Vec2 origin{cocos2d::Director::getInstance()->getVisibleOrigin()};
+
+            m_tutorialOverlay.showFinger(
+                {origin.x + visibleSize.width / 8, origin.y + visibleSize.height / 4},
+                TutorialOverlay::FingerDirection::up);
 
             m_tutorialInputHandler.setJumpCallback([this]() {
                 clearInteractions();
-                m_tutorialInputHandler.setClickCallback([this]() { jumpRightTutorial(); }, 0.7f);
+                m_tutorialInputHandler.setClickCallback([this]() { jumpRightTutorial(); }, 0.9f);
                 m_tutorialOverlay.hide();
                 m_tutorialOverlay.showText("WOW!");
                 delayedText(0.2f, "Well done!");
@@ -267,12 +272,18 @@ void TutorialScene::doubleJumpTutorial()
     auto callbackLambda = [this]() {
         clearInteractions();
         m_tutorialOverlay.showSecondaryText("Swipe twice for double jump, try it!");
+        const auto visibleSize{cocos2d::Director::getInstance()->getVisibleSize()};
+        const cocos2d::Vec2 origin{cocos2d::Director::getInstance()->getVisibleOrigin()};
+
+        m_tutorialOverlay.showFinger(
+            {origin.x + visibleSize.width / 8, origin.y + visibleSize.height / 4},
+            TutorialOverlay::FingerDirection::upup);
 
         m_tutorialInputHandler.setDoubleJumpCallback([this]() {
             clearInteractions();
             m_inputHandler.disable();
             m_tutorialInputHandler.resetCallbacks();
-            m_tutorialInputHandler.setClickCallback([this]() { doubleJumpClosure(); }, 0.8f);
+            m_tutorialInputHandler.setClickCallback([this]() { doubleJumpClosure(); }, 0.9f);
             m_tutorialOverlay.hide();
             m_tutorialOverlay.showText("Splendid!");
             delayedText(0.1f, "just remember..!");
@@ -378,8 +389,19 @@ void TutorialScene::dashTutorial()
         clearInteractions();
         m_tutorialOverlay.hide();
         m_tutorialOverlay.showText("Swipe up to get some air");
-        delayedText(0.2f, "Then swipe down to dive. Try it!");
-        // TODO display finger
+
+        auto fingerDelay = cocos2d::DelayTime::create(0.2f);
+        auto fingerCallback = cocos2d::CallFunc::create([this]() {
+            const auto visibleSize{cocos2d::Director::getInstance()->getVisibleSize()};
+            const cocos2d::Vec2 origin{cocos2d::Director::getInstance()->getVisibleOrigin()};
+
+            m_tutorialOverlay.showSecondaryText("Then swipe down to dive. Try it!");
+            m_tutorialOverlay.showFinger(
+                {origin.x + visibleSize.width / 8, origin.y + visibleSize.height / 4},
+                TutorialOverlay::FingerDirection::updown);
+        });
+        runAction(cocos2d::Sequence::create(fingerDelay, fingerCallback, nullptr));
+
         m_tutorialInputHandler.setDiveCallback([this]() {
             clearInteractions();
             m_tutorialInputHandler.setClickCallback([this]() { tutorialClosure(); }, 0.8f);

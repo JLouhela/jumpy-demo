@@ -21,18 +21,21 @@
 #ifndef __TUTORIAL_OVERLAY_H__
 #define __TUTORIAL_OVERLAY_H__
 
+#include <cstdint>
 #include <functional>
 #include "cocos2d.h"
 
 class TutorialOverlay {
 public:
+    enum class FingerDirection : std::uint8_t { up, upup, updown };
+
     bool init(cocos2d::Scene& scene);
     void showText(const cocos2d::Vec2& pos, const std::string& text);
     void showText(const std::string& text);
     void showSecondaryText(const std::string& text);
     void showLeftArea();
     void showRightArea();
-    void showFinger(const cocos2d::Vec2& pos);
+    void showFinger(const cocos2d::Vec2& pos, FingerDirection dir);
     void hide();
 
 private:
@@ -41,6 +44,7 @@ private:
     cocos2d::Label* m_secondaryLabel{nullptr};
     cocos2d::RenderTexture* m_leftRect{nullptr};
     cocos2d::RenderTexture* m_rightRect{nullptr};
+    cocos2d::Sprite* m_finger{nullptr};
     cocos2d::Node* m_overlay{nullptr};
 };
 
