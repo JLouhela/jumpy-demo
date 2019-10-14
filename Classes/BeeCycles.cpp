@@ -30,7 +30,7 @@ BeeCycle getSimpleCycle_1_left()
     BeeCycle cycle(Direction::left);
     bool ok{true};
     while (ok) {
-        ok = cycle.addBeeSpawn(beeLow, BeeCycle::beatLength);
+        ok = cycle.addBeeSpawn(beeLow, BeeCycle::halfNote);
     }
     return cycle;
 }
@@ -39,7 +39,7 @@ BeeCycle getSimpleCycle_1_right()
     BeeCycle cycle(Direction::right);
     bool ok{true};
     while (ok) {
-        ok = cycle.addBeeSpawn(beeLow, BeeCycle::beatLength);
+        ok = cycle.addBeeSpawn(beeLow, BeeCycle::halfNote);
     }
     return cycle;
 }
@@ -47,9 +47,9 @@ BeeCycle getSimpleCycle_1_right()
 BeeCycle getSimpleCycle_2_left()
 {
     BeeCycle cycle(Direction ::left);
-    auto ok = cycle.addBreak(BeeCycle::eightNote);
+    auto ok = cycle.addBreak(BeeCycle::quarterNote);
     while (ok) {
-        ok = cycle.addBeeSpawn(beeLow, BeeCycle::beatLength);
+        ok = cycle.addBeeSpawn(beeLow, BeeCycle::halfNote);
     }
     return cycle;
 }
@@ -57,9 +57,9 @@ BeeCycle getSimpleCycle_2_left()
 BeeCycle getSimpleCycle_2_right()
 {
     BeeCycle cycle(Direction::right);
-    auto ok = cycle.addBreak(BeeCycle::eightNote);
+    auto ok = cycle.addBreak(BeeCycle::quarterNote);
     while (ok) {
-        ok = !cycle.addBeeSpawn(beeLow, BeeCycle::beatLength);
+        ok = cycle.addBeeSpawn(beeLow, BeeCycle::halfNote);
     }
     return cycle;
 }

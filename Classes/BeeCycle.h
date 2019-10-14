@@ -38,11 +38,11 @@ class BeeCycle {
 public:
     // TODO check
     static constexpr float bpm{110.0f};
-    static constexpr float fourthNote{545.45f};
-    static constexpr float halfNote{fourthNote * 2.0f};
-    static constexpr float beatLength{fourthNote * 4.0f};
-    static constexpr float eightNote{beatLength / 2.0f};
-    static constexpr float triplet{beatLength * 0.6667f};
+    static constexpr float quarterNote{545.45f};
+    static constexpr float halfNote{quarterNote * 2.0f};
+    static constexpr float beatLength{quarterNote * 4.0f};
+    static constexpr float eightNote{quarterNote / 2.0f};
+    static constexpr float triplet{quarterNote * 0.6667f};
     static constexpr float cycleLength{beatLength * 4.0f};
 
     explicit BeeCycle(Direction dir) : m_dir{dir}
