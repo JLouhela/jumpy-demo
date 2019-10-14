@@ -36,11 +36,11 @@ enum GameState : std::uint8_t { start, active, wait, end };
 
 class GameLogic {
 public:
+    ~GameLogic();
     bool init(cocos2d::Scene& scene, b2World& world);
 
 private:
     void initGame();
-    void endGame();
     void cleanState();
 
     cocos2d::Scene* m_scene;
@@ -55,6 +55,7 @@ private:
     std::int32_t m_curLvl{0};
     std::uint8_t m_bunnyCount{0};
     InputHandler m_inputHandler;
+    std::int32_t m_musicId{-1};
 };
 
 #endif  // __GAME_LOGIC_H__

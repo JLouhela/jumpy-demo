@@ -19,6 +19,7 @@
 /// IN THE SOFTWARE.
 
 #include "GameLogic.h"
+#include "AudioEngine.h"
 #include "Box2D/Box2D.h"
 #include "CustomEvents.h"
 #include "MenuScene.h"
@@ -80,6 +81,7 @@ bool GameLogic::init(cocos2d::Scene& scene, b2World& world)
     m_actionNode = cocos2d::Node::create();
     scene.addChild(m_actionNode);
 
+    m_musicId = cocos2d::experimental::AudioEngine::play2d("jumpy.ogg", true);
     initGame();
     return true;
 }
@@ -93,9 +95,9 @@ void GameLogic::initGame()
     m_state = GameState::active;
 }
 
-void GameLogic::endGame()
+GameLogic::~GameLogic()
 {
-    // TODO
+    cocos2d::experimental::AudioEngine::stop(m_musicId);
 }
 
 void GameLogic::cleanState()

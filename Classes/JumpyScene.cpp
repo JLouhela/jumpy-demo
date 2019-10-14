@@ -61,7 +61,6 @@ bool JumpyScene::init()
 
     scheduleUpdate();
     m_world.setDrawDebug(false);
-    m_musicId = cocos2d::experimental::AudioEngine::play2d("jumpy.ogg", true);
 
     return true;
 }
@@ -69,7 +68,6 @@ bool JumpyScene::init()
 JumpyScene::~JumpyScene()
 {
     cocos2d::Director::getInstance()->getEventDispatcher()->removeEventListener(m_keyListener);
-    cocos2d::experimental::AudioEngine::stop(m_musicId);
 }
 
 void JumpyScene::update(const float dt)

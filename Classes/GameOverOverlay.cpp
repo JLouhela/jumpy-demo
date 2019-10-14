@@ -27,7 +27,7 @@ bool GameOverOverlay::init(std::function<void()> retryCallback, cocos2d::Scene& 
     const auto origin{cocos2d::Director::getInstance()->getVisibleOrigin()};
 
     // Ouch label
-    auto gameOverLabel = cocos2d::Label::createWithTTF("Game over!", "fonts/Marker Felt.ttf", 100);
+    auto gameOverLabel = cocos2d::Label::createWithTTF("Game over!", "fonts/Marker Felt.ttf", 120);
     gameOverLabel->setRotation(315);
     gameOverLabel->setColor(cocos2d::Color3B::RED);
 
@@ -37,12 +37,14 @@ bool GameOverOverlay::init(std::function<void()> retryCallback, cocos2d::Scene& 
         return false;
     }
     gameOverLabel->setPosition(cocos2d::Vec2{
-        origin.x + visibleSize.width / 4,
+        origin.x + visibleSize.width / 5,
         origin.y + 3 * visibleSize.height / 5 + gameOverLabel->getContentSize().height / 2});
 
     // Retry label
-    auto retryLabel = cocos2d::Label::createWithTTF("Try again", "fonts/Marker Felt.ttf", 100);
-    retryLabel->setColor(cocos2d::Color3B::BLACK);
+    auto retryLabel = cocos2d::Label::createWithTTF("Try again", "fonts/Marker Felt.ttf", 150);
+    retryLabel->setColor(cocos2d::Color3B::GREEN);
+    retryLabel->enableOutline(cocos2d::Color4B::BLACK, 3);
+
     auto retryButton = cocos2d::MenuItemLabel::create(
         retryLabel, [retryCallback](cocos2d::Ref* sender) { retryCallback(); });
 
@@ -57,8 +59,9 @@ bool GameOverOverlay::init(std::function<void()> retryCallback, cocos2d::Scene& 
                       origin.y + visibleSize.height / 2 + gameOverLabel->getContentSize().height});
 
     // Main menu label
-    auto menuLabel = cocos2d::Label::createWithTTF("Main Menu", "fonts/Marker Felt.ttf", 50);
-    menuLabel->setColor(cocos2d::Color3B::BLACK);
+    auto menuLabel = cocos2d::Label::createWithTTF("Main Menu", "fonts/Marker Felt.ttf", 100);
+    menuLabel->setColor(cocos2d::Color3B::GREEN);
+    menuLabel->enableOutline(cocos2d::Color4B::BLACK, 2);
     auto menuButton = cocos2d::MenuItemLabel::create(menuLabel, [](cocos2d::Ref* sender) {
         auto scene = MenuScene::createScene();
         cocos2d::Director::getInstance()->replaceScene(scene);
@@ -72,7 +75,7 @@ bool GameOverOverlay::init(std::function<void()> retryCallback, cocos2d::Scene& 
 
     menuButton->setPosition(
         cocos2d::Vec2{retryButton->getPosition().x,
-                      retryButton->getPosition().y - retryLabel->getContentSize().height * 1.5f});
+                      retryButton->getPosition().y - retryLabel->getContentSize().height * 1.2f});
 
     // create menu, it's an autorelease object
     auto menu = cocos2d::Menu::createWithArray({retryButton, menuButton});
