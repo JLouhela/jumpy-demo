@@ -42,6 +42,7 @@ private:
     PhysicsWorld m_world;
     GameLogic m_gameLogic;
     cocos2d::EventListenerKeyboard* m_keyListener{nullptr};
+    std::int32_t m_musicId{-1};
 
     // implement the "static create()" method manually
     CREATE_FUNC(JumpyScene);

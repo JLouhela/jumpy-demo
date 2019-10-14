@@ -19,6 +19,7 @@
 /// IN THE SOFTWARE.
 
 #include "MenuScene.h"
+#include "AudioEngine.h"
 #include "JumpyScene.h"
 #include "TutorialScene.h"
 
@@ -79,8 +80,10 @@ bool MenuScene::init()
 
     // Exit label
     auto exitLabel = cocos2d::Label::createWithTTF("Quit", "fonts/Marker Felt.ttf", 100);
-    auto exitLabelButton = cocos2d::MenuItemLabel::create(
-        exitLabel, [](Ref* sender) { cocos2d::Director::getInstance()->end(); });
+    auto exitLabelButton = cocos2d::MenuItemLabel::create(exitLabel, [](Ref* sender) {
+        cocos2d::experimental::AudioEngine::end();
+        cocos2d::Director::getInstance()->end();
+    });
 
     if (exitLabelButton == nullptr || exitLabelButton->getContentSize().width <= 0 ||
         exitLabelButton->getContentSize().height <= 0) {

@@ -23,22 +23,6 @@
 #include "MenuScene.h"
 #include "TutorialScene.h"
 
-// #define USE_AUDIO_ENGINE 1
-#define USE_SIMPLE_AUDIO_ENGINE 1
-
-#if USE_AUDIO_ENGINE && USE_SIMPLE_AUDIO_ENGINE
-#error \
-    "Don't use AudioEngine and SimpleAudioEngine at the same time. Please just select one in your game!"
-#endif
-
-#if USE_AUDIO_ENGINE
-#include "audio/include/AudioEngine.h"
-using namespace cocos2d::experimental;
-#elif USE_SIMPLE_AUDIO_ENGINE
-#include "audio/include/SimpleAudioEngine.h"
-using namespace CocosDenshion;
-#endif
-
 USING_NS_CC;
 
 static const cocos2d::Size designResolutionSize = cocos2d::Size(1280, 720);
@@ -49,11 +33,6 @@ AppDelegate::AppDelegate()
 
 AppDelegate::~AppDelegate()
 {
-#if USE_AUDIO_ENGINE
-    AudioEngine::end();
-#elif USE_SIMPLE_AUDIO_ENGINE
-    SimpleAudioEngine::end();
-#endif
 }
 
 // if you want a different context, modify the value of glContextAttrs
@@ -91,7 +70,7 @@ bool AppDelegate::applicationDidFinishLaunching()
     }
 
     // Set to true in order to turn on display FPS
-    director->setDisplayStats(true);
+    director->setDisplayStats(false);
 
     // set FPS. the default value is 1.0/60 if you don't call this
     director->setAnimationInterval(1.0f / 60);
