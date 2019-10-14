@@ -23,8 +23,6 @@
 #include "ZOrders.h"
 
 namespace {
-// TODO meaningful value
-constexpr float bpm = 1.5f;
 
 Bee* getAvailableBee(BeeSpawner::BeeContainer& bees)
 {
@@ -43,17 +41,16 @@ Bee* getAvailableBee(BeeSpawner::BeeContainer& bees)
 
 bool BeeSpawner::spawnBees()
 {
-    if (m_actionNode->getNumberOfRunningActions() > 0) {
-        return false;
-    }
-    scheduleSpawn();
+    const auto& rightCycle = m_cycles.getRandomCycle(Direction::right);
+    const auto& leftCycle = m_cycles.getRandomCycle(Direction::left);
+
+    scheduleSpawn(rightCycle.getCycle(), rightCycle.getDirection());
+    scheduleSpawn(leftCycle.getCycle(), leftCycle.getDirection());
     return true;
 }
 
-void BeeSpawner::spawnBee()
+void BeeSpawner::spawnBee(float y, Direction dir)
 {
-    scheduleSpawn();
-
     auto bee = getAvailableBee(m_beeContainer);
     if (!bee) {
         cocos2d::log("No free bees to spawn");
@@ -62,19 +59,18 @@ void BeeSpawner::spawnBee()
 
     const auto visibleSize{cocos2d::Director::getInstance()->getVisibleSize()};
     static constexpr float xOffset = 0.0f;
-    Direction dir = (cocos2d::random() % 2) == 0 ? Direction::left : Direction::right;
     const float x = (dir == Direction::left) ? (visibleSize.width - xOffset) : xOffset;
-
-    // TODO variance
-    static constexpr float beeY{170.0f};
-    bee->spawn(cocos2d::Vec2{x, beeY}, dir);
+    bee->spawn(cocos2d::Vec2{x, y}, dir);
 }
 
-void BeeSpawner::scheduleSpawn()
+void BeeSpawner::scheduleSpawn(const std::vector<BeeSpawn>& spawns, Direction dir)
 {
-    auto delayAction = cocos2d::DelayTime::create(bpm);
-    auto callback = cocos2d::CallFunc::create([this]() { spawnBee(); });
-    m_actionNode->runAction(cocos2d::Sequence::create(delayAction, callback, nullptr));
+    for (const auto& spawn : spawns) {
+        auto delayAction = cocos2d::DelayTime::create(spawn.timeFromCycleStart / 1000.0f);
+        auto callback =
+            cocos2d::CallFunc::create([this, &spawn, dir]() { spawnBee(spawn.y, dir); });
+        m_actionNode->runAction(cocos2d::Sequence::create(delayAction, callback, nullptr));
+    }
 }
 
 bool BeeSpawner::init(cocos2d::Scene& scene, b2World& world)

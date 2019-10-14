@@ -18,33 +18,21 @@
 /// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 /// IN THE SOFTWARE.
 
-#ifndef __BEE_SPAWNER_H__
-#define __BEE_SPAWNER_H__
+#ifndef __BEE_CYCLES_H__
+#define __BEE_CYCLES_H__
 
-#include <array>
-#include <chrono>
-#include <cstdint>
-#include "Bee.h"
-#include "BeeCycles.h"
-#include "cocos2d.h"
+#include <vector>
+#include "BeeCycle.h"
+#include "Direction.h"
 
-class b2World;
-
-class BeeSpawner {
+class BeeCycles {
 public:
-    using BeeContainer = std::array<Bee, 20>;
-    bool init(cocos2d::Scene& scene, b2World& world);
-    bool spawnBees();
-    void stop();
+    BeeCycles();
+    const BeeCycle& getRandomCycle(Direction dir);
 
 private:
-    void spawnBee(float y, Direction dir);
-    void scheduleSpawn(const std::vector<BeeSpawn>& spawns, Direction dir);
-    // Bee_id equals to container index
-    BeeContainer m_beeContainer{};
-    BeeCycles m_cycles;
-
-    cocos2d::Node* m_actionNode{nullptr};
+    std::vector<BeeCycle> m_leftCycles;
+    std::vector<BeeCycle> m_rightCycles;
 };
 
-#endif  // __BEE_SPAWNER_H__
+#endif  // __BEE_CYCLES_H__

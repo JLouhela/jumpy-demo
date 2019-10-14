@@ -81,15 +81,17 @@ bool GameLogic::init(cocos2d::Scene& scene, b2World& world)
     m_actionNode = cocos2d::Node::create();
     scene.addChild(m_actionNode);
 
-    m_musicId = cocos2d::experimental::AudioEngine::play2d("jumpy.ogg", true);
     initGame();
     return true;
 }
 
 void GameLogic::initGame()
 {
-    m_bunnyController.spawnBunnies();
+    m_musicId = cocos2d::experimental::AudioEngine::play2d("jumpy.ogg", true);
+    cocos2d::experimental::AudioEngine::setFinishCallback(
+        m_musicId, [this](int, const std::string&) { m_beeSpawner.spawnBees(); });
     m_beeSpawner.spawnBees();
+    m_bunnyController.spawnBunnies();
     m_scoreCounter.reset();
     m_inputHandler.enable();
     m_state = GameState::active;
@@ -102,6 +104,7 @@ GameLogic::~GameLogic()
 
 void GameLogic::cleanState()
 {
+    cocos2d::experimental::AudioEngine::stop(m_musicId);
     m_bunnyController.disposeBunnies();
     m_beeSpawner.stop();
     m_scoreCounter.reset();

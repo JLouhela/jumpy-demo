@@ -50,6 +50,8 @@ endif()
 list(APPEND GAME_SOURCE
      Classes/AppDelegate.cpp
      Classes/Bee.cpp
+     Classes/BeeCycle.cpp
+     Classes/BeeCycles.cpp
      Classes/BeeSpawner.cpp
      Classes/Box2DUtils.cpp
      Classes/Bunny.cpp
@@ -72,6 +74,8 @@ list(APPEND GAME_SOURCE
 list(APPEND GAME_HEADER
      Classes/AppDelegate.h
      Classes/Bee.h
+     Classes/BeeCycle.h
+     Classes/BeeCycles.h
      Classes/BeeSpawner.h
      Classes/Box2DUtils.h
      Classes/Bunny.h

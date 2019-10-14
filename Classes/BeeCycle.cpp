@@ -18,33 +18,24 @@
 /// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 /// IN THE SOFTWARE.
 
-#ifndef __BEE_SPAWNER_H__
-#define __BEE_SPAWNER_H__
+#include "BeeCycle.h"
 
-#include <array>
-#include <chrono>
-#include <cstdint>
-#include "Bee.h"
-#include "BeeCycles.h"
-#include "cocos2d.h"
+bool BeeCycle::addBeeSpawn(float y, float deltaTime)
+{
+    if (deltaTime > (cycleLength - m_usedTime)) {
+        return false;
+    }
+    m_usedTime += deltaTime;
+    m_cycle.emplace_back(BeeSpawn(y, m_usedTime));
+    return true;
+}
 
-class b2World;
-
-class BeeSpawner {
-public:
-    using BeeContainer = std::array<Bee, 20>;
-    bool init(cocos2d::Scene& scene, b2World& world);
-    bool spawnBees();
-    void stop();
-
-private:
-    void spawnBee(float y, Direction dir);
-    void scheduleSpawn(const std::vector<BeeSpawn>& spawns, Direction dir);
-    // Bee_id equals to container index
-    BeeContainer m_beeContainer{};
-    BeeCycles m_cycles;
-
-    cocos2d::Node* m_actionNode{nullptr};
-};
-
-#endif  // __BEE_SPAWNER_H__
+bool BeeCycle::addBreak(float breakTime)
+{
+    if (breakTime > (cycleLength - m_usedTime)) {
+        m_usedTime = cycleLength;
+        return false;
+    }
+    m_usedTime += breakTime;
+    return true;
+}

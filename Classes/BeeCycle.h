@@ -18,33 +18,54 @@
 /// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 /// IN THE SOFTWARE.
 
-#ifndef __BEE_SPAWNER_H__
-#define __BEE_SPAWNER_H__
+#ifndef __BEE_CYCLE_H__
+#define __BEE_CYCLE_H__
 
-#include <array>
-#include <chrono>
 #include <cstdint>
-#include "Bee.h"
-#include "BeeCycles.h"
-#include "cocos2d.h"
+#include <utility>
+#include <vector>
+#include "Direction.h"
 
-class b2World;
-
-class BeeSpawner {
-public:
-    using BeeContainer = std::array<Bee, 20>;
-    bool init(cocos2d::Scene& scene, b2World& world);
-    bool spawnBees();
-    void stop();
-
-private:
-    void spawnBee(float y, Direction dir);
-    void scheduleSpawn(const std::vector<BeeSpawn>& spawns, Direction dir);
-    // Bee_id equals to container index
-    BeeContainer m_beeContainer{};
-    BeeCycles m_cycles;
-
-    cocos2d::Node* m_actionNode{nullptr};
+struct BeeSpawn {
+    BeeSpawn(float ay, float atime) : y{ay}, timeFromCycleStart{atime}
+    {
+    }
+    float y{0.0f};
+    float timeFromCycleStart{0.0f};
 };
 
-#endif  // __BEE_SPAWNER_H__
+class BeeCycle {
+public:
+    // TODO check
+    static constexpr float bpm{110.0f};
+    static constexpr float fourthNote{545.45f};
+    static constexpr float halfNote{fourthNote * 2.0f};
+    static constexpr float beatLength{fourthNote * 4.0f};
+    static constexpr float eightNote{beatLength / 2.0f};
+    static constexpr float triplet{beatLength * 0.6667f};
+    static constexpr float cycleLength{beatLength * 4.0f};
+
+    explicit BeeCycle(Direction dir) : m_dir{dir}
+    {
+    }
+
+    Direction getDirection() const
+    {
+        return m_dir;
+    }
+
+    const std::vector<BeeSpawn>& getCycle() const
+    {
+        return m_cycle;
+    }
+
+    bool addBeeSpawn(float y, float deltaTime);
+    bool addBreak(float breakTime);
+
+private:
+    Direction m_dir{Direction::left};
+    float m_usedTime{0.0f};
+    std::vector<BeeSpawn> m_cycle;
+};
+
+#endif  // _BEE_CYCLE_H__

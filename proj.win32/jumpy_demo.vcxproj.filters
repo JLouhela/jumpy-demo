@@ -99,6 +99,12 @@
     <ClCompile Include="..\Classes\InputHandler.cpp">
       <Filter>src\input</Filter>
     </ClCompile>
+    <ClCompile Include="..\Classes\BeeCycle.cpp">
+      <Filter>src\bees</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\BeeCycles.cpp">
+      <Filter>src\bees</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
@@ -181,6 +187,12 @@
     </ClInclude>
     <ClInclude Include="..\Classes\InputHandler.h">
       <Filter>src\input</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BeeCycle.h">
+      <Filter>src\bees</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BeeCycles.h">
+      <Filter>src\bees</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
