@@ -28,7 +28,7 @@ Bee* getAvailableBee(BeeSpawner::BeeContainer& bees)
 {
     for (auto& bee : bees) {
         if (bee.getState() == BeeState::inactive) {
-            // Shortcut: should be tied to spawn, but this menas
+            // Shortcut: should be tied to spawn, but this means
             // bee should offer functionality to spawn after certain time.
             bee.activate();
             return &bee;
@@ -41,13 +41,27 @@ Bee* getAvailableBee(BeeSpawner::BeeContainer& bees)
 
 bool BeeSpawner::spawnBees()
 {
-    auto cyclePair = m_cycles.getRandomCycles();
+    BeeCycles::BeeCyclePair cyclePair;
+    float beeSpawnCycle{0.0f};
+    // Sync bees to music
+    if (!m_cycleInitialized) {
+        beeSpawnCycle = (BeeCycle::cycleLength - (BeeCycle::beatLength)) / 1000.0f;
 
-    scheduleSpawn(cyclePair.snareCycle.getCycle(), cyclePair.snareCycle.getDirection());
-    scheduleSpawn(cyclePair.bassCycle.getCycle(), cyclePair.bassCycle.getDirection());
+        cyclePair = m_cycles.getInitialCycles();
+        m_cycleInitialized = true;
+    }
+    else {
+        beeSpawnCycle = BeeCycle::cycleLength / 1000.0f;
+        cyclePair = m_cycles.getRandomCycles();
+        // cyclePair = m_cycles.getDevCycles();
+    }
+    const auto& snareCycle = m_cycles.getSnare(cyclePair.snareIndex);
+    const auto& bassCycle = m_cycles.getBass(cyclePair.bassIndex);
+    scheduleSpawn(snareCycle.getCycle(), snareCycle.getDirection());
+    scheduleSpawn(bassCycle.getCycle(), bassCycle.getDirection());
 
     // Schedule new spawn
-    auto delayAction = cocos2d::DelayTime::create(BeeCycle::cycleLength / 1000.0f);
+    auto delayAction = cocos2d::DelayTime::create(beeSpawnCycle);
     auto callback = cocos2d::CallFunc::create([this]() { spawnBees(); });
     m_actionNode->runAction(cocos2d::Sequence::create(delayAction, callback, nullptr));
 
@@ -63,7 +77,7 @@ void BeeSpawner::spawnBee(float y, Direction dir)
     }
 
     const auto visibleSize{cocos2d::Director::getInstance()->getVisibleSize()};
-    static constexpr float xOffset = -30.0f;
+    static constexpr float xOffset = -40.0f;
     const float x = (dir == Direction::left) ? (visibleSize.width - xOffset) : xOffset;
     bee->spawn(cocos2d::Vec2{x, y}, dir);
 }

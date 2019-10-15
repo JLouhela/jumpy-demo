@@ -28,16 +28,23 @@
 class BeeCycles {
 public:
     struct BeeCyclePair {
-        BeeCyclePair(const BeeCycle& asnareCycle, const BeeCycle& abassCycle)
-            : snareCycle{asnareCycle}, bassCycle{abassCycle}
+        BeeCyclePair() = default;
+        BeeCyclePair(std::uint32_t asnareIndex, std::uint32_t abassIndex)
+            : snareIndex{asnareIndex}, bassIndex{abassIndex}
         {
         }
-        const BeeCycle& snareCycle;
-        const BeeCycle& bassCycle;
+        std::uint32_t snareIndex{99999};
+        std::uint32_t bassIndex{99999};
     };
 
     BeeCycles();
-    BeeCyclePair getRandomCycles();
+
+    const BeeCycle& getSnare(std::uint32_t index) const;
+    const BeeCycle& getBass(std::uint32_t index) const;
+
+    BeeCyclePair getInitialCycles() const;
+    BeeCyclePair getRandomCycles() const;
+    BeeCyclePair getDevCycles() const;
 
 private:
     std::vector<BeeCycle> m_snareCycles;

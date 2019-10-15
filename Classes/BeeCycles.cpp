@@ -27,6 +27,32 @@ constexpr float beeLow{170.0f};
 constexpr float beeMid{220.0f};
 constexpr float beeHigh{270.0f};
 
+BeeCycle getBassInit()
+{
+    BeeCycle cycle(Direction::left);
+    bool ok = cycle.addBeeSpawn(beeLow, 0.0f);
+    for (std::uint8_t i = 0; i < 5; ++i) {
+        ok = cycle.addBeeSpawn(beeLow, BeeCycle::halfNote);
+        if (!ok) {
+            cocos2d::log("Failed to create getBassInit properly");
+        }
+    }
+    return cycle;
+}
+
+BeeCycle getSnareInit()
+{
+    BeeCycle cycle(Direction::right);
+    cycle.addBeeSpawn(beeLow, BeeCycle::quarterNote);
+    for (std::uint8_t i = 0; i < 5; ++i) {
+        bool ok = cycle.addBeeSpawn(beeLow, BeeCycle::halfNote);
+        if (!ok) {
+            cocos2d::log("Failed to create getSnareInit properly");
+        }
+    }
+    return cycle;
+}
+
 BeeCycle get4to4Bass()
 {
     BeeCycle cycle(Direction::left);
@@ -39,6 +65,7 @@ BeeCycle get4to4Bass()
     }
     return cycle;
 }
+
 BeeCycle get4to4Snare()
 {
     BeeCycle cycle(Direction::right);
@@ -51,17 +78,57 @@ BeeCycle get4to4Snare()
     }
     return cycle;
 }
+
+BeeCycle getSnareDiveEnd()
+{
+    BeeCycle cycle(Direction::right);
+    cycle.addBeeSpawn(beeLow, BeeCycle::quarterNote);
+    for (std::uint8_t i = 0; i < 6; ++i) {
+        bool ok = cycle.addBeeSpawn(beeLow, BeeCycle::halfNote);
+        if (!ok) {
+            cocos2d::log("Failed to create getSnareDiveEnd properly");
+        }
+    }
+    if (!cycle.addBeeSpawn(beeMid, BeeCycle::eightNote) ||
+        !cycle.addBeeSpawn(beeHigh, BeeCycle::quarterNote + BeeCycle::eightNote)) {
+        cocos2d::log("Failed to create getSnareDiveEnd properly");
+    }
+
+    return cycle;
+}
 }  // namespace
 
 BeeCycles::BeeCycles()
 {
+    m_snareCycles.emplace_back(getSnareInit());
     m_snareCycles.emplace_back(get4to4Snare());
+    m_snareCycles.emplace_back(getSnareDiveEnd());
+    m_bassCycles.emplace_back(getBassInit());
     m_bassCycles.emplace_back(get4to4Bass());
 }
 
-BeeCycles::BeeCyclePair BeeCycles::getRandomCycles()
+const BeeCycle& BeeCycles::getSnare(std::uint32_t index) const
 {
-    return BeeCyclePair{
-        m_snareCycles[cocos2d::RandomHelper::random_int(0U, m_snareCycles.size() - 1)],
-        m_bassCycles[cocos2d::RandomHelper::random_int(0U, m_bassCycles.size() - 1)]};
+    return m_snareCycles[index];
+}
+
+const BeeCycle& BeeCycles::getBass(std::uint32_t index) const
+{
+    return m_bassCycles[index];
+}
+
+BeeCycles::BeeCyclePair BeeCycles::getRandomCycles() const
+{
+    return BeeCyclePair{cocos2d::RandomHelper::random_int(0U, m_snareCycles.size() - 2) + 1,
+                        cocos2d::RandomHelper::random_int(0U, m_bassCycles.size() - 2) + 1};
+}
+
+BeeCycles::BeeCyclePair BeeCycles::getInitialCycles() const
+{
+    return BeeCyclePair{0, 0};
+}
+
+BeeCycles::BeeCyclePair BeeCycles::getDevCycles() const
+{
+    return BeeCyclePair{2, 1};
 }

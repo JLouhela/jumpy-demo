@@ -43,6 +43,7 @@ private:
     // Bee_id equals to container index
     BeeContainer m_beeContainer{};
     BeeCycles m_cycles;
+    bool m_cycleInitialized{false};
 
     cocos2d::Node* m_actionNode{nullptr};
 };
