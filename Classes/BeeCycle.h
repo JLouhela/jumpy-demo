@@ -42,6 +42,7 @@ public:
     static constexpr float halfNote{quarterNote * 2.0f};
     static constexpr float beatLength{quarterNote * 4.0f};
     static constexpr float eightNote{quarterNote / 2.0f};
+    static constexpr float sixteenthNote{eightNote / 2.0f};
     static constexpr float triplet{quarterNote * 0.6667f};
     static constexpr float cycleLength{beatLength * 4.0f};
 

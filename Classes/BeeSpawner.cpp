@@ -78,7 +78,7 @@ void BeeSpawner::spawnBee(float y, Direction dir)
 
     const auto visibleSize{cocos2d::Director::getInstance()->getVisibleSize()};
     static constexpr float xOffset = -40.0f;
-    const float x = (dir == Direction::left) ? (visibleSize.width - xOffset) : xOffset;
+    const float x = (dir == Direction::left) ? (visibleSize.width - xOffset + 20) : xOffset;
     bee->spawn(cocos2d::Vec2{x, y}, dir);
 }
 

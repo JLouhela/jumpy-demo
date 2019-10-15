@@ -24,8 +24,8 @@
 namespace {
 
 constexpr float beeLow{170.0f};
-constexpr float beeMid{220.0f};
-constexpr float beeHigh{270.0f};
+constexpr float beeMid{210.0f};
+constexpr float beeHigh{290.0f};
 
 BeeCycle getBassInit()
 {
@@ -66,6 +66,81 @@ BeeCycle get4to4Bass()
     return cycle;
 }
 
+BeeCycle getBassDoubles()
+{
+    BeeCycle cycle(Direction::left);
+    // First half
+    bool ok = cycle.addBeeSpawn(beeLow, 0.0f);
+    ok = cycle.addBeeSpawn(beeLow, BeeCycle::halfNote);
+    ok = cycle.addBeeSpawn(beeLow, BeeCycle::halfNote);
+    ok = cycle.addBeeSpawn(beeHigh, BeeCycle::triplet);
+    ok = cycle.addBeeSpawn(beeLow, BeeCycle::triplet);
+    ok = cycle.addBeeSpawn(beeLow, BeeCycle::triplet + BeeCycle::halfNote);
+    ok = cycle.addBeeSpawn(beeLow, BeeCycle::halfNote);
+
+    // second
+    ok = cycle.addBeeSpawn(beeLow, BeeCycle::halfNote);
+    ok = cycle.addBeeSpawn(beeLow, BeeCycle::halfNote);
+    ok = cycle.addBeeSpawn(beeMid, BeeCycle::eightNote);
+    ok = cycle.addBreak(BeeCycle::eightNote);
+    if (!ok) {
+        cocos2d::log("Failed to create getBassDoubles properly");
+    }
+    return cycle;
+}
+
+BeeCycle get4to4DiveBass()
+{
+    BeeCycle cycle(Direction::left);
+    bool ok = cycle.addBeeSpawn(beeLow, 0.0f);
+    for (std::uint8_t i = 0; i < 7; ++i) {
+        ok = cycle.addBeeSpawn(beeHigh, BeeCycle::triplet);
+        ok = cycle.addBeeSpawn(beeLow, BeeCycle::triplet * 2);
+        if (!ok) {
+            cocos2d::log("Failed to create get4to4Bass properly");
+        }
+    }
+    return cycle;
+}
+
+BeeCycle get4to2DiveBass()
+{
+    BeeCycle cycle(Direction::left);
+    bool ok = cycle.addBeeSpawn(beeLow, 0.0f);
+    for (std::uint8_t i = 0; i < 7; ++i) {
+        if (i % 2 == 0) {
+            ok = cycle.addBeeSpawn(beeLow, BeeCycle::halfNote);
+        }
+        else {
+            ok = cycle.addBeeSpawn(beeHigh, BeeCycle::triplet);
+            ok = cycle.addBeeSpawn(beeLow, BeeCycle::triplet * 2);
+        }
+        if (!ok) {
+            cocos2d::log("Failed to create get4to4Bass properly");
+        }
+    }
+    return cycle;
+}
+
+BeeCycle get2to4DiveBass()
+{
+    BeeCycle cycle(Direction::left);
+    bool ok = cycle.addBeeSpawn(beeLow, 0.0f);
+    for (std::uint8_t i = 0; i < 7; ++i) {
+        if (i % 2 == 1) {
+            ok = cycle.addBeeSpawn(beeLow, BeeCycle::halfNote);
+        }
+        else {
+            ok = cycle.addBeeSpawn(beeHigh, BeeCycle::triplet);
+            ok = cycle.addBeeSpawn(beeLow, BeeCycle::triplet * 2);
+        }
+        if (!ok) {
+            cocos2d::log("Failed to create get4to4Bass properly");
+        }
+    }
+    return cycle;
+}
+
 BeeCycle get4to4Snare()
 {
     BeeCycle cycle(Direction::right);
@@ -96,6 +171,63 @@ BeeCycle getSnareDiveEnd()
 
     return cycle;
 }
+
+BeeCycle getSnareDoubleEnd()
+{
+    BeeCycle cycle(Direction::right);
+    bool ok = cycle.addBeeSpawn(beeLow, BeeCycle::quarterNote);
+    for (std::uint8_t i = 0; i < 6; ++i) {
+        ok = cycle.addBeeSpawn(beeLow, BeeCycle::halfNote);
+    }
+    ok = cycle.addBeeSpawn(beeMid, BeeCycle::triplet);
+    ok = cycle.addBeeSpawn(beeLow, BeeCycle::triplet);
+
+    ok = cycle.addBreak(BeeCycle::triplet);
+    if (!ok) {
+        cocos2d::log("Failed to create getSnareDoubleEnd properly");
+    }
+
+    return cycle;
+}
+
+BeeCycle get4to2diveSnare()
+{
+    BeeCycle cycle(Direction::right);
+    bool ok = cycle.addBeeSpawn(beeLow, BeeCycle::quarterNote);
+    for (std::uint8_t i = 0; i < 7; ++i) {
+        if (i % 2 == 0) {
+            ok = cycle.addBeeSpawn(beeLow, BeeCycle::halfNote);
+        }
+        else {
+            ok = cycle.addBeeSpawn(beeHigh, BeeCycle::triplet);
+            ok = cycle.addBeeSpawn(beeLow, BeeCycle::triplet * 2);
+        }
+    }
+    if (!ok) {
+        cocos2d::log("Failed to create get4to4Bass properly");
+    }
+    return cycle;
+}
+
+BeeCycle get2to4diveSnare()
+{
+    BeeCycle cycle(Direction::right);
+    bool ok = cycle.addBeeSpawn(beeLow, BeeCycle::quarterNote);
+    for (std::uint8_t i = 0; i < 7; ++i) {
+        if (i % 2 == 1) {
+            ok = cycle.addBeeSpawn(beeLow, BeeCycle::halfNote);
+        }
+        else {
+            ok = cycle.addBeeSpawn(beeHigh, BeeCycle::triplet);
+            ok = cycle.addBeeSpawn(beeLow, BeeCycle::triplet * 2);
+        }
+    }
+    if (!ok) {
+        cocos2d::log("Failed to create get4to4Bass properly");
+    }
+    return cycle;
+}
+
 }  // namespace
 
 BeeCycles::BeeCycles()
@@ -103,8 +235,15 @@ BeeCycles::BeeCycles()
     m_snareCycles.emplace_back(getSnareInit());
     m_snareCycles.emplace_back(get4to4Snare());
     m_snareCycles.emplace_back(getSnareDiveEnd());
+    m_snareCycles.emplace_back(getSnareDoubleEnd());
+    m_snareCycles.emplace_back(get4to2diveSnare());
+    m_snareCycles.emplace_back(get2to4diveSnare());
     m_bassCycles.emplace_back(getBassInit());
     m_bassCycles.emplace_back(get4to4Bass());
+    m_bassCycles.emplace_back(getBassDoubles());
+    m_bassCycles.emplace_back(get4to4DiveBass());
+    m_bassCycles.emplace_back(get4to2DiveBass());
+    m_bassCycles.emplace_back(get2to4DiveBass());
 }
 
 const BeeCycle& BeeCycles::getSnare(std::uint32_t index) const
@@ -130,5 +269,5 @@ BeeCycles::BeeCyclePair BeeCycles::getInitialCycles() const
 
 BeeCycles::BeeCyclePair BeeCycles::getDevCycles() const
 {
-    return BeeCyclePair{2, 1};
+    return BeeCyclePair{5, 5};
 }

@@ -35,6 +35,8 @@ public:
     }
 
 private:
+    cocos2d::Node* m_scoreOverlay{nullptr};
+    cocos2d::Label* m_label{nullptr};
     cocos2d::EventListenerCustom* m_beeListener{nullptr};
     std::uint64_t m_score{0};
 };

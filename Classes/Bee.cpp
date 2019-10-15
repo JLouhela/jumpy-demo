@@ -26,7 +26,7 @@
 
 namespace {
 
-constexpr float velocity{5.3f};
+constexpr float velocity{5.4f};
 
 cocos2d::Sprite* loadSprite()
 {
@@ -71,7 +71,7 @@ bool Bee::init(const Bee_id id, b2World& world)
 
     b2FixtureDef beeFixtureDef;
     const auto spriteSize = m_sprite->getContentSize();
-    const static cocos2d::Vec2 relativeBodySize{0.9f, 0.8f};
+    const static cocos2d::Vec2 relativeBodySize{0.8f, 0.7f};
 
     auto boxShape = utils::box2d::getBoxShape(
         {spriteSize.width * relativeBodySize.x, spriteSize.height * relativeBodySize.y});
