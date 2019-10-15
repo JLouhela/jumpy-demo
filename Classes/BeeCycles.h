@@ -27,12 +27,21 @@
 
 class BeeCycles {
 public:
+    struct BeeCyclePair {
+        BeeCyclePair(const BeeCycle& asnareCycle, const BeeCycle& abassCycle)
+            : snareCycle{asnareCycle}, bassCycle{abassCycle}
+        {
+        }
+        const BeeCycle& snareCycle;
+        const BeeCycle& bassCycle;
+    };
+
     BeeCycles();
-    const BeeCycle& getRandomCycle(Direction dir);
+    BeeCyclePair getRandomCycles();
 
 private:
-    std::vector<BeeCycle> m_leftCycles;
-    std::vector<BeeCycle> m_rightCycles;
+    std::vector<BeeCycle> m_snareCycles;
+    std::vector<BeeCycle> m_bassCycles;
 };
 
 #endif  // __BEE_CYCLES_H__

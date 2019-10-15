@@ -77,8 +77,10 @@ bool Bunny::init(Bunny_id id, cocos2d::Scene& scene, b2World& world)
             return true;
         }
         if (colliderGroup == CollisionGroup::bee) {
+#ifndef JUMPY_GOD_MODE
             cocos2d::EventCustom event(CustomEvent::bunnyHitEvent);
             cocos2d::Director::getInstance()->getEventDispatcher()->dispatchEvent(&event);
+#endif
             // TODO play sound?
             return true;
         }

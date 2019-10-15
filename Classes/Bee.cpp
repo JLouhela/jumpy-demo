@@ -26,7 +26,7 @@
 
 namespace {
 
-constexpr float velocity{5.0f};
+constexpr float velocity{5.3f};
 
 cocos2d::Sprite* loadSprite()
 {
@@ -79,6 +79,9 @@ bool Bee::init(const Bee_id id, b2World& world)
     beeFixtureDef.density = 1;
     beeFixtureDef.filter.categoryBits = CollisionGroup::bee;
     beeFixtureDef.filter.maskBits = 0x00;
+#ifdef JUMPY_GOD_MODE
+    beeFixtureDef.isSensor = true;
+#endif
     m_body->CreateFixture(&beeFixtureDef);
 
     m_physicsObject.sprite = m_sprite;

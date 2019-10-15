@@ -42,6 +42,7 @@ public:
 private:
     void initGame();
     void cleanState();
+    void startMusic();
 
     cocos2d::Scene* m_scene;
     BunnyController m_bunnyController;

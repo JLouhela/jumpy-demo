@@ -22,7 +22,7 @@
 
 bool BeeCycle::addBeeSpawn(float y, float deltaTime)
 {
-    if (deltaTime > (cycleLength - m_usedTime)) {
+    if (deltaTime >= (cycleLength - m_usedTime)) {
         return false;
     }
     m_usedTime += deltaTime;

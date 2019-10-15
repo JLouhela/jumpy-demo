@@ -24,42 +24,30 @@
 namespace {
 
 constexpr float beeLow{170.0f};
+constexpr float beeMid{220.0f};
+constexpr float beeHigh{270.0f};
 
-BeeCycle getSimpleCycle_1_left()
+BeeCycle get4to4Bass()
 {
     BeeCycle cycle(Direction::left);
-    bool ok{true};
-    while (ok) {
+    bool ok = cycle.addBeeSpawn(beeLow, 0.0f);
+    for (std::uint8_t i = 0; i < 7; ++i) {
         ok = cycle.addBeeSpawn(beeLow, BeeCycle::halfNote);
+        if (!ok) {
+            cocos2d::log("Failed to create get4to4Bass properly");
+        }
     }
     return cycle;
 }
-BeeCycle getSimpleCycle_1_right()
+BeeCycle get4to4Snare()
 {
     BeeCycle cycle(Direction::right);
-    bool ok{true};
-    while (ok) {
-        ok = cycle.addBeeSpawn(beeLow, BeeCycle::halfNote);
-    }
-    return cycle;
-}
-
-BeeCycle getSimpleCycle_2_left()
-{
-    BeeCycle cycle(Direction ::left);
-    auto ok = cycle.addBreak(BeeCycle::quarterNote);
-    while (ok) {
-        ok = cycle.addBeeSpawn(beeLow, BeeCycle::halfNote);
-    }
-    return cycle;
-}
-
-BeeCycle getSimpleCycle_2_right()
-{
-    BeeCycle cycle(Direction::right);
-    auto ok = cycle.addBreak(BeeCycle::quarterNote);
-    while (ok) {
-        ok = cycle.addBeeSpawn(beeLow, BeeCycle::halfNote);
+    cycle.addBeeSpawn(beeLow, BeeCycle::quarterNote);
+    for (std::uint8_t i = 0; i < 7; ++i) {
+        bool ok = cycle.addBeeSpawn(beeLow, BeeCycle::halfNote);
+        if (!ok) {
+            cocos2d::log("Failed to create get4to4Bass properly");
+        }
     }
     return cycle;
 }
@@ -67,16 +55,13 @@ BeeCycle getSimpleCycle_2_right()
 
 BeeCycles::BeeCycles()
 {
-    m_leftCycles.emplace_back(getSimpleCycle_1_left());
-    m_leftCycles.emplace_back(getSimpleCycle_2_left());
-    m_rightCycles.emplace_back(getSimpleCycle_1_right());
-    m_rightCycles.emplace_back(getSimpleCycle_2_right());
+    m_snareCycles.emplace_back(get4to4Snare());
+    m_bassCycles.emplace_back(get4to4Bass());
 }
 
-const BeeCycle& BeeCycles::getRandomCycle(Direction dir)
+BeeCycles::BeeCyclePair BeeCycles::getRandomCycles()
 {
-    if (dir == Direction::left) {
-        return m_leftCycles[cocos2d::RandomHelper::random_int(0U, m_leftCycles.size() - 1)];
-    }
-    return m_rightCycles[cocos2d::RandomHelper::random_int(0U, m_rightCycles.size() - 1)];
+    return BeeCyclePair{
+        m_snareCycles[cocos2d::RandomHelper::random_int(0U, m_snareCycles.size() - 1)],
+        m_bassCycles[cocos2d::RandomHelper::random_int(0U, m_bassCycles.size() - 1)]};
 }

@@ -41,11 +41,16 @@ Bee* getAvailableBee(BeeSpawner::BeeContainer& bees)
 
 bool BeeSpawner::spawnBees()
 {
-    const auto& rightCycle = m_cycles.getRandomCycle(Direction::right);
-    const auto& leftCycle = m_cycles.getRandomCycle(Direction::left);
+    auto cyclePair = m_cycles.getRandomCycles();
 
-    scheduleSpawn(rightCycle.getCycle(), rightCycle.getDirection());
-    scheduleSpawn(leftCycle.getCycle(), leftCycle.getDirection());
+    scheduleSpawn(cyclePair.snareCycle.getCycle(), cyclePair.snareCycle.getDirection());
+    scheduleSpawn(cyclePair.bassCycle.getCycle(), cyclePair.bassCycle.getDirection());
+
+    // Schedule new spawn
+    auto delayAction = cocos2d::DelayTime::create(BeeCycle::cycleLength / 1000.0f);
+    auto callback = cocos2d::CallFunc::create([this]() { spawnBees(); });
+    m_actionNode->runAction(cocos2d::Sequence::create(delayAction, callback, nullptr));
+
     return true;
 }
 
@@ -58,7 +63,7 @@ void BeeSpawner::spawnBee(float y, Direction dir)
     }
 
     const auto visibleSize{cocos2d::Director::getInstance()->getVisibleSize()};
-    static constexpr float xOffset = 0.0f;
+    static constexpr float xOffset = -30.0f;
     const float x = (dir == Direction::left) ? (visibleSize.width - xOffset) : xOffset;
     bee->spawn(cocos2d::Vec2{x, y}, dir);
 }
