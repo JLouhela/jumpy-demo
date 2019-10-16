@@ -36,12 +36,12 @@ float noise(int x, int y)
 void utils::shaker::shakeNode(cocos2d::Node* node, const bool lessen)
 {
     float interval = 0.f;
-    float duration = 0.12f;
+    float duration = 0.1f;
     float speed = 2.0f;
-    float magnitude = 1.7f;
+    float magnitude = 1.4f;
     if (lessen) {
-        magnitude -= 0.3f;
-        duration -= 0.03f;
+        magnitude -= 0.4f;
+        duration -= 0.05f;
     }
     // Attention: single caller only
     static float elapsed = 0.f;
