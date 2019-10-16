@@ -225,11 +225,53 @@ BeeCycle getSnareDiveEnd()
     return cycle;
 }
 
+BeeCycle getSnareDiveEndEasy()
+{
+    BeeCycle cycle(Direction::right);
+    cycle.addBeeSpawn(beeLow, BeeCycle::quarterNote);
+    for (std::uint8_t i = 0; i < 3; ++i) {
+        bool ok = cycle.addBreak(BeeCycle::halfNote);
+        ok = cycle.addBeeSpawn(beeLow, BeeCycle::halfNote);
+        if (!ok) {
+            cocos2d::log("Failed to create getSnareDiveEnd properly");
+        }
+    }
+    if (!cycle.addBeeSpawn(beeMid, BeeCycle::eightNote) ||
+        !cycle.addBeeSpawn(beeHigh, BeeCycle::quarterNote + BeeCycle::eightNote)) {
+        cocos2d::log("Failed to create getSnareDiveEnd properly");
+    }
+
+    return cycle;
+}
+
 BeeCycle getSnareDoubleEnd()
 {
     BeeCycle cycle(Direction::right);
     bool ok = cycle.addBeeSpawn(beeLow, BeeCycle::quarterNote);
     for (std::uint8_t i = 0; i < 6; ++i) {
+        ok = cycle.addBeeSpawn(beeLow, BeeCycle::halfNote);
+    }
+    ok = cycle.addBeeSpawn(beeMid, BeeCycle::triplet);
+    ok = cycle.addBeeSpawn(beeLow, BeeCycle::triplet);
+
+    ok = cycle.addBreak(BeeCycle::triplet);
+    if (!ok) {
+        cocos2d::log("Failed to create getSnareDoubleEnd properly");
+    }
+
+    return cycle;
+}
+
+BeeCycle getSnareDoublesEasy()
+{
+    BeeCycle cycle(Direction::right);
+    bool ok = cycle.addBeeSpawn(beeLow, BeeCycle::quarterNote);
+    ok = cycle.addBeeSpawn(beeMid, BeeCycle::triplet);
+    ok = cycle.addBeeSpawn(beeLow, BeeCycle::triplet);
+
+    ok = cycle.addBreak(BeeCycle::triplet);
+    for (std::uint8_t i = 0; i < 2; ++i) {
+        ok = cycle.addBreak(BeeCycle::halfNote);
         ok = cycle.addBeeSpawn(beeLow, BeeCycle::halfNote);
     }
     ok = cycle.addBeeSpawn(beeMid, BeeCycle::triplet);
@@ -315,6 +357,8 @@ BeeCycles::BeeCycles()
     m_snareCycles.emplace_back(getSnareDoubleEndEasy());
     m_snareCycles.emplace_back(getSnareDiveEnd());
     m_snareCycles.emplace_back(getSnareDiveEnd());
+    m_snareCycles.emplace_back(getSnareDiveEndEasy());
+    m_snareCycles.emplace_back(getSnareDiveEndEasy());
     m_snareCycles.emplace_back(getSnareDoubleEnd());
     m_snareCycles.emplace_back(get4to2diveSnare());
     m_snareCycles.emplace_back(get2to4diveSnare());
@@ -328,6 +372,7 @@ BeeCycles::BeeCycles()
     m_bassCycles.emplace_back(getBassDoubles());
     m_bassCycles.emplace_back(getBassDoubles());
     m_bassCycles.emplace_back(get4to4DiveBass());
+    m_bassCycles.emplace_back(get4to2DiveBass());
     m_bassCycles.emplace_back(get4to2DiveBass());
     m_bassCycles.emplace_back(get2to4DiveBass());
 }

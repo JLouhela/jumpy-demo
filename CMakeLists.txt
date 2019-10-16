@@ -67,6 +67,7 @@ list(APPEND GAME_SOURCE
      Classes/MenuScene.cpp
      Classes/PhysicsWorld.cpp
      Classes/ScoreCounter.cpp
+     Classes/ScreenShake.cpp
      Classes/TutorialInputHandler.cpp
      Classes/TutorialOverlay.cpp
      Classes/TutorialScene.cpp
@@ -96,6 +97,7 @@ list(APPEND GAME_HEADER
      Classes/PhysicsWorld.h
      Classes/PTM.h
      Classes/ScoreCounter.h
+     Classes/ScreenShake.h
      Classes/TutorialInputHandler.h
      Classes/TutorialOverlay.h
      Classes/TutorialScene.h

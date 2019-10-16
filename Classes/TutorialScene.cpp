@@ -54,11 +54,13 @@ bool TutorialScene::init()
 
     // android back press event
     m_keyListener = cocos2d::EventListenerKeyboard::create();
-    m_keyListener->onKeyReleased = [](cocos2d::EventKeyboard::KeyCode keyCode,
-                                      cocos2d::Event* event) {
+    m_keyListener->onKeyReleased = [this](cocos2d::EventKeyboard::KeyCode keyCode,
+                                          cocos2d::Event* event) {
         if (keyCode == cocos2d::EventKeyboard::KeyCode::KEY_BACK ||
             keyCode == cocos2d::EventKeyboard::KeyCode::KEY_ESCAPE) {
             auto scene = MenuScene::createScene();
+            m_inputHandler.disable();
+            m_tutorialInputHandler.resetCallbacks();
             cocos2d::Director::getInstance()->replaceScene(scene);
         }
     };
@@ -439,7 +441,7 @@ void TutorialScene::tutorialClosure()
     auto callbackLambda = [this]() {
         clearInteractions();
         m_tutorialOverlay.hide();
-        m_tutorialOverlay.showText("That settles the tutorial");
+        m_tutorialOverlay.showText("That settles the tutorial!");
         delayedText(0.1f, "Tap to return to main menu");
         m_tutorialInputHandler.setClickCallback(
             [this]() {

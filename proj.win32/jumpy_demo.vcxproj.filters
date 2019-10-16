@@ -105,6 +105,9 @@
     <ClCompile Include="..\Classes\BeeCycles.cpp">
       <Filter>src\bees</Filter>
     </ClCompile>
+    <ClCompile Include="..\Classes\ScreenShake.cpp">
+      <Filter>src\utils</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
@@ -193,6 +196,9 @@
     </ClInclude>
     <ClInclude Include="..\Classes\BeeCycles.h">
       <Filter>src\bees</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\ScreenShake.h">
+      <Filter>src\utils</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

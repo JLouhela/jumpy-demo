@@ -19,10 +19,12 @@
 /// IN THE SOFTWARE.
 
 #include "GameLogic.h"
+#include <cstdint>
 #include "AudioEngine.h"
 #include "Box2D/Box2D.h"
 #include "CustomEvents.h"
 #include "MenuScene.h"
+#include "ScreenShake.h"
 
 namespace {
 void displayVictoryLabel(cocos2d::Scene& scene)
@@ -64,7 +66,6 @@ bool GameLogic::init(cocos2d::Scene& scene, b2World& world)
     }
 
     world.SetContactListener(&m_contactListener);
-    m_inputHandler.init(m_bunnyController);
     m_scoreCounter.init(scene);
 
     m_bunnyEventListener = cocos2d::EventListenerCustom::create(
@@ -81,6 +82,15 @@ bool GameLogic::init(cocos2d::Scene& scene, b2World& world)
     m_actionNode = cocos2d::Node::create();
     scene.addChild(m_actionNode);
 
+    auto delayAction = cocos2d::DelayTime::create(BeeCycle::quarterNote / 1000.0f);
+    auto shakeCallback = cocos2d::CallFunc::create([this]() {
+        static std::uint32_t counter{0};
+        utils::shaker::shakeNode(m_scene, (counter++ % 2 == 0));
+    });
+    auto shakeSeq = cocos2d::Sequence::create(delayAction, shakeCallback, nullptr);
+    m_actionNode->runAction(cocos2d::RepeatForever::create(shakeSeq));
+
+    m_inputHandler.init(m_bunnyController);
     initGame();
     return true;
 }
@@ -88,6 +98,7 @@ bool GameLogic::init(cocos2d::Scene& scene, b2World& world)
 void GameLogic::initGame()
 {
     startMusic();
+    m_scoreCounter.reset();
     m_beeSpawner.spawnBees();
     m_bunnyController.spawnBunnies();
     m_scoreCounter.reset();
@@ -113,5 +124,4 @@ void GameLogic::cleanState()
     cocos2d::experimental::AudioEngine::stop(m_musicId);
     m_bunnyController.disposeBunnies();
     m_beeSpawner.stop();
-    m_scoreCounter.reset();
 }

@@ -55,12 +55,12 @@ private:
     void delayedText(float delay, const std::string& text);
 
     PhysicsWorld m_world;
-    InputHandler m_inputHandler;
     ContactListener m_contactListener;
-    TutorialInputHandler m_tutorialInputHandler;
     TutorialOverlay m_tutorialOverlay;
     BunnyController m_bunnyController;
     cocos2d::EventListenerKeyboard* m_keyListener{nullptr};
+    InputHandler m_inputHandler;
+    TutorialInputHandler m_tutorialInputHandler;
 
     // implement the "static create()" method manually
     CREATE_FUNC(TutorialScene);
