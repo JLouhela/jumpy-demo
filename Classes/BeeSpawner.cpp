@@ -115,4 +115,5 @@ void BeeSpawner::stop()
         bee.dispose();
     }
     m_actionNode->cleanup();
+    m_cycleInitialized = false;
 }

@@ -26,7 +26,7 @@
 #include "PTM.h"
 
 namespace {
-const cocos2d::Vec2 relativeBodySize{0.7f, 0.9f};
+const cocos2d::Vec2 relativeBodySize{0.4f, 0.9f};
 constexpr float velocityLimitUp{350.0f};
 constexpr float velocityLimitDown{500.0f};
 

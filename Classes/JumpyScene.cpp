@@ -60,7 +60,7 @@ bool JumpyScene::init()
     _eventDispatcher->addEventListenerWithSceneGraphPriority(m_keyListener, this);
 
     scheduleUpdate();
-    m_world.setDrawDebug(false);
+    m_world.setDrawDebug(true);
 
     return true;
 }

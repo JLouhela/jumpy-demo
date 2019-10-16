@@ -56,4 +56,5 @@ void ScoreCounter::init(cocos2d::Scene& scene)
 void ScoreCounter::reset()
 {
     m_score = 0;
+    m_label->setString("Score: 0");
 }

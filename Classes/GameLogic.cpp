@@ -109,6 +109,7 @@ GameLogic::~GameLogic()
 
 void GameLogic::cleanState()
 {
+    m_inputHandler.disable();
     cocos2d::experimental::AudioEngine::stop(m_musicId);
     m_bunnyController.disposeBunnies();
     m_beeSpawner.stop();
