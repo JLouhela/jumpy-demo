@@ -23,7 +23,7 @@
 
 namespace {
 
-constexpr float beeLow{170.0f};
+constexpr float beeLow{165.0f};
 constexpr float beeMid{210.0f};
 constexpr float beeHigh{290.0f};
 
@@ -31,7 +31,8 @@ BeeCycle getBassInit()
 {
     BeeCycle cycle(Direction::left);
     bool ok = cycle.addBeeSpawn(beeLow, 0.0f);
-    for (std::uint8_t i = 0; i < 5; ++i) {
+    for (std::uint8_t i = 0; i < 2; ++i) {
+        ok = cycle.addBreak(BeeCycle::halfNote);
         ok = cycle.addBeeSpawn(beeLow, BeeCycle::halfNote);
         if (!ok) {
             cocos2d::log("Failed to create getBassInit properly");
@@ -44,10 +45,25 @@ BeeCycle getSnareInit()
 {
     BeeCycle cycle(Direction::right);
     cycle.addBeeSpawn(beeLow, BeeCycle::quarterNote);
-    for (std::uint8_t i = 0; i < 5; ++i) {
-        bool ok = cycle.addBeeSpawn(beeLow, BeeCycle::halfNote);
+    for (std::uint8_t i = 0; i < 2; ++i) {
+        bool ok = cycle.addBreak(BeeCycle::halfNote);
+        ok = cycle.addBeeSpawn(beeLow, BeeCycle::halfNote);
         if (!ok) {
             cocos2d::log("Failed to create getSnareInit properly");
+        }
+    }
+    return cycle;
+}
+
+BeeCycle get2to4Bass()
+{
+    BeeCycle cycle(Direction::left);
+    bool ok = cycle.addBeeSpawn(beeLow, 0.0f);
+    for (std::uint8_t i = 0; i < 3; ++i) {
+        ok = cycle.addBreak(BeeCycle::halfNote);
+        ok = cycle.addBeeSpawn(beeLow, BeeCycle::halfNote);
+        if (!ok) {
+            cocos2d::log("Failed to create get4to4Bass properly");
         }
     }
     return cycle;
@@ -62,6 +78,29 @@ BeeCycle get4to4Bass()
         if (!ok) {
             cocos2d::log("Failed to create get4to4Bass properly");
         }
+    }
+    return cycle;
+}
+
+BeeCycle getBassDoublesEasy()
+{
+    BeeCycle cycle(Direction::left);
+    // First half
+    bool ok = cycle.addBeeSpawn(beeLow, 0.0f);
+    ok = cycle.addBreak(BeeCycle::halfNote);
+    ok = cycle.addBeeSpawn(beeLow, BeeCycle::halfNote);
+    ok = cycle.addBeeSpawn(beeHigh, BeeCycle::triplet);
+    ok = cycle.addBeeSpawn(beeLow, BeeCycle::triplet);
+    ok = cycle.addBreak(BeeCycle::triplet + BeeCycle::halfNote);
+    ok = cycle.addBeeSpawn(beeLow, BeeCycle::halfNote);
+
+    // second
+    ok = cycle.addBreak(BeeCycle::halfNote);
+    ok = cycle.addBeeSpawn(beeLow, BeeCycle::halfNote);
+    ok = cycle.addBeeSpawn(beeMid, BeeCycle::eightNote);
+    ok = cycle.addBreak(BeeCycle::eightNote);
+    if (!ok) {
+        cocos2d::log("Failed to create getBassDoubles properly");
     }
     return cycle;
 }
@@ -154,6 +193,20 @@ BeeCycle get4to4Snare()
     return cycle;
 }
 
+BeeCycle get2to4Snare()
+{
+    BeeCycle cycle(Direction::right);
+    cycle.addBeeSpawn(beeLow, BeeCycle::quarterNote);
+    for (std::uint8_t i = 0; i < 3; ++i) {
+        bool ok = cycle.addBreak(BeeCycle::halfNote);
+        ok = cycle.addBeeSpawn(beeLow, BeeCycle::halfNote);
+        if (!ok) {
+            cocos2d::log("Failed to create get4to4Bass properly");
+        }
+    }
+    return cycle;
+}
+
 BeeCycle getSnareDiveEnd()
 {
     BeeCycle cycle(Direction::right);
@@ -177,6 +230,25 @@ BeeCycle getSnareDoubleEnd()
     BeeCycle cycle(Direction::right);
     bool ok = cycle.addBeeSpawn(beeLow, BeeCycle::quarterNote);
     for (std::uint8_t i = 0; i < 6; ++i) {
+        ok = cycle.addBeeSpawn(beeLow, BeeCycle::halfNote);
+    }
+    ok = cycle.addBeeSpawn(beeMid, BeeCycle::triplet);
+    ok = cycle.addBeeSpawn(beeLow, BeeCycle::triplet);
+
+    ok = cycle.addBreak(BeeCycle::triplet);
+    if (!ok) {
+        cocos2d::log("Failed to create getSnareDoubleEnd properly");
+    }
+
+    return cycle;
+}
+
+BeeCycle getSnareDoubleEndEasy()
+{
+    BeeCycle cycle(Direction::right);
+    bool ok = cycle.addBeeSpawn(beeLow, BeeCycle::quarterNote);
+    for (std::uint8_t i = 0; i < 3; ++i) {
+        ok = cycle.addBreak(BeeCycle::halfNote);
         ok = cycle.addBeeSpawn(beeLow, BeeCycle::halfNote);
     }
     ok = cycle.addBeeSpawn(beeMid, BeeCycle::triplet);
@@ -232,14 +304,28 @@ BeeCycle get2to4diveSnare()
 
 BeeCycles::BeeCycles()
 {
+    // Lame memory usage for random biasing
+    // Should use
     m_snareCycles.emplace_back(getSnareInit());
     m_snareCycles.emplace_back(get4to4Snare());
+    m_snareCycles.emplace_back(get2to4Snare());
+    m_snareCycles.emplace_back(get4to4Snare());
+    m_snareCycles.emplace_back(get2to4Snare());
+    m_snareCycles.emplace_back(getSnareDoubleEndEasy());
+    m_snareCycles.emplace_back(getSnareDoubleEndEasy());
+    m_snareCycles.emplace_back(getSnareDiveEnd());
     m_snareCycles.emplace_back(getSnareDiveEnd());
     m_snareCycles.emplace_back(getSnareDoubleEnd());
     m_snareCycles.emplace_back(get4to2diveSnare());
     m_snareCycles.emplace_back(get2to4diveSnare());
     m_bassCycles.emplace_back(getBassInit());
     m_bassCycles.emplace_back(get4to4Bass());
+    m_bassCycles.emplace_back(get2to4Bass());
+    m_bassCycles.emplace_back(getBassDoublesEasy());
+    m_bassCycles.emplace_back(getBassDoublesEasy());
+    m_bassCycles.emplace_back(get4to4Bass());
+    m_bassCycles.emplace_back(get2to4Bass());
+    m_bassCycles.emplace_back(getBassDoubles());
     m_bassCycles.emplace_back(getBassDoubles());
     m_bassCycles.emplace_back(get4to4DiveBass());
     m_bassCycles.emplace_back(get4to2DiveBass());
